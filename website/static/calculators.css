@@ -1,0 +1,19 @@
+li {
+  margin-top: 10px;
+  margin-bottom: -10px;
+  width: 100%;
+  text-align: center;
+}
+  
+.collapse-main {
+  margin-top: 0.25rem;
+  width: 100%;
+}
+
+input {
+  margin-top: 2px;
+}
+
+.header {
+  font-weight: bold;
+}

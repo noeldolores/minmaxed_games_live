@@ -1,0 +1,58 @@
+{% extends "base.html" %} 
+
+{% block title %}Calculators - NewWorld Tools{% endblock %}
+
+{% block content%}
+
+
+<link rel="stylesheet" href="{{ url_for('static', filename='calculators.css') }}"/>
+<br></br>
+<h1 align="center" class="text-black p-2" id="topHeader">Calculators</h1>
+<br></br>
+
+<form>
+    <div class="container">
+
+        <div class="active list-unstyled components">
+            <div href="#homeSubmenu1" data-toggle="collapse" aria-expanded="false" class="btn btn-outline-dark dropdown-toggle collapse-main">Cheapest Route to Material</div>
+            <ul class="collapse list-unstyled show collapseall" id="homeSubmenu1">
+
+                <li class="info">
+                    <h4>Leatherworking</h4>
+                    <div class="form-row justify-content-center">
+                        <div class="col-auto">
+                            <label for="coarse_leather" class="header">Coarse Leather</label> 
+                            <input type="text" id="coarse_leather" name="coarse_leather" class="form-control skillLevel" min="0" value="{{ cheapest_route['leatherworking']['coarse_leather']['source'] }}" disabled>
+                            <input type="number" id="coarse_leather" name="coarse_leather" class="form-control skillLevel" min="0" value="{{ cheapest_route['leatherworking']['coarse_leather']['price'] }}" disabled>
+                        </div>
+                        <div class="col-auto">
+                            <label for="rugged_leather" class="header">Rugged Leather</label>
+                            <input type="text" id="rugged_leather" name="rugged_leather" class="form-control skillLevel" min="0" value="{{ cheapest_route['leatherworking']['rugged_leather']['source'] }}" disabled>
+                            <input type="number" id="rugged_leather" name="rugged_leather" class="form-control skillLevel" min="0" value="{{ cheapest_route['leatherworking']['rugged_leather']['price'] }}" disabled>
+                        </div>
+                        <div class="col-auto">
+                            <label for="layered_leather" class="header">Layered Leather</label>
+                            <input type="text" id="layered_leather" name="layered_leather" class="form-control skillLevel" min="0" value="{{ cheapest_route['leatherworking']['layered_leather']['source'] }}" disabled>
+                            <input type="number" id="layered_leather" name="layered_leather" class="form-control skillLevel" min="0" value="{{ cheapest_route['leatherworking']['layered_leather']['price'] }}" disabled>
+                        </div>
+                        <div class="col-auto">
+                            <label for="infused_leather" class="header">Infused Leather</label>
+                            <input type="text" id="infused_leather" name="infused_leather" class="form-control skillLevel" min="0" value="{{ cheapest_route['leatherworking']['infused_leather']['source'] }}" disabled>
+                            <input type="number" id="infused_leather" name="infused_leather" class="form-control skillLevel" min="0" value="{{ cheapest_route['leatherworking']['infused_leather']['price'] }}" disabled>
+                        </div>
+                        <div class="col-auto">
+                            <label for="runic_leather" class="header">Runic Leather</label>
+                            <input type="text" id="runic_leather" name="runic_leather" class="form-control skillLevel" min="0" value="{{ cheapest_route['leatherworking']['runic_leather']['source'] }}"" disabled>
+                            <input type="number" id="runic_leather" name="runic_leather" class="form-control skillLevel" min="0" value="{{ cheapest_route['leatherworking']['runic_leather']['price'] }}" disabled>
+                        </div>
+                    </div>
+                </li>
+                
+            </ul> 
+        </div>   
+
+    </div>
+</form>
+
+
+{% endblock %}
