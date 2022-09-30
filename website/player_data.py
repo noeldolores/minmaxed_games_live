@@ -15,7 +15,7 @@ skill_levels = {
     "refining" : {
         "leatherworking": 0,
         "smelting": 0,
-        "stonecutting": 0,
+        "stone_cutting": 0,
         "weaving": 0,
         "woodworking": 0
     },
@@ -107,7 +107,7 @@ price_list = {
         "gold_ore" : 0,
         "platinum_ore" : 0
     },
-    "stonecutting" : {
+    "stone_cutting" : {
         "stone" : 0,
         "stone_block" : 0,
         "stone_brick" : 0,

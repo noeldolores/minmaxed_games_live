@@ -51,7 +51,7 @@ def skills():
             "refining" : {
                 "leatherworking": strip_leading_zeros(False, request.form['leatherworking_level']),
                 "smelting": strip_leading_zeros(False, request.form['smelting_level']),
-                "stonecutting": strip_leading_zeros(False, request.form['stonecutting_level']),
+                "stone_cutting": strip_leading_zeros(False, request.form['stone_cutting_level']),
                 "weaving": strip_leading_zeros(False, request.form['weaving_level']),
                 "woodworking": strip_leading_zeros(False, request.form['woodworking_level'])
             },
@@ -126,7 +126,7 @@ def tradepost():
                 "gold_ore" : strip_leading_zeros(True, request.form['gold_ore']),
                 "platinum_ore" : strip_leading_zeros(True, request.form['platinum_ore'])
             },
-            "stonecutting" : {
+            "stone_cutting" : {
                 "stone": strip_leading_zeros(True, request.form['stone']),
                 "stone_block": strip_leading_zeros(True, request.form['stone_block']),
                 "stone_brick": strip_leading_zeros(True, request.form['stone_brick']),
@@ -177,7 +177,11 @@ def calculators():
     init_session()
     
     cheapest_route = {
-        "leatherworking": calcs.cheapest_route_leatherworking(session['price_list'], session['skill_levels']['refining']['leatherworking'], session['gear_sets']['leatherworking'])
+        "leatherworking": calcs.cheapest_route_leatherworking(session['price_list'], session['skill_levels']['refining']['leatherworking'], session['gear_sets']['leatherworking']),
+        "smelting": calcs.cheapest_route_smelting(session['price_list'], session['skill_levels']['refining']['smelting'], session['gear_sets']['smelting']),
+        "stone_cutting": calcs.cheapest_route_stone_cutting(session['price_list'], session['skill_levels']['refining']['stone_cutting'], session['gear_sets']['stone_cutting']),
+        "weaving": calcs.cheapest_route_weaving(session['price_list'], session['skill_levels']['refining']['weaving'], session['gear_sets']['weaving']),
+        "woodworking": calcs.cheapest_route_woodworking(session['price_list'], session['skill_levels']['refining']['woodworking'], session['gear_sets']['woodworking'])
     }
 
     return render_template('calculators.html', cheapest_route=cheapest_route)
