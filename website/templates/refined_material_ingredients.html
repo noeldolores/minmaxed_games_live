@@ -1,0 +1,103 @@
+{% extends "base.html" %} 
+
+{% block title %}Calculators - NewWorld Tools{% endblock %}
+
+{% block head %}
+
+<link rel="stylesheet" href="{{ url_for('static', filename='refined_material_ingredients.css') }}"/>
+
+{% endblock %}
+
+
+{% block content%}
+{% include "navbar.html" %}
+
+<h1 align="center" class="text-black" id="topHeader">Refining Ingredient Requirements</h1>
+
+<form>
+    <div class="container">
+        <div class="active list-unstyled components">
+
+            <div href="#homeSubmenu2" data-toggle="collapse" aria-expanded="false" class="btn btn-outline-dark dropdown-toggle collapse-main">Smelting</div>
+                <ul class="collapse list-unstyled collapseall" id="homeSubmenu2">
+
+                    <div class="form-row justify-content-center">
+                        <div class="col-auto">
+                            <div class="input-group input-group-sm mt-3 mb-3">
+                                <div class="input-group-prepend">
+                                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-expanded="false">Target Material</button>
+                                    <div class="dropdown-menu">
+                                        <a class="dropdown-item" href="#">Action</a>
+                                        <a class="dropdown-item" href="#">Another action</a>
+                                        <a class="dropdown-item" href="#">Something else here</a>
+                                        <a class="dropdown-item" href="#">Separated link</a>
+                                    </div>
+                                </div>
+                                <input type="number" class="form-control" aria-label="Text input with dropdown button">
+                            </div>
+                        </div>
+                    </div>
+
+                    <li>
+                        <table class="table table-striped">
+                            <thead>
+                            <tr>
+                                <th scope="col">Iron Ore</th>
+                                <th scope="col">Iron Ingot</th>
+                                <th scope="col">Steel Ingot</th>
+                                <th scope="col">Starmetal Ore</th>
+                                <th scope="col">Starmetal Ingot</th>
+                                <th scope="col">Orichalcum Ore</th>
+                                <th scope="col">Orichalcum Ingot</th>
+                                <th scope="col">Charcoal</th>
+                                <th scope="col">Obsidian Flux</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr>
+                                <td scope="row">Mark</td>
+                                <td>Otto</td>
+                                <td>@mdo</td>
+                                <td>Otto</td>
+                                <td>@mdo</td>
+                                <td>Otto</td>
+                                <td>@mdo</td>
+                                <td>Otto</td>
+                                <td>@mdo</td>
+                            </tr>
+                            <tr>
+                                <td scope="row">Jacob</td>
+                                <td>Thornton</td>
+                                <td>@fat</td>
+                                <td>Otto</td>
+                                <td>@mdo</td>
+                                <td>Otto</td>
+                                <td>@mdo</td>
+                                <td>Otto</td>
+                                <td>@mdo</td>
+                            </tr>
+                            <tr>
+                                <td scope="row">Larry</td>
+                                <td>the Bird</td>
+                                <td>@twitter</td>
+                                <td>Otto</td>
+                                <td>@mdo</td>
+                                <td>Otto</td>
+                                <td>@mdo</td>
+                                <td>Otto</td>
+                                <td>@mdo</td>
+                            </tr>
+                            </tbody>
+                        </table>
+
+                        
+                    </li>
+                </ul> 
+            </div> 
+
+        </div>
+    </div>
+</form>
+{% include "scripts.html" %}
+
+{% endblock %}

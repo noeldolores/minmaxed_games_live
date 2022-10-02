@@ -1,0 +1,32 @@
+#listspace {
+  margin-top: 1rem;
+  width: 100%;
+  text-align: center;
+}
+  
+input {
+  text-align: center;
+}
+
+.collapse-main {
+  margin-top: 0.25rem;
+  width: 100%;
+}
+
+.skillLevel {
+  margin-top: 2px;
+}
+
+.header {
+  font-weight: bold;
+  margin-top: 0.25rem;
+  margin-bottom: -0.25rem;
+}
+
+.noHover{
+  pointer-events: none;
+}
+
+h1 {
+  margin-top: 4rem;
+}

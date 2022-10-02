@@ -2,217 +2,204 @@
 
 {% block title %}Calculators - NewWorld Tools{% endblock %}
 
+{% block head %}
+
+<link rel="stylesheet" href="{{ url_for('static', filename='refined_material_cost.css') }}"/>
+
+{% endblock %}
+
 {% block content%}
+    {% include "navbar.html" %}
 
+    <h1 align="center" class="text-black" id="topHeader">Cheapest Route to Material</h1>
 
-<link rel="stylesheet" href="{{ url_for('static', filename='calculators.css') }}"/>
-<br></br>
-<h1 align="center" class="text-black p-2" id="topHeader">Calculators</h1>
-<br></br>
-
-<form>
-    <div class="container">
-
-        <div class="active list-unstyled components">
-            <div href="#homeSubmenu1" data-toggle="collapse" aria-expanded="false" class="btn btn-outline-dark dropdown-toggle collapse-main">Cheapest Route to Material</div>
-            <ul class="collapse list-unstyled collapseall" id="homeSubmenu1">
-
-                <li class="info">
+    <form>
+        <div class="container">
+            <div class="active list-unstyled components">
+                <li id="listspace">
                     <h4>Leatherworking</h4>
                     <div class="form-row justify-content-center">
                         <div class="col-auto">
                             <label for="coarse_leather" class="header">Coarse Leather</label> 
                             <input type="text" id="coarse_leather" name="coarse_leather" class="form-control skillLevel" min="0" value="{{ cheapest_route['leatherworking']['coarse_leather']['source'] }}" disabled>
-                            <input type="number" id="coarse_leather" name="coarse_leather" class="form-control skillLevel" min="0" value="{{ cheapest_route['leatherworking']['coarse_leather']['price'] }}" disabled>
+                            <input type="text" id="coarse_leather" name="coarse_leather" class="form-control skillLevel" min="0" value="{{ cheapest_route['leatherworking']['coarse_leather']['price'] }}" disabled>
                         </div>
                         <div class="col-auto">
                             <label for="rugged_leather" class="header">Rugged Leather</label>
                             <input type="text" id="rugged_leather" name="rugged_leather" class="form-control skillLevel" min="0" value="{{ cheapest_route['leatherworking']['rugged_leather']['source'] }}" disabled>
-                            <input type="number" id="rugged_leather" name="rugged_leather" class="form-control skillLevel" min="0" value="{{ cheapest_route['leatherworking']['rugged_leather']['price'] }}" disabled>
+                            <input type="text" id="rugged_leather" name="rugged_leather" class="form-control skillLevel" min="0" value="{{ cheapest_route['leatherworking']['rugged_leather']['price'] }}" disabled>
                         </div>
                         <div class="col-auto">
                             <label for="layered_leather" class="header">Layered Leather</label>
                             <input type="text" id="layered_leather" name="layered_leather" class="form-control skillLevel" min="0" value="{{ cheapest_route['leatherworking']['layered_leather']['source'] }}" disabled>
-                            <input type="number" id="layered_leather" name="layered_leather" class="form-control skillLevel" min="0" value="{{ cheapest_route['leatherworking']['layered_leather']['price'] }}" disabled>
+                            <input type="text" id="layered_leather" name="layered_leather" class="form-control skillLevel" min="0" value="{{ cheapest_route['leatherworking']['layered_leather']['price'] }}" disabled>
                         </div>
                         <div class="col-auto">
                             <label for="infused_leather" class="header">Infused Leather</label>
                             <input type="text" id="infused_leather" name="infused_leather" class="form-control skillLevel" min="0" value="{{ cheapest_route['leatherworking']['infused_leather']['source'] }}" disabled>
-                            <input type="number" id="infused_leather" name="infused_leather" class="form-control skillLevel" min="0" value="{{ cheapest_route['leatherworking']['infused_leather']['price'] }}" disabled>
+                            <input type="text" id="infused_leather" name="infused_leather" class="form-control skillLevel" min="0" value="{{ cheapest_route['leatherworking']['infused_leather']['price'] }}" disabled>
                         </div>
                         <div class="col-auto">
                             <label for="runic_leather" class="header">Runic Leather</label>
                             <input type="text" id="runic_leather" name="runic_leather" class="form-control skillLevel" min="0" value="{{ cheapest_route['leatherworking']['runic_leather']['source'] }}" disabled>
-                            <input type="number" id="runic_leather" name="runic_leather" class="form-control skillLevel" min="0" value="{{ cheapest_route['leatherworking']['runic_leather']['price'] }}" disabled>
+                            <input type="text" id="runic_leather" name="runic_leather" class="form-control skillLevel" min="0" value="{{ cheapest_route['leatherworking']['runic_leather']['price'] }}" disabled>
                         </div>
                     </div>
                 </li>
 
-                <br></br>
-
-                <li class="info">
+                <li id="listspace">
                     <h4>Smelting</h4>
                     <div class="form-row justify-content-center">
                         <div class="col-auto">
                             <label for="iron_ingot" class="header">Iron Ingot</label> 
                             <input type="text" id="iron_ingot" name="iron_ingot" class="form-control skillLevel" min="0" value="{{ cheapest_route['smelting']['iron_ingot']['source'] }}" disabled>
-                            <input type="number" id="iron_ingot" name="iron_ingot" class="form-control skillLevel" min="0" value="{{ cheapest_route['smelting']['iron_ingot']['price'] }}" disabled>
+                            <input type="text" id="iron_ingot" name="iron_ingot" class="form-control skillLevel" min="0" value="{{ cheapest_route['smelting']['iron_ingot']['price'] }}" disabled>
                         </div>
                         <div class="col-auto">
                             <label for="gold_ingot" class="header">Steel Ingot</label>
                             <input type="text" id="gold_ingot" name="gold_ingot" class="form-control skillLevel" min="0" value="{{ cheapest_route['smelting']['steel_ingot']['source'] }}" disabled>
-                            <input type="number" id="gold_ingot" name="gold_ingot" class="form-control skillLevel" min="0" value="{{ cheapest_route['smelting']['steel_ingot']['price'] }}" disabled>
+                            <input type="text" id="gold_ingot" name="gold_ingot" class="form-control skillLevel" min="0" value="{{ cheapest_route['smelting']['steel_ingot']['price'] }}" disabled>
                         </div>
                         <div class="col-auto">
                             <label for="starmetal_ingot" class="header">Starmetal Ingot</label>
                             <input type="text" id="starmetal_ingot" name="starmetal_ingot" class="form-control skillLevel" min="0" value="{{ cheapest_route['smelting']['starmetal_ingot']['source'] }}" disabled>
-                            <input type="number" id="starmetal_ingot" name="starmetal_ingot" class="form-control skillLevel" min="0" value="{{ cheapest_route['smelting']['starmetal_ingot']['price'] }}" disabled>
+                            <input type="text" id="starmetal_ingot" name="starmetal_ingot" class="form-control skillLevel" min="0" value="{{ cheapest_route['smelting']['starmetal_ingot']['price'] }}" disabled>
                         </div>
                         <div class="col-auto">
                             <label for="orichalcum_ingot" class="header">Orichalcum Ingot</label>
                             <input type="text" id="orichalcum_ingot" name="orichalcum_ingot" class="form-control skillLevel" min="0" value="{{ cheapest_route['smelting']['orichalcum_ingot']['source'] }}" disabled>
-                            <input type="number" id="orichalcum_ingot" name="orichalcum_ingot" class="form-control skillLevel" min="0" value="{{ cheapest_route['smelting']['orichalcum_ingot']['price'] }}" disabled>
+                            <input type="text" id="orichalcum_ingot" name="orichalcum_ingot" class="form-control skillLevel" min="0" value="{{ cheapest_route['smelting']['orichalcum_ingot']['price'] }}" disabled>
                         </div>
                         <div class="col-auto">
                             <label for="asmodeum" class="header">Asmodeum</label>
                             <input type="text" id="asmodeum" name="asmodeum" class="form-control skillLevel" min="0" value="{{ cheapest_route['smelting']['asmodeum']['source'] }}" disabled>
-                            <input type="number" id="asmodeum" name="asmodeum" class="form-control skillLevel" min="0" value="{{ cheapest_route['smelting']['asmodeum']['price'] }}" disabled>
+                            <input type="text" id="asmodeum" name="asmodeum" class="form-control skillLevel" min="0" value="{{ cheapest_route['smelting']['asmodeum']['price'] }}" disabled>
                         </div>
                     </div>
                     <div class="form-row justify-content-center">
                         <div class="col-auto">
                             <label for="silver_ingot" class="header">Silver Ingot</label> 
                             <input type="text" id="silver_ingot" name="silver_ingot" class="form-control skillLevel" min="0" value="{{ cheapest_route['smelting']['silver_ingot']['source'] }}" disabled>
-                            <input type="number" id="silver_ingot" name="silver_ingot" class="form-control skillLevel" min="0" value="{{ cheapest_route['smelting']['silver_ingot']['price'] }}" disabled>
+                            <input type="text" id="silver_ingot" name="silver_ingot" class="form-control skillLevel" min="0" value="{{ cheapest_route['smelting']['silver_ingot']['price'] }}" disabled>
                         </div>
                         <div class="col-auto">
                             <label for="gold_ingot" class="header">Gold Ingot</label>
                             <input type="text" id="gold_ingot" name="gold_ingot" class="form-control skillLevel" min="0" value="{{ cheapest_route['smelting']['gold_ingot']['source'] }}" disabled>
-                            <input type="number" id="gold_ingot" name="gold_ingot" class="form-control skillLevel" min="0" value="{{ cheapest_route['smelting']['gold_ingot']['price'] }}" disabled>
+                            <input type="text" id="gold_ingot" name="gold_ingot" class="form-control skillLevel" min="0" value="{{ cheapest_route['smelting']['gold_ingot']['price'] }}" disabled>
                         </div>
                         <div class="col-auto">
                             <label for="platinum_ingot" class="header">Platinum Ingot</label>
                             <input type="text" id="platinum_ingot" name="platinum_ingot" class="form-control skillLevel" min="0" value="{{ cheapest_route['smelting']['platinum_ingot']['source'] }}" disabled>
-                            <input type="number" id="platinum_ingot" name="platinum_ingot" class="form-control skillLevel" min="0" value="{{ cheapest_route['smelting']['platinum_ingot']['price'] }}" disabled>
+                            <input type="text" id="platinum_ingot" name="platinum_ingot" class="form-control skillLevel" min="0" value="{{ cheapest_route['smelting']['platinum_ingot']['price'] }}" disabled>
                         </div>
                         <div class="col-auto">
                             <label for="orichalcum_ingot_platinum" class="header">Orichalcum Ingot (Platinum)</label>
                             <input type="text" id="orichalcum_ingot_platinum" name="orichalcum_ingot_platinum" class="form-control skillLevel" min="0" value="{{ cheapest_route['smelting']['orichalcum_ingot_platinum']['source'] }}" disabled>
-                            <input type="number" id="orichalcum_ingot_platinum" name="orichalcum_ingot_platinum" class="form-control skillLevel" min="0" value="{{ cheapest_route['smelting']['orichalcum_ingot_platinum']['price'] }}" disabled>
+                            <input type="text" id="orichalcum_ingot_platinum" name="orichalcum_ingot_platinum" class="form-control skillLevel" min="0" value="{{ cheapest_route['smelting']['orichalcum_ingot_platinum']['price'] }}" disabled>
                         </div>
                     </div>
                 </li>
-                
-                <br></br>
 
-                <li class="info">
+                <li id="listspace">
                     <h4>Stone Cutting</h4>
                     <div class="form-row justify-content-center">
                         <div class="col-auto">
                             <label for="stone_block" class="header">Stone Block</label> 
-                            <input type="text" id="stone_block" name="stone_block" class="form-control skillLevel" min="0" value="{{ cheapest_route['stone_cutting']['stone_block']['source'] }}" disabled>
-                            <input type="number" id="stone_block" name="stone_block" class="form-control skillLevel" min="0" value="{{ cheapest_route['stone_cutting']['stone_block']['price'] }}" disabled>
+                            <input type="text" id="stone_block" name="stone_block" class="form-control skillLevel" min="0" value="{{cheapest_route['stone_cutting']['stone_block']['source']}}" disabled>
+                            <input type="text" id="stone_block" name="stone_block" class="form-control skillLevel" min="0" value="{{cheapest_route['stone_cutting']['stone_block']['price']}}" disabled>
                         </div>
                         <div class="col-auto">
                             <label for="stone_brick" class="header">Stone Brick</label>
                             <input type="text" id="stone_brick" name="stone_brick" class="form-control skillLevel" min="0" value="{{ cheapest_route['stone_cutting']['stone_brick']['source'] }}" disabled>
-                            <input type="number" id="stone_brick" name="stone_brick" class="form-control skillLevel" min="0" value="{{ cheapest_route['stone_cutting']['stone_brick']['price'] }}" disabled>
+                            <input type="text" id="stone_brick" name="stone_brick" class="form-control skillLevel" min="0" value="{{ cheapest_route['stone_cutting']['stone_brick']['price'] }}" disabled>
                         </div>
                         <div class="col-auto">
                             <label for="lodestone_brick" class="header">Lodestone Brick</label>
                             <input type="text" id="lodestone_brick" name="lodestone_brick" class="form-control skillLevel" min="0" value="{{ cheapest_route['stone_cutting']['lodestone_brick']['source'] }}" disabled>
-                            <input type="number" id="lodestone_brick" name="lodestone_brick" class="form-control skillLevel" min="0" value="{{ cheapest_route['stone_cutting']['lodestone_brick']['price'] }}" disabled>
+                            <input type="text" id="lodestone_brick" name="lodestone_brick" class="form-control skillLevel" min="0" value="{{ cheapest_route['stone_cutting']['lodestone_brick']['price'] }}" disabled>
                         </div>
                         <div class="col-auto">
                             <label for="obsidian_voidstone" class="header">Obsidian Voidstone</label>
                             <input type="text" id="obsidian_voidstone" name="obsidian_voidstone" class="form-control skillLevel" min="0" value="{{ cheapest_route['stone_cutting']['obsidian_voidstone']['source'] }}" disabled>
-                            <input type="number" id="obsidian_voidstone" name="obsidian_voidstone" class="form-control skillLevel" min="0" value="{{ cheapest_route['stone_cutting']['obsidian_voidstone']['price'] }}" disabled>
+                            <input type="text" id="obsidian_voidstone" name="obsidian_voidstone" class="form-control skillLevel" min="0" value="{{ cheapest_route['stone_cutting']['obsidian_voidstone']['price'] }}" disabled>
                         </div>
                         <div class="col-auto">
                             <label for="runestone" class="header">Runestone</label>
                             <input type="text" id="runestone" name="runestone" class="form-control skillLevel" min="0" value="{{ cheapest_route['stone_cutting']['runestone']['source'] }}" disabled>
-                            <input type="number" id="runestone" name="runestone" class="form-control skillLevel" min="0" value="{{ cheapest_route['stone_cutting']['runestone']['price'] }}" disabled>
+                            <input type="text" id="runestone" name="runestone" class="form-control skillLevel" min="0" value="{{ cheapest_route['stone_cutting']['runestone']['price'] }}" disabled>
                         </div>
                         <div class="col-auto">
                             <label for="elemental_lodestone" class="header">Elemental Lodestone</label>
                             <input type="text" id="elemental_lodestone" name="elemental_lodestone" class="form-control skillLevel" min="0" value="{{ cheapest_route['stone_cutting']['elemental_lodestone']['source'] }}" disabled>
-                            <input type="number" id="elemental_lodestone" name="elemental_lodestone" class="form-control skillLevel" min="0" value="{{ cheapest_route['stone_cutting']['elemental_lodestone']['price'] }}" disabled>
+                            <input type="text" id="elemental_lodestone" name="elemental_lodestone" class="form-control skillLevel" min="0" value="{{ cheapest_route['stone_cutting']['elemental_lodestone']['price'] }}" disabled>
                         </div>
                     </div>
                 </li>
 
-                <br></br>
-
-                <li class="info">
+                <li id="listspace">
                     <h4>Weaving</h4>
                     <div class="form-row justify-content-center">
                         <div class="col-auto">
                             <label for="linen" class="header">Linen</label> 
                             <input type="text" id="linen" name="linen" class="form-control skillLevel" min="0" value="{{ cheapest_route['weaving']['linen']['source'] }}" disabled>
-                            <input type="number" id="linen" name="linen" class="form-control skillLevel" min="0" value="{{ cheapest_route['weaving']['linen']['price'] }}" disabled>
+                            <input type="text" id="linen" name="linen" class="form-control skillLevel" min="0" value="{{ cheapest_route['weaving']['linen']['price'] }}" disabled>
                         </div>
                         <div class="col-auto">
                             <label for="sateen" class="header">Sateen</label>
                             <input type="text" id="sateen" name="sateen" class="form-control skillLevel" min="0" value="{{ cheapest_route['weaving']['sateen']['source'] }}" disabled>
-                            <input type="number" id="sateen" name="sateen" class="form-control skillLevel" min="0" value="{{ cheapest_route['weaving']['sateen']['price'] }}" disabled>
+                            <input type="text" id="sateen" name="sateen" class="form-control skillLevel" min="0" value="{{ cheapest_route['weaving']['sateen']['price'] }}" disabled>
                         </div>
                         <div class="col-auto">
                             <label for="silk" class="header">Silk</label>
                             <input type="text" id="silk" name="silk" class="form-control skillLevel" min="0" value="{{ cheapest_route['weaving']['silk']['source'] }}" disabled>
-                            <input type="number" id="silk" name="silk" class="form-control skillLevel" min="0" value="{{ cheapest_route['weaving']['silk']['price'] }}" disabled>
+                            <input type="text" id="silk" name="silk" class="form-control skillLevel" min="0" value="{{ cheapest_route['weaving']['silk']['price'] }}" disabled>
                         </div>
                         <div class="col-auto">
                             <label for="infused_silk" class="header">Infused Silk</label>
                             <input type="text" id="infused_silk" name="infused_silk" class="form-control skillLevel" min="0" value="{{ cheapest_route['weaving']['infused_silk']['source'] }}" disabled>
-                            <input type="number" id="infused_silk" name="infused_silk" class="form-control skillLevel" min="0" value="{{ cheapest_route['weaving']['infused_silk']['price'] }}" disabled>
+                            <input type="text" id="infused_silk" name="infused_silk" class="form-control skillLevel" min="0" value="{{ cheapest_route['weaving']['infused_silk']['price'] }}" disabled>
                         </div>
                         <div class="col-auto">
                             <label for="phoenixweave" class="header">Phoenix Weave</label>
                             <input type="text" id="phoenixweave" name="phoenixweave" class="form-control skillLevel" min="0" value="{{ cheapest_route['weaving']['phoenixweave']['source'] }}" disabled>
-                            <input type="number" id="phoenixweave" name="phoenixweave" class="form-control skillLevel" min="0" value="{{ cheapest_route['weaving']['phoenixweave']['price'] }}" disabled>
+                            <input type="text" id="phoenixweave" name="phoenixweave" class="form-control skillLevel" min="0" value="{{ cheapest_route['weaving']['phoenixweave']['price'] }}" disabled>
                         </div>
                     </div>
                 </li>
 
-                <br></br>
-
-                <li class="info">
+                <li id="listspace">
                     <h4>Woodworking</h4>
                     <div class="form-row justify-content-center">
                         <div class="col-auto">
                             <label for="timber" class="header">Timber</label> 
                             <input type="text" id="timber" name="timber" class="form-control skillLevel" min="0" value="{{ cheapest_route['woodworking']['timber']['source'] }}" disabled>
-                            <input type="number" id="timber" name="timber" class="form-control skillLevel" min="0" value="{{ cheapest_route['woodworking']['timber']['price'] }}" disabled>
+                            <input type="text" id="timber" name="timber" class="form-control skillLevel" min="0" value="{{ cheapest_route['woodworking']['timber']['price'] }}" disabled>
                         </div>
                         <div class="col-auto">
                             <label for="lumber" class="header">Lumber</label>
                             <input type="text" id="lumber" name="lumber" class="form-control skillLevel" min="0" value="{{ cheapest_route['woodworking']['lumber']['source'] }}" disabled>
-                            <input type="number" id="lumber" name="lumber" class="form-control skillLevel" min="0" value="{{ cheapest_route['woodworking']['lumber']['price'] }}" disabled>
+                            <input type="text" id="lumber" name="lumber" class="form-control skillLevel" min="0" value="{{ cheapest_route['woodworking']['lumber']['price'] }}" disabled>
                         </div>
                         <div class="col-auto">
                             <label for="wyrdwood_planks" class="header">Wyrdwood Planks</label>
                             <input type="text" id="wyrdwood_planks" name="wyrdwood_planks" class="form-control skillLevel" min="0" value="{{ cheapest_route['woodworking']['wyrdwood_planks']['source'] }}" disabled>
-                            <input type="number" id="wyrdwood_planks" name="wyrdwood_planks" class="form-control skillLevel" min="0" value="{{ cheapest_route['woodworking']['wyrdwood_planks']['price'] }}" disabled>
+                            <input type="text" id="wyrdwood_planks" name="wyrdwood_planks" class="form-control skillLevel" min="0" value="{{ cheapest_route['woodworking']['wyrdwood_planks']['price'] }}" disabled>
                         </div>
                         <div class="col-auto">
                             <label for="ironwood_planks" class="header">Ironwood Planks</label>
                             <input type="text" id="ironwood_planks" name="ironwood_planks" class="form-control skillLevel" min="0" value="{{ cheapest_route['woodworking']['ironwood_planks']['source'] }}" disabled>
-                            <input type="number" id="ironwood_planks" name="ironwood_planks" class="form-control skillLevel" min="0" value="{{ cheapest_route['woodworking']['ironwood_planks']['price'] }}" disabled>
+                            <input type="text" id="ironwood_planks" name="ironwood_planks" class="form-control skillLevel" min="0" value="{{ cheapest_route['woodworking']['ironwood_planks']['price'] }}" disabled>
                         </div>
                         <div class="col-auto">
                             <label for="glittering_ebony" class="header">Glittering Ebony</label>
                             <input type="text" id="glittering_ebony" name="glittering_ebony" class="form-control skillLevel" min="0" value="{{ cheapest_route['woodworking']['glittering_ebony']['source'] }}" disabled>
-                            <input type="number" id="glittering_ebony" name="glittering_ebony" class="form-control skillLevel" min="0" value="{{ cheapest_route['woodworking']['glittering_ebony']['price'] }}" disabled>
+                            <input type="text" id="glittering_ebony" name="glittering_ebony" class="form-control skillLevel" min="0" value="{{ cheapest_route['woodworking']['glittering_ebony']['price'] }}" disabled>
                         </div>
                     </div>
                 </li>
-
-                <br></br>
-            </ul> 
-        </div>   
-
-    </div>
-</form>
-
-
+            </div>   
+        </div>
+    </form>
+    <br></br>
+    {% include "scripts.html" %}
 {% endblock %}

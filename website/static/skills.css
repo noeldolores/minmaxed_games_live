@@ -1,0 +1,43 @@
+h4 {
+  margin-top: 2rem;
+}
+
+h1 {
+  margin-top: 4rem;
+}
+
+#topHeader {
+  margin-top: 2rem;
+}
+
+input {
+  min-width: 135px;
+  
+}
+
+.skillLevel{
+  text-align: center; 
+}
+
+label {
+  margin-top: 4px;
+  margin-bottom: 0px;
+}
+
+.skillBoxes{
+  text-align: center;
+}
+
+.saveSkillLevels {
+  margin-top: 2rem;
+  min-width: 150px;
+}
+
+html {
+  overflow-y: scroll;
+}
+
+
+.alert {
+  margin-top: 4rem;
+}

@@ -1,43 +1,44 @@
 h2 {
     padding-top: 2rem;
-}
-
-h1 {
+  }
+  
+  h1 {
     margin-bottom: -2rem;
-}
-
-#topHeader {
+  }
+  
+  #topHeader {
     margin-top: 2rem;
-}
-
-input {
+  }
+  
+  input {
     min-width: 135px;
     
-}
-
-.skillLevel{
+  }
+  
+  .skillLevel{
     text-align: center; 
-}
-
-label {
+  }
+  
+  label {
     margin-top: 4px;
     margin-bottom: 0px;
-}
-
-#skillBoxes, #priceBoxes {
+  }
+  
+  #skillBoxes{
     text-align: center;
-}
-
-.saveSkillLevels {
+  }
+  
+  .saveSkillLevels {
     margin-top: 2rem;
     min-width: 150px;
-}
-
-html {
+  }
+  
+  html {
     overflow-y: scroll;
-}
-
-
-.alert {
+  }
+  
+  
+  .alert {
     margin-top: 4rem;
-}
+  }
+  

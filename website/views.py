@@ -172,8 +172,8 @@ def tradepost():
     return render_template('tradepost.html', price_list=session['price_list'])
 
 
-@views.route('/calculators', methods=['GET', 'POST'])
-def calculators():
+@views.route('/refined_material_cost', methods=['GET', 'POST'])
+def refined_material_cost():
     init_session()
     
     cheapest_route = {
@@ -184,7 +184,15 @@ def calculators():
         "woodworking": calcs.cheapest_route_woodworking(session['price_list'], session['skill_levels']['refining']['woodworking'], session['gear_sets']['woodworking'])
     }
 
-    return render_template('calculators.html', cheapest_route=cheapest_route)
+    return render_template('refined_material_cost.html', cheapest_route=cheapest_route)
+
+
+@views.route('/refined_material_ingredients', methods=['GET', 'POST'])
+def refined_material_ingredients():
+    init_session()
+    
+
+    return render_template('refined_material_ingredients.html')
 
 
 @views.route('/markets', methods=['GET', 'POST'])
@@ -192,3 +200,15 @@ def markets():
     init_session()
     
     return render_template('markets.html')
+
+
+@views.route('/dropdown_show', methods=['GET', 'POST'])
+def dropdown_show():
+    
+    return render_template('dropdown_show.html')
+
+
+@views.route('/dropdown_hide', methods=['GET', 'POST'])
+def dropdown_hide():
+    
+    return render_template('dropdown_hide.html')

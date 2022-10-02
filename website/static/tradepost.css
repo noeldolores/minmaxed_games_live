@@ -1,4 +1,22 @@
-li {
+h1 {
+  margin-top: 4rem;
+}
+
+.price{
+  text-align: center; 
+}
+
+label {
+  margin-top: 4px;
+  margin-bottom: 0px;
+}
+
+.savePrices {
+  margin-top: 2rem;
+  min-width: 150px;
+}  
+
+#listspace {
   margin-top: 10px;
   margin-bottom: -10px;
   width: 100%;
@@ -8,6 +26,18 @@ li {
 .collapse-main {
   margin-top: 0.25rem;
   width: 100%;
+}
+
+#htmx-swap {
+  text-align: center;
+}
+
+html {
+  overflow-y: scroll;
+}
+
+.alert {
+  margin-top: 4rem;
 }
 
 /* The switch - the box around the slider */
