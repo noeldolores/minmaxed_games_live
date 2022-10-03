@@ -243,10 +243,13 @@ def material(material):
     
     quantity = 1
     if "update_quantity" in request.args:
-        quantity = int(str(escape(request.args['update_quantity'])))
-
+        quantity = max(int(str(escape(request.args['update_quantity']))), 1)
+    
     material_data, component_data = calcs.ingredients_needed_to_refine(discipline, material_check, quantity, session['skill_levels']['refining'][discipline], session['gear_sets'][discipline])
-    return render_template('material.html', material=material,material_data=material_data, component_data=component_data)    
+    
+    material_display = material.replace("_"," ").lower().title()
+    
+    return render_template('material.html', quantity=quantity, material=material_display,material_data=material_data, component_data=component_data)    
 
 
 @views.route('/material_table/<material>', methods=['GET', 'POST'])
@@ -254,10 +257,12 @@ def material_table(material):
 
     material_check = material.replace(" ","_").lower()
     discipline = calcs.determine_discipline(material_check)
-    quantity = int(str(escape(request.args['update_quantity'])))
+    quantity = max(int(str(escape(request.args['update_quantity']))), 1)
     material_data, component_data = calcs.ingredients_needed_to_refine(discipline, material_check, quantity, session['skill_levels']['refining'][discipline], session['gear_sets'][discipline])
     
-    return render_template('material_table.html', material=material,material_data=material_data, component_data=component_data)
+    material_display = material.replace("_"," ").lower().title()
+    
+    return render_template('material_table.html', quantity=quantity, material=material_display,material_data=material_data, component_data=component_data)
 
 
 @views.route('/refined_material_ingredients', methods=['GET', 'POST'])

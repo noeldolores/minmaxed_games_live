@@ -1,55 +1,31 @@
 {% extends "base.html" %} 
 
 {% block head %}
-<title>{{material.upper()}} - NewWorld Tools</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='refined_material_ingredients.css') }}"/>
+<title>{{material}} - NewWorld Tools</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='material.css') }}"/>
 {% endblock %}
 
 {% block content%}
 {% include "navbar.html" %}
+<h1 align="center" class="text-black" id="topHeader">{{material}}</h1>
 
-<h1 align="center" class="text-black" id="topHeader">{{material.upper()}}</h1>
+<div class="container">
+    <div class="active list-unstyled components">
 
-<form>
-    <div class="container">
-        <div class="active list-unstyled components">
+        <form class="form-row justify-content-center" onkeydown="return event.key != 'Enter';">
+            <div class="col-auto p-2">
+                <input type="number" class="form-control" min="1" value="{{quantity}}" 
+                    hx-get="/material_table/{{material}}" 
+                    hx-trigger="keyup changed delay:500ms" 
+                    hx-target="#ingredients" name="update_quantity" >
+            </div>
+        </form>
 
-            <form class="form-row justify-content-center" method="GET" name="update_quantity">
-                <div class="col-auto p-2">
-                    <input type="number" class="form-control" min="0" value="1" hx-get="/material_table/{{material}}" 
-                        hx-trigger="keyup changed delay:500ms, search" 
-                        hx-target="#ingredients" name="update_quantity"
-                            >
-                </div>
-            </form>
-
-            <li>
-                <table class="table table-striped" id="ingredients">
-                    <thead>
-                        <tr>
-                            {% for key, value in material_data.items() %}
-                            <th scope="col">{{ key }}</th>
-                            {% endfor %}
-                            {% for key, value in component_data.items() %}
-                            <th scope="col">{{ key }}</th>
-                            {% endfor %}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            {% for key, value in material_data.items() %}
-                            <td scope="row">{{ value }}</td>
-                            {% endfor %}
-                            {% for key, value in component_data.items() %}
-                            <td scope="row">{{ value[0] }}</td>
-                            {% endfor %}
-                        </tr>
-                    </tbody>
-                </table>
-            </li>
-
-        </div>
+        <table class="table table-striped" id="ingredients">
+            {% include "material_table.html"%}
+        </table>
+        
     </div>
-</form>
+</div>
 {% include "scripts.html" %}
 {% endblock %}

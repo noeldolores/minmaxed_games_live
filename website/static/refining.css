@@ -30,3 +30,19 @@ input {
 h1 {
   margin-top: 4rem;
 }
+
+html {
+  overflow-y: scroll;
+}
+
+a:link {
+  color: rgb(0, 0, 0);
+  background-color: transparent;
+  text-decoration: none;
+}
+
+a:visited {
+  color: rgb(0, 0, 0);
+  background-color: transparent;
+  text-decoration: none;
+}

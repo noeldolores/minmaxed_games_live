@@ -31,3 +31,7 @@
 #htmx-swap {
   text-align: center;
 }
+
+html {
+  overflow-y: scroll;
+}

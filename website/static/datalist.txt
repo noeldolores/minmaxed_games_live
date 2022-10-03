@@ -11,6 +11,7 @@ Asmodeum
 Silver Ingot
 Gold Ingot
 Platinum Ingot
+Orichalcum Ingot Platinum
 Stone Block
 Stone Brick
 Lodestone Brick
