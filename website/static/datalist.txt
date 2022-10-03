@@ -1,0 +1,28 @@
+Coarse Leather
+Rugged Leather
+Layered Leather
+Infused Leather
+Runic Leather
+Iron Ingot
+Steel Ingot
+Starmetal Ingot
+Orichalcum Ingot
+Asmodeum
+Silver Ingot
+Gold Ingot
+Platinum Ingot
+Stone Block
+Stone Brick
+Lodestone Brick
+Obsidian Voidstone
+Runestone
+Linen
+Sateen
+Silk
+Infused Silk
+Phoenixweave
+Timber
+Lumber
+Wyrdwood Planks
+Ironwood Planks
+Glittering Ebony
