@@ -248,11 +248,11 @@ def material(material):
         else:
             quantity = max(int(str(escape(request.args['update_quantity']))), 1)
 
-    material_data, component_data = calcs.ingredients_needed_to_refine(discipline, material_check, quantity, session['skill_levels']['refining'][discipline], session['gear_sets'][discipline])
+    material_data, component_data, data = calcs.ingredients_needed_to_refine(discipline, material_check, quantity, session['skill_levels']['refining'][discipline], session['gear_sets'][discipline])
     
     material_display = material.replace("_"," ").lower().title()
     
-    return render_template('material.html', quantity=quantity, material=material_display,material_data=material_data, component_data=component_data)    
+    return render_template('material.html', data=data, quantity=quantity, material=material_display,material_data=material_data, component_data=component_data)    
 
 
 @views.route('/material_table/<material>', methods=['GET', 'POST'])
@@ -265,11 +265,11 @@ def material_table(material):
             quantity = 1
         else:
             quantity = max(int(str(escape(request.args['update_quantity']))), 1)
-    material_data, component_data = calcs.ingredients_needed_to_refine(discipline, material_check, quantity, session['skill_levels']['refining'][discipline], session['gear_sets'][discipline])
+    material_data, component_data, data = calcs.ingredients_needed_to_refine(discipline, material_check, quantity, session['skill_levels']['refining'][discipline], session['gear_sets'][discipline])
     
     material_display = material.replace("_"," ").lower().title()
     
-    return render_template('material_table.html', quantity=quantity, material=material_display,material_data=material_data, component_data=component_data)
+    return render_template('material_table.html', data=data, quantity=quantity, material=material_display,material_data=material_data, component_data=component_data)
 
 
 @views.route('/refined_material_ingredients', methods=['GET', 'POST'])

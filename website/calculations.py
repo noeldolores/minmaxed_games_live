@@ -909,12 +909,47 @@ def ingredients_needed_to_refine(discipline, material, quantity, skill_level, ge
                 if key != "tier" and key != "primary" and key != primary_ingredients[i]:
                     secondary_quant_needed_per_refine = refine_conversions[target_refine][key]
                     ingredients[key] = int(ingredients[primary_ingredients[i]] / quant_needed_per_refine * secondary_quant_needed_per_refine)
-                    
+                
+    test_refine = refining_component.copy()
+          
     refining_component.insert(0, int(sum(refining_component)))
     refining_component_dict = {
         refine_conversions['refining_component']: refining_component
     }
-    return ingredients, refining_component_dict
+    
+    # Need to clean up, can probably combine with the original script
+    final_refine = []
+    for i in range(len(test_refine)):
+        if i == 0:
+            final_refine.append(test_refine[i])
+        else:
+            final_refine.append(final_refine[i - 1] + test_refine[i])
+    final_refine.append(final_refine[-1])
+    final_refine.reverse()
+    
+    ingredients_list = []
+    primary_ingredients.reverse()
+    for i in primary_ingredients:
+        ingredients_list.append(ingredients.fromkeys(ingredients.keys(), "-"))
+    
+    
+    for i in range(len(primary_ingredients)):
+        ingredients_list[i][primary_ingredients[i]] = ingredients[primary_ingredients[i]]
+        ingredients_list[i][refine_conversions['refining_component']] = int(final_refine[i])
+        current_tier = i + 1
+        for key, value in ingredients.items():
+            if key not in primary_ingredients:
+                for k, v in refine_conversions.items():
+                    if type(v) is dict:
+                        if v['tier'] >= current_tier:
+                            for kk in v.keys():
+                                if kk != "primary" and kk != "tier" and kk not in primary_ingredients:
+                                    if kk in ingredients:
+                                        ingredients_list[i][kk] = ingredients[kk]
+                                        if kk == "charcoal":
+                                            ingredients_list[i][kk] = int(ingredients_list[i][refine_conversions['refining_component']] * 2)
+                                    
+    return ingredients, refining_component_dict, ingredients_list
     
     
 def determine_discipline(material):    

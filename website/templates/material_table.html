@@ -1,20 +1,19 @@
 <thead>
     <tr>
         {% for key, value in material_data.items() %}
-        <th scope="col">{{ key.title() | replace("_"," ")}}</th>
+        <th scope="col">{{ key.title() | replace("_"," ") }}</th>
         {% endfor %}
         {% for key, value in component_data.items() %}
         <th scope="col">{{ key.title() | replace("_"," ") }}</th>
         {% endfor %}
     </tr>
 </thead>
+{% for material in data %}
 <tbody>
     <tr id="values">
-        {% for key, value in material_data.items() %}
+        {% for value in material.values() %}
         <td scope="row">{{ value }}</td>
-        {% endfor %}
-        {% for key, value in component_data.items() %}
-        <td scope="row">{{ value[0] }}</td>
         {% endfor %}
     </tr>
 </tbody>
+{% endfor %}
