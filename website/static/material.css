@@ -40,3 +40,14 @@ input::-webkit-inner-spin-button {
 input[type=number] {
   -moz-appearance: textfield;
 }
+
+.htmx-settling tr.load td {
+  background: rgb(210, 240, 255);
+}
+tr td {
+  transition: all 0.75s;
+}
+
+#quant_field {
+  text-align: center;
+}

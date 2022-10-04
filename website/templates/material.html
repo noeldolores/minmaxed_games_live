@@ -12,16 +12,18 @@
 <div class="container">
     <div class="active list-unstyled components">
 
-        <form class="form-row justify-content-center" onkeydown="return event.key != 'Enter';">
+        <form class="form-row justify-content-center">
             <div class="col-auto p-2">
-                <input type="number" class="form-control" min="1" value="{{quantity}}" 
+                <input type="number" id="quant_field" class="form-control" min="1" value="{{quantity}}" name="update_quantity"
                     hx-get="/material_table/{{material}}" 
-                    hx-trigger="keyup changed delay:500ms" 
-                    hx-target="#ingredients" name="update_quantity" >
+                    hx-trigger="keyup[key=='Enter'] from:body, keyup[key!='Enter'] changed delay:500ms" 
+                    hx-target="#ingredients" 
+                    _="on keyup add .load to #values">
+                <input type="text" style="display: none;" />
             </div>
         </form>
 
-        <table class="table table-striped" id="ingredients">
+        <table class="table table-striped" id="ingredients"  _="on htmx:load call #quant_field.blur()">
             {% include "material_table.html"%}
         </table>
         
