@@ -6,7 +6,10 @@ def create_app():
   app.config.from_object("config.DevelopmentConfig")
   
   
-  from .views import views
-  app.register_blueprint(views, url_prefix='/')
+  from .views.newworld import newworld
+  from .views.index import index
   
+  app.register_blueprint(newworld, url_prefix='/newworld')
+  app.register_blueprint(index, url_prefix='/')
+
   return app

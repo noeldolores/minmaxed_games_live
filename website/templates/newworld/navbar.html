@@ -1,15 +1,15 @@
 <nav class="navbar navbar-expand-lg fixed-top navbar-custom shadow-sm p-2" id="navtest">
-    <a class="navbar-brand" href="/" style="color:white;">NewWorld Tools</a>
+    <a class="navbar-brand" href="/newworld" style="color:white;">NewWorld Tools</a>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>
     </button>
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-            <a class="nav-link text-white" href="/skills">Skill Levels</a>
-            <a class="nav-link text-white" href="/gearsets">Gear Sets</a>
-            <a class="nav-link text-white" href="/tradepost">Trade Post</a>
-            <a class="nav-link text-white" href="/refining">Refining</a>
+            <a class="nav-link text-white" href="/newworld/skills">Skill Levels</a>
+            <a class="nav-link text-white" href="/newworld/gearsets">Gear Sets</a>
+            <a class="nav-link text-white" href="/newworld/tradepost">Trade Post</a>
+            <a class="nav-link text-white" href="/newworld/refining">Refining</a>
             <!--<div id="dropdown-main">
             <li class="nav-item dropdown">
                 <a class="nav-link text-white" href="#" hx-get="/dropdown_show" hx-target="#dropdown-main">
@@ -21,7 +21,7 @@
         </ul>
         <form class="form-inline my-2 my-lg-0" method="GET" id="search">
             <input class="form-control mr-sm-2 datafield" type="text" name="search" aria-label="Search" list="materialList" autocomplete="off" onkeydown="return /[a-z]/i.test(event.key)"
-                hx-get="/datalist" 
+                hx-get="/newworld/datalist" 
                 hx-trigger="keyup changed delay:500ms, search" 
                 hx-target="#materialList" >
             

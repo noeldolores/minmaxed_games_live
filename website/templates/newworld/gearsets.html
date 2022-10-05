@@ -1,17 +1,17 @@
-{% extends "base.html" %} 
+{% extends "newworld/base.html" %} 
 
 {% block head %}
 <title>Gear Sets - NewWorld Tools</title>
-<link id="style" rel="stylesheet" href="{{ url_for('static', filename='css/gearsets.css') }}"/>
+<link id="style" rel="stylesheet" href="{{ url_for('static', filename='newworld/css/gearsets.css') }}"/>
 {% endblock %}
 
 {% block content%}
 <div id="htmx-swap">
-    {% include "navbar.html" %}
+    {% include "newworld/navbar.html" %}
     
     <h1 align="center" class="text-black gearsets-h1" id="topHeader">Gear Sets</h1>
     
-    <form hx-post="/gearsets" hx-target="#htmx-swap">
+    <form hx-post="/newworld/gearsets" hx-target="#htmx-swap">
         <div class="container">
             <div class="active list-unstyled components">
                 
@@ -228,6 +228,6 @@
         </div>
     </form>
 
-    {% include "scripts.html" %}
+    {% include "newworld/scripts.html" %}
 </div>
 {% endblock %}

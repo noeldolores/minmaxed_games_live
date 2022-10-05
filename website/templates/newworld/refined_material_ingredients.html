@@ -1,16 +1,16 @@
-{% extends "base.html" %} 
+{% extends "newworld/base.html" %} 
 
 {% block title %}Calculators - NewWorld Tools{% endblock %}
 
 {% block head %}
 
-<link rel="stylesheet" href="{{ url_for('static', filename='css/refined_material_ingredients.css') }}"/>
+<link rel="stylesheet" href="{{ url_for('static', filename='newworld/css/refined_material_ingredients.css') }}"/>
 
 {% endblock %}
 
 
 {% block content%}
-{% include "navbar.html" %}
+{% include "newworld/navbar.html" %}
 
 <h1 align="center" class="text-black" id="topHeader">Refining Ingredient Requirements</h1>
 
@@ -98,6 +98,6 @@
         </div>
     </div>
 </form>
-{% include "scripts.html" %}
+{% include "newworld/scripts.html" %}
 
 {% endblock %}

@@ -1,17 +1,17 @@
-{% extends "base.html" %} 
+{% extends "newworld/base.html" %} 
 
 {% block head %}
 <title>Skill Levels - NewWorld Tools</title>
-<link id="style" rel="stylesheet" href="{{ url_for('static', filename='css/skills.css') }}"/>
+<link id="style" rel="stylesheet" href="{{ url_for('static', filename='newworld/css/skills.css') }}"/>
 {% endblock %}
 
 {% block content %}
 <div id="htmx-swap" class="skillBoxes container">
-    {% include "navbar.html" %}
+    {% include "newworld/navbar.html" %}
 
     <h1 align="center" class="text-black">Skill Levels</h1>
 
-    <form hx-post="/skills" hx-target="#htmx-swap">
+    <form hx-post="/newworld/skills" hx-target="#htmx-swap">
         <h4 align="center" >Crafting</h4>
         <div class="form-row justify-content-center">
             <div class="col-auto">
@@ -97,6 +97,6 @@
         </div>
     </form>
 
-    {% include "scripts.html" %}
+    {% include "newworld/scripts.html" %}
 </div>
 {% endblock %}

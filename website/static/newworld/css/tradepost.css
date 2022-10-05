@@ -15,46 +15,52 @@ span.navbar-toggler-icon{
   color: rgb(0, 0, 0);
 }
 
-
-h2 {
-  padding-top: 2rem;
+html, body {
+  background-color: rgb(28, 28, 28);
 }
 
 h1 {
-  margin-bottom: -2rem;
+  margin-top: 4rem;
+  color: white;
 }
 
-#topHeader {
-  margin-top: 2rem;
-}
-
-input {
-  min-width: 135px;
-  
-}
-
-.skillLevel{
+.price{
   text-align: center; 
 }
 
 label {
   margin-top: 4px;
   margin-bottom: 0px;
+  color: white;
 }
 
-#skillBoxes{
-  text-align: center;
-}
-
-.saveSkillLevels {
+.savePrices {
   margin-top: 2rem;
   min-width: 150px;
+}  
+
+#listspace {
+  margin-top: 10px;
+  margin-bottom: -10px;
+  width: 100%;
+  text-align: center;
+}
+  
+.collapse-main {
+  margin-top: 0.25rem;
+  width: 100%;
+  color: white;
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+
+#htmx-swap {
+  text-align: center;
 }
 
 html {
   overflow-y: scroll;
 }
-
 
 .alert {
   margin-top: 4rem;
@@ -64,20 +70,30 @@ html {
   display:none !important;
 }
 
-html {
-  background-color: rgb(28, 28, 28);
+.nav-link {
+  text-align: left;
 }
 
 a:link {
   color: white;
   background-color: transparent;
   text-decoration: none;
-  font-weight: bold;
 }
 
 a:visited {
   color: white;
   background-color: transparent;
   text-decoration: none;
-  font-weight: bold;
 }
+
+.btn[aria-expanded="true"]{
+  background-color: rgb(10, 10, 10);
+}
+
+.btn-outline-secondary:hover {
+  background-color: rgb(20, 20, 20);
+}
+
+.btn-outline-secondary:not(:disabled):not(:disabled):active {
+  background-color: rgb(10, 10, 10);
+} 

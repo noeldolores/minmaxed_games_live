@@ -1,18 +1,18 @@
-{% extends "base.html" %} 
+{% extends "newworld/base.html" %} 
 
 {% block head %}
 <title>Trade Post Prices - NewWorld Tools</title>
-<link id="style" rel="stylesheet" href="{{ url_for('static', filename='css/tradepost.css') }}"/>
+<link id="style" rel="stylesheet" href="{{ url_for('static', filename='newworld/css/tradepost.css') }}"/>
 {% endblock %}
 
 {% block content%}
 
 <div id="htmx-swap">
-    {% include "navbar.html" %}
+    {% include "newworld/navbar.html" %}
 
     <h1 align="center" class="text-black" id="topHeader">Trade Post Prices</h1>
 
-    <form hx-post="/tradepost" hx-target="#htmx-swap">
+    <form hx-post="/newworld/tradepost" hx-target="#htmx-swap">
         <div class="container">
             <div class="active list-unstyled components">
 
@@ -39,7 +39,7 @@
         </div>
     </form>
 
-    {% include "scripts.html" %}
+    {% include "newworld/scripts.html" %}
     <br></br>
     <br></br>
 </div>

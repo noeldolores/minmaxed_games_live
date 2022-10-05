@@ -1,12 +1,12 @@
-{% extends "base.html" %} 
+{% extends "newworld/base.html" %} 
 
 {% block head %}
 <title>{{material}} - NewWorld Tools</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='css/material.css') }}"/>
+<link rel="stylesheet" href="{{ url_for('static', filename='newworld/css/material.css') }}"/>
 {% endblock %}
 
 {% block content%}
-{% include "navbar.html" %}
+{% include "newworld/navbar.html" %}
 <h1 align="center" class="text-black" id="topHeader">{{material}}</h1>
 
 {% include "scripts.html" %}

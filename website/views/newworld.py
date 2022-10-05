@@ -1,10 +1,9 @@
-from ast import parse
 from flask import Blueprint, request, flash, render_template, redirect, url_for, escape, session
-from . import player_data, calculations as calcs
+from .. import player_data, calculations as calcs
 import os
 
 
-views = Blueprint('views', __name__)
+newworld = Blueprint('newworld', __name__)
 
 
 def init_session():
@@ -24,19 +23,14 @@ def strip_leading_zeros(is_float, number):
         if is_float:
             return float(number.lstrip('0'))
         return int(number.lstrip('0'))
-    # if number != "0":
-    #     if is_float:
-    #         return "{:.2f}".format(float(number))
-    #     else:
-    #         return int("{:.0f}".format(float(number)))
     return 0
 
 
 def validate_search(search):
     basedir = os.path.abspath(os.path.dirname(__file__))
-    primary_ingredients = os.path.join(basedir, 'static/txt/primary_ingredients.txt')
-    secondary_ingredients = os.path.join(basedir, 'static/txt/secondary_ingredients.txt')
-    components = os.path.join(basedir, 'static/txt/components.txt')
+    primary_ingredients = os.path.join(basedir, '../static/newworld/txt/primary_ingredients.txt')
+    secondary_ingredients = os.path.join(basedir, '../static/newworld/txt/secondary_ingredients.txt')
+    components = os.path.join(basedir, '../static/newworld/txt/components.txt')
     primary_list = []
     secondary_list = []
     components_list = []
@@ -71,9 +65,9 @@ def search_function():
 
 def determine_material_category(material):
     basedir = os.path.abspath(os.path.dirname(__file__))
-    primary_ingredients = os.path.join(basedir, 'static/txt/primary_ingredients.txt')
-    secondary_ingredients = os.path.join(basedir, 'static/txt/secondary_ingredients.txt')
-    components = os.path.join(basedir, 'static/txt/components.txt')
+    primary_ingredients = os.path.join(basedir, '../static/newworld/txt/primary_ingredients.txt')
+    secondary_ingredients = os.path.join(basedir, '../static/newworld/txt/secondary_ingredients.txt')
+    components = os.path.join(basedir, '../static/newworld/txt/components.txt')
 
     primary_list = []
     with open(primary_ingredients) as file:
@@ -99,22 +93,22 @@ def determine_material_category(material):
     return None
 
 
-@views.route('/', methods=['GET', 'POST'])
+@newworld.route('/', methods=['GET', 'POST'])
 def home():
     init_session()
     search = search_function()
     if search:
-        return redirect(url_for("views.material", material=search))
+        return redirect(url_for("newworld.material", material=search))
 
-    return render_template('base.html')
+    return render_template('newworld/base.html')
 
 
-@views.route('/skills', methods=['GET', 'POST'])
+@newworld.route('/skills', methods=['GET', 'POST'])
 def skills():
     init_session()
     search = search_function()
     if search:
-        return redirect(url_for('views.material', material=search))
+        return redirect(url_for('newworld.material', material=search))
     
     if request.method == 'POST':
         if "save" in request.form:
@@ -144,15 +138,15 @@ def skills():
                 }  
             }
     
-    return render_template('skills.html', skill_levels=session['skill_levels'])
+    return render_template('newworld/skills.html', skill_levels=session['skill_levels'])
 
 
-@views.route('/gearsets', methods=['GET', 'POST'])
+@newworld.route('/gearsets', methods=['GET', 'POST'])
 def gearsets():
     init_session()
     search = search_function()
     if search:
-        return redirect(url_for('views.material', material=search))
+        return redirect(url_for('newworld.material', material=search))
         
     
     if request.method == 'POST':
@@ -164,15 +158,15 @@ def gearsets():
                     else:
                         session['gear_sets'][i][j] = False    
 
-    return render_template('gearsets.html', gear_sets=session['gear_sets'])
+    return render_template('newworld/gearsets.html', gear_sets=session['gear_sets'])
 
 
-@views.route('/tradepost', methods=['GET', 'POST'])
+@newworld.route('/tradepost', methods=['GET', 'POST'])
 def tradepost():
     init_session()
     search = search_function()
     if search:
-        return redirect(url_for('views.material', material=search))
+        return redirect(url_for('newworld.material', material=search))
     
     template_order = player_data.trade_post_order()
     
@@ -260,15 +254,15 @@ def tradepost():
                 } 
             }
     
-    return render_template('tradepost.html', price_list=session['price_list'], template_order=template_order)
+    return render_template('newworld/tradepost.html', price_list=session['price_list'], template_order=template_order)
 
 
-@views.route('/refining', methods=['GET', 'POST'])
+@newworld.route('/refining', methods=['GET', 'POST'])
 def refining():
     init_session()
     search = search_function()
     if search:
-        return redirect(url_for('views.material', material=search))
+        return redirect(url_for('newworld.material', material=search))
     
     template_order = player_data.refining_order()
     
@@ -280,15 +274,15 @@ def refining():
         "woodworking": calcs.cheapest_route_woodworking(session['price_list'], session['skill_levels']['refining']['woodworking'], session['gear_sets']['woodworking'])
     }
 
-    return render_template('refining.html', cheapest_route=cheapest_route, template_order=template_order)
+    return render_template('newworld/refining.html', cheapest_route=cheapest_route, template_order=template_order)
 
 
-@views.route('/material/<material>', methods=['GET', 'POST'])
+@newworld.route('/material/<material>', methods=['GET', 'POST'])
 def material(material):
     init_session()
     search = search_function()
     if search:
-        return redirect(url_for('views.material', material=search))
+        return redirect(url_for('newworld.material', material=search))
     
     category = determine_material_category(material.replace("_"," "))
     material_display = material.replace("_"," ").lower().title()
@@ -304,16 +298,16 @@ def material(material):
 
         material_data, component_data, data = calcs.ingredients_needed_to_refine(discipline, material_check, quantity, session['skill_levels']['refining'][discipline], session['gear_sets'][discipline])
     
-        return render_template('primary_material.html', data=data, quantity=quantity, material=material_display,material_data=material_data, component_data=component_data) 
+        return render_template('newworld/primary_material.html', data=data, quantity=quantity, material=material_display,material_data=material_data, component_data=component_data) 
      
     if category == "secondary":
-        return render_template('secondary_material.html', material=material_display)
+        return render_template('newworld/secondary_material.html', material=material_display)
     
     if category == "component":  
-        return render_template('component_material.html', material=material_display)
+        return render_template('newworld/component_material.html', material=material_display)
 
 
-@views.route('/primary_material_table/<material>', methods=['GET', 'POST'])
+@newworld.route('/primary_material_table/<material>', methods=['GET', 'POST'])
 def material_table(material):
 
     material_check = material.replace(" ","_").lower()
@@ -327,45 +321,45 @@ def material_table(material):
     
     material_display = material.replace("_"," ").lower().title()
     
-    return render_template('primary_material_table.html', data=data, quantity=quantity, material=material_display,material_data=material_data, component_data=component_data)
+    return render_template('newworld/primary_material_table.html', data=data, quantity=quantity, material=material_display,material_data=material_data, component_data=component_data)
 
 
 
 
-@views.route('/refined_material_ingredients', methods=['GET', 'POST'])
+@newworld.route('/refined_material_ingredients', methods=['GET', 'POST'])
 def refined_material_ingredients():
     init_session()
     search = search_function()
     if search:
-        return redirect(url_for('views.material', material=search))
+        return redirect(url_for('newworld.material', material=search))
 
-    return render_template('refined_material_ingredients.html')
+    return render_template('newworld/refined_material_ingredients.html')
 
 
-@views.route('/markets', methods=['GET', 'POST'])
+@newworld.route('/markets', methods=['GET', 'POST'])
 def markets():
     init_session()
     search = search_function()
     if search:
-        return redirect(url_for('views.material', material=search))
+        return redirect(url_for('newworld.material', material=search))
     
-    return render_template('markets.html')
+    return render_template('newworld/markets.html')
 
 
-@views.route('/datalist', methods=['GET', 'POST'])
+@newworld.route('/datalist', methods=['GET', 'POST'])
 def datalist():
     basedir = os.path.abspath(os.path.dirname(__file__))
-    primary_file = os.path.join(basedir, 'static/txt/primary_ingredients.txt')
+    primary_file = os.path.join(basedir, '../static/newworld/txt/primary_ingredients.txt')
     with open(primary_file) as file:
         lines = file.readlines()
         datalist = [line.rstrip().lower() for line in lines]
     
-    secondary_file = os.path.join(basedir, 'static/txt/secondary_ingredients.txt')
+    secondary_file = os.path.join(basedir, '../static/newworld/txt/secondary_ingredients.txt')
     with open(secondary_file) as file_2:
         lines = file_2.readlines()
         datalist.extend([line.rstrip().lower() for line in lines])
         
-    components_file = os.path.join(basedir, 'static/txt/components.txt')
+    components_file = os.path.join(basedir, '../static/newworld/txt/components.txt')
     with open(components_file) as file_3:
         lines = file_3.readlines()
         datalist.extend([line.rstrip().lower() for line in lines])
@@ -384,17 +378,17 @@ def datalist():
 
                 parsed_list.sort()
                 return_length = min(5, len(parsed_list))
-                
-    return render_template('datalist.html', datalist=parsed_list[0:return_length])
+
+    return render_template('newworld/datalist.html', datalist=parsed_list[0:return_length])
 
 
-@views.route('/dropdown_show', methods=['GET', 'POST'])
+@newworld.route('/dropdown_show', methods=['GET', 'POST'])
 def dropdown_show():
     
-    return render_template('dropdown_show.html')
+    return render_template('newworld/dropdown_show.html')
 
 
-@views.route('/dropdown_hide', methods=['GET', 'POST'])
+@newworld.route('/dropdown_hide', methods=['GET', 'POST'])
 def dropdown_hide():
     
-    return render_template('dropdown_hide.html')
+    return render_template('newworld/dropdown_hide.html')

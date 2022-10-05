@@ -8,7 +8,7 @@
     
     {% block head %}
     <title>NewWorld Tools</title>
-    <link  id="style" rel="stylesheet" href="{{ url_for('static', filename='css/base.css') }}"/>
+    <link  id="style" rel="stylesheet" href="{{ url_for('static', filename='newworld/css/base.css') }}"/>
     {% endblock %}
   </head>
 
@@ -39,8 +39,8 @@
     
     {% block content%}
     <div id="htmx-swap">
-    {% include "navbar.html" %}
-    {% include "scripts.html" %}
+    {% include "newworld/navbar.html" %}
+    {% include "newworld/scripts.html" %}
     
     </div>
     {% endblock %}

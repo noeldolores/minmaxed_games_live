@@ -1,12 +1,12 @@
-{% extends "base.html" %} 
+{% extends "newworld/base.html" %} 
 
 {% block head %}
 <title>Refining - NewWorld Tools</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='css/refining.css') }}"/>
+<link rel="stylesheet" href="{{ url_for('static', filename='newworld/css/refining.css') }}"/>
 {% endblock %}
 
 {% block content%}
-{% include "navbar.html" %}
+{% include "newworld/navbar.html" %}
 
 <h1 align="center" class="text-black pb-4" id="topHeader">Refining</h1>
 
@@ -32,11 +32,11 @@
                         {% for material in template_order[i][1:] %}
                             <tr>
                             {% if material == "elemental_lodestone"%}
-                                <td scope="row"><a href="/material/{{ cheapest_route[template_order[i][0]][material]['source'].lower() | replace(" ","_") }}">{{material.title() | replace("_"," ")}}</a></td>
+                                <td scope="row"><a href="/newworld/material/{{ cheapest_route[template_order[i][0]][material]['source'].lower() | replace(" ","_") }}">{{material.title() | replace("_"," ")}}</a></td>
                             {% else %}
-                                <td scope="row"><a href="/material/{{material | replace(" ","_")}}">{{material.title() | replace("_"," ")}}</a></td>
+                                <td scope="row"><a href="/newworld/material/{{material | replace(" ","_")}}">{{material.title() | replace("_"," ")}}</a></td>
                             {% endif %}
-                                <td><a href="/material/{{ cheapest_route[template_order[i][0]][material]['source'].lower() | replace(" ","_") }}">{{ cheapest_route[template_order[i][0]][material]['source'] }}</td>
+                                <td><a href="/newworld/material/{{ cheapest_route[template_order[i][0]][material]['source'].lower() | replace(" ","_") }}">{{ cheapest_route[template_order[i][0]][material]['source'] }}</td>
                                 <td>{{ '%.2f'|format(cheapest_route[template_order[i][0]][material]['price'] | float) }}</td>
                                 <td>{{ '%.2f'|format(cheapest_route[template_order[i][0]][material]['tp_flip'] | float) }}</td>
                                 <td>{{ cheapest_route[template_order[i][0]][material]['tp_margin'] }}</td>
@@ -53,5 +53,5 @@
 </form>
 
 <br></br>
-{% include "scripts.html" %}
+{% include "newworld/scripts.html" %}
 {% endblock %}
