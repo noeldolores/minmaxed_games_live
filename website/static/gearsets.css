@@ -35,3 +35,7 @@
 html {
   overflow-y: scroll;
 }
+
+.datafield::-webkit-calendar-picker-indicator {
+  display:none !important;
+}

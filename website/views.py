@@ -24,18 +24,36 @@ def strip_leading_zeros(is_float, number):
         if is_float:
             return float(number.lstrip('0'))
         return int(number.lstrip('0'))
+    # if number != "0":
+    #     if is_float:
+    #         return "{:.2f}".format(float(number))
+    #     else:
+    #         return int("{:.0f}".format(float(number)))
     return 0
 
 
 def validate_search(search):
     basedir = os.path.abspath(os.path.dirname(__file__))
-    data_file = os.path.join(basedir, 'static/datalist.txt')
-    datalist = []
-    with open(data_file) as file:
-        lines = file.readlines()
-        datalist = [line.rstrip().lower() for line in lines]
+    primary_ingredients = os.path.join(basedir, 'static/txt/primary_ingredients.txt')
+    secondary_ingredients = os.path.join(basedir, 'static/txt/secondary_ingredients.txt')
+    components = os.path.join(basedir, 'static/txt/components.txt')
+    primary_list = []
+    secondary_list = []
+    components_list = []
     
-    if search in datalist:
+    with open(primary_ingredients) as file:
+        lines = file.readlines()
+        primary_list = [line.rstrip().lower() for line in lines]
+    
+    with open(secondary_ingredients) as file_2:
+        lines = file_2.readlines()
+        secondary_list = [line.rstrip().lower() for line in lines]
+        
+    with open(components) as file_3:
+        lines = file_3.readlines()
+        components_list = [line.rstrip().lower() for line in lines]
+    
+    if search in primary_list or search in secondary_list or search in components_list:
         return search
     return None
 
@@ -44,19 +62,49 @@ def search_function():
     search = None
     if request.method == "GET":
         if 'search' in request.args:
-            search = validate_search(str(escape(request.args['search'])))
-            if search is not None:
-                return search     
-    return False
+            search = str(escape(request.args['search'])).strip().lower()
+            search_result = validate_search(search)
+            if search_result is not None:
+                return search_result.replace(" ","_")
+    return None
                 
-            
+
+def determine_material_category(material):
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    primary_ingredients = os.path.join(basedir, 'static/txt/primary_ingredients.txt')
+    secondary_ingredients = os.path.join(basedir, 'static/txt/secondary_ingredients.txt')
+    components = os.path.join(basedir, 'static/txt/components.txt')
+
+    primary_list = []
+    with open(primary_ingredients) as file:
+        lines = file.readlines()
+        primary_list = [line.rstrip().lower() for line in lines]
+    
+    secondary_list = []
+    with open(secondary_ingredients) as file_2:
+        lines = file_2.readlines()
+        secondary_list = [line.rstrip().lower() for line in lines]
+    
+    components_list = []
+    with open(components) as file_3:
+        lines = file_3.readlines()
+        components_list = [line.rstrip().lower() for line in lines]
+    
+    if material in primary_list:
+        return "primary"
+    elif material in secondary_list:
+        return "secondary"
+    elif material in components_list:
+        return "component"
+    return None
+
 
 @views.route('/', methods=['GET', 'POST'])
 def home():
     init_session()
     search = search_function()
     if search:
-        return redirect(url_for('views.material', material=search))
+        return redirect(url_for("views.material", material=search))
 
     return render_template('base.html')
 
@@ -125,6 +173,8 @@ def tradepost():
     search = search_function()
     if search:
         return redirect(url_for('views.material', material=search))
+    
+    template_order = player_data.trade_post_order()
     
     if request.method == 'POST':
         if "save" in request.form:
@@ -210,7 +260,7 @@ def tradepost():
                 } 
             }
     
-    return render_template('tradepost.html', price_list=session['price_list'])
+    return render_template('tradepost.html', price_list=session['price_list'], template_order=template_order)
 
 
 @views.route('/refining', methods=['GET', 'POST'])
@@ -220,6 +270,8 @@ def refining():
     if search:
         return redirect(url_for('views.material', material=search))
     
+    template_order = player_data.refining_order()
+    
     cheapest_route = {
         "leatherworking": calcs.cheapest_route_leatherworking(session['price_list'], session['skill_levels']['refining']['leatherworking'], session['gear_sets']['leatherworking']),
         "smelting": calcs.cheapest_route_smelting(session['price_list'], session['skill_levels']['refining']['smelting'], session['gear_sets']['smelting']),
@@ -228,7 +280,7 @@ def refining():
         "woodworking": calcs.cheapest_route_woodworking(session['price_list'], session['skill_levels']['refining']['woodworking'], session['gear_sets']['woodworking'])
     }
 
-    return render_template('refining.html', cheapest_route=cheapest_route)
+    return render_template('refining.html', cheapest_route=cheapest_route, template_order=template_order)
 
 
 @views.route('/material/<material>', methods=['GET', 'POST'])
@@ -238,21 +290,27 @@ def material(material):
     if search:
         return redirect(url_for('views.material', material=search))
     
-    material_check = material.replace(" ","_").lower()
-    discipline = calcs.determine_discipline(material_check)
-    
-    quantity = 1
-    if "update_quantity" in request.args:
-        if request.args['update_quantity'] == "":
-            quantity = 1
-        else:
-            quantity = max(int(str(escape(request.args['update_quantity']))), 1)
-
-    material_data, component_data, data = calcs.ingredients_needed_to_refine(discipline, material_check, quantity, session['skill_levels']['refining'][discipline], session['gear_sets'][discipline])
-    
+    category = determine_material_category(material.replace("_"," "))
     material_display = material.replace("_"," ").lower().title()
+    quantity = 1
     
-    return render_template('material.html', data=data, quantity=quantity, material=material_display,material_data=material_data, component_data=component_data)    
+    if category == "primary":
+        material_check = material.replace(" ","_").lower()
+        discipline = calcs.determine_discipline(material_check)
+        
+        if "update_quantity" in request.args:
+            if request.args['update_quantity'] != "":
+                quantity = max(int(str(escape(request.args['update_quantity']))), 1)
+
+        material_data, component_data, data = calcs.ingredients_needed_to_refine(discipline, material_check, quantity, session['skill_levels']['refining'][discipline], session['gear_sets'][discipline])
+    
+        return render_template('primary_material.html', data=data, quantity=quantity, material=material_display,material_data=material_data, component_data=component_data) 
+     
+    if category == "secondary":
+        return render_template('secondary_material.html', material=material_display)
+    
+    if category == "component":  
+        return render_template('component_material.html', material=material_display)
 
 
 @views.route('/material_table/<material>', methods=['GET', 'POST'])
@@ -270,6 +328,8 @@ def material_table(material):
     material_display = material.replace("_"," ").lower().title()
     
     return render_template('material_table.html', data=data, quantity=quantity, material=material_display,material_data=material_data, component_data=component_data)
+
+
 
 
 @views.route('/refined_material_ingredients', methods=['GET', 'POST'])
@@ -295,20 +355,37 @@ def markets():
 @views.route('/datalist', methods=['GET', 'POST'])
 def datalist():
     basedir = os.path.abspath(os.path.dirname(__file__))
-    data_file = os.path.join(basedir, 'static/datalist.txt')
-    with open(data_file) as file:
+    primary_file = os.path.join(basedir, 'static/txt/primary_ingredients.txt')
+    with open(primary_file) as file:
         lines = file.readlines()
         datalist = [line.rstrip().lower() for line in lines]
     
+    secondary_file = os.path.join(basedir, 'static/txt/secondary_ingredients.txt')
+    with open(secondary_file) as file_2:
+        lines = file_2.readlines()
+        datalist.extend([line.rstrip().lower() for line in lines])
+        
+    components_file = os.path.join(basedir, 'static/txt/components.txt')
+    with open(components_file) as file_3:
+        lines = file_3.readlines()
+        datalist.extend([line.rstrip().lower() for line in lines])
+        
     parsed_list=[]
+    return_length = 0
     if request.method == "GET":
         if 'search' in request.args:
             if len(request.args['search']) > 0:
                 datalist_search = request.args['search'].lower()
                 
-                parsed_list = [line for line in datalist if datalist_search in line]
+                parsed_list = [line.title() for line in datalist if datalist_search == line[0:len(datalist_search)]]
                 
-    return render_template('datalist.html', datalist=parsed_list)
+                if len(parsed_list) == 0:
+                    parsed_list = [line.title() for line in datalist if datalist_search in line]
+
+                parsed_list.sort()
+                return_length = min(5, len(parsed_list))
+                
+    return render_template('datalist.html', datalist=parsed_list[0:return_length])
 
 
 @views.route('/dropdown_show', methods=['GET', 'POST'])

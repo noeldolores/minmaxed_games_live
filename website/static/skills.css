@@ -41,3 +41,7 @@ html {
 .alert {
   margin-top: 4rem;
 }
+
+.datafield::-webkit-calendar-picker-indicator {
+  display:none !important;
+}

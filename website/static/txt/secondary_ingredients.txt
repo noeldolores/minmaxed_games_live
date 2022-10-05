@@ -1,0 +1,34 @@
+Rawhide
+Thick Hide
+Iron Hide
+Smolderhide
+Scarhide
+Iron Ore
+Charcoal
+Starmetal Ore
+Orichalcum Ore
+Tolvium
+Cinnabar
+Silver Ore
+Gold Ore
+Platinum Ore
+Stone
+Lodestone
+Molten Lodestone
+Loamy Lodestone
+Shocking Lodestone
+Crystalline Lodestone
+Freezing Lodestone
+Putrid Lodestone
+Gleaming Lodestone
+Fibers
+Silk Threads
+Wirefiber
+Scalecloth
+Blisterweave
+Green Wood
+Aged Wood
+Wyrdwood
+Ironwood
+Wildwood
+Barbvine

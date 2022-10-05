@@ -878,7 +878,10 @@ def ingredients_needed_to_refine(discipline, material, quantity, skill_level, ge
                                 craft_bonus = total_craft_bonus(skill_level, gear_set, discipline)[target_refine]
                                 ingredients[primary_ingredients[-1]] = quant_needed_per_refine * math.ceil(target_refine_quant * quant_needed_per_refine / craft_bonus / quant_needed_per_refine)
                                 
-                                refining_component.append(ingredients[primary_ingredients[-1]] / quant_needed_per_refine)
+                                if tier != 1:
+                                    refining_component.append(ingredients[primary_ingredients[-1]] / quant_needed_per_refine)
+                                else:
+                                    refining_component.append(0)
                         else:
                             ingredients[value] = 0
     
@@ -903,13 +906,13 @@ def ingredients_needed_to_refine(discipline, material, quantity, skill_level, ge
             
             if i != len(primary_ingredients) - 1:
                 refining_component.append(ingredients[primary_ingredients[i]] / quant_needed_per_refine)
-            
+                
             # Assign the next tier of the secondary ingredient
             for key, value in refine_conversions[target_refine].items():
                 if key != "tier" and key != "primary" and key != primary_ingredients[i]:
                     secondary_quant_needed_per_refine = refine_conversions[target_refine][key]
                     ingredients[key] = int(ingredients[primary_ingredients[i]] / quant_needed_per_refine * secondary_quant_needed_per_refine)
-                
+                        
     test_refine = refining_component.copy()
           
     refining_component.insert(0, int(sum(refining_component)))
@@ -926,6 +929,8 @@ def ingredients_needed_to_refine(discipline, material, quantity, skill_level, ge
             final_refine.append(final_refine[i - 1] + test_refine[i])
     final_refine.append(final_refine[-1])
     final_refine.reverse()
+    
+    
     
     ingredients_list = []
     primary_ingredients.reverse()

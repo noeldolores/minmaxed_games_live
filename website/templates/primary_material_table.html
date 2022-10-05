@@ -1,0 +1,16 @@
+<thead>
+    <tr>
+        {% for key in data[0].keys() %}
+        <th scope="col"><a href="/material/{{key}}">{{ key.title() | replace("_"," ") }}</th>
+        {% endfor %}
+    </tr>
+</thead>
+{% for material in data %}
+<tbody>
+    <tr id="values">
+        {% for value in material.values() %}
+        <td scope="row">{{ value }}</td>
+        {% endfor %}
+    </tr>
+</tbody>
+{% endfor %}

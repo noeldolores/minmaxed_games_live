@@ -6,323 +6,48 @@
 {% endblock %}
 
 {% block content%}
-    {% include "navbar.html" %}
+{% include "navbar.html" %}
 
-    <h1 align="center" class="text-black pb-4" id="topHeader">Refining</h1>
+<h1 align="center" class="text-black pb-4" id="topHeader">Refining</h1>
 
-    <form>
-        <div class="container">
-            <div class="active list-unstyled components">
-                
-                <div href="#homeSubmenu1" data-toggle="collapse" aria-expanded="false" class="btn btn-outline-dark dropdown-toggle collapse-main">Leatherworking</div>
-                <ul class="collapse list-unstyled collapseall" id="homeSubmenu1">
-                    <li>
-                        <table class="table table-striped">
-                            <thead>
-                            <tr>
-                                <th scope="col">Target</th>
-                                <th scope="col">Buy</th>
-                                <th scope="col">Avg. Cost</th>
-                                <th scope="col">TP Flip</th>
-                                <th scope="col">TP Margin %</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td scope="row"><a href="/material/coarse_leather">Coarse Leather</a></td>
-                                <td>{{ cheapest_route['leatherworking']['coarse_leather']['source'] }}</td>
-                                <td>{{ cheapest_route['leatherworking']['coarse_leather']['price'] }}</td>
-                                <td>{{ cheapest_route['leatherworking']['coarse_leather']['tp_flip'] }}</td>
-                                <td>{{ cheapest_route['leatherworking']['coarse_leather']['tp_margin'] }}</td>
-                            </tr>
-                            <tr>
-                                <td scope="row"><a href="/material/rugged_leather">Rugged Leather</td>
-                                <td>{{ cheapest_route['leatherworking']['rugged_leather']['source'] }}</td>
-                                <td>{{ cheapest_route['leatherworking']['rugged_leather']['price'] }}</td>
-                                <td>{{ cheapest_route['leatherworking']['rugged_leather']['tp_flip'] }}</td>
-                                <td>{{ cheapest_route['leatherworking']['rugged_leather']['tp_margin'] }}</td>
-                            </tr>
-                            <tr>
-                                <td scope="row"><a href="/material/layered_leather">Layered Leather</td>
-                                <td>{{ cheapest_route['leatherworking']['layered_leather']['source'] }}</td>
-                                <td>{{ cheapest_route['leatherworking']['layered_leather']['price'] }}</td>
-                                <td>{{ cheapest_route['leatherworking']['layered_leather']['tp_flip'] }}</td>
-                                <td>{{ cheapest_route['leatherworking']['layered_leather']['tp_margin'] }}</td>
-                            </tr>
-                            <tr>
-                                <td scope="row"><a href="/material/infused_leather">Infused Leather</td>
-                                <td>{{ cheapest_route['leatherworking']['infused_leather']['source'] }}</td>
-                                <td>{{ cheapest_route['leatherworking']['infused_leather']['price'] }}</td>
-                                <td>{{ cheapest_route['leatherworking']['infused_leather']['tp_flip'] }}</td>
-                                <td>{{ cheapest_route['leatherworking']['infused_leather']['tp_margin'] }}</td>
-                            </tr>
-                            <tr>
-                                <td scope="row"><a href="/material/runic_leather">Runic Leather</td>
-                                <td>{{ cheapest_route['leatherworking']['runic_leather']['source'] }}</td>
-                                <td>{{ cheapest_route['leatherworking']['runic_leather']['price'] }}</td>
-                                <td>{{ cheapest_route['leatherworking']['runic_leather']['tp_flip'] }}</td>
-                                <td>{{ cheapest_route['leatherworking']['runic_leather']['tp_margin'] }}</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </li>
-                </ul> 
-                
-                <div href="#homeSubmenu2" data-toggle="collapse" aria-expanded="false" class="btn btn-outline-dark dropdown-toggle collapse-main">Smelting</div>
-                <ul class="collapse list-unstyled collapseall" id="homeSubmenu2">
-                    <li>
-                        <table class="table table-striped">
-                            <thead>
-                            <tr>
-                                <th scope="col">Target</th>
-                                <th scope="col">Buy</th>
-                                <th scope="col">Avg. Cost</th>
-                                <th scope="col">TP Flip</th>
-                                <th scope="col">TP Margin %</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td scope="row"><a href="/material/iron_ingot">Iron Ingot</td>
-                                <td>{{ cheapest_route['smelting']['iron_ingot']['source'] }}</td>
-                                <td>{{ cheapest_route['smelting']['iron_ingot']['price'] }}</td>
-                                <td>{{ cheapest_route['smelting']['iron_ingot']['tp_flip'] }}</td>
-                                <td>{{ cheapest_route['smelting']['iron_ingot']['tp_margin'] }}</td>
-                            </tr>
-                            <tr>
-                                <td scope="row"><a href="/material/steel_ingot">Steel Ingot</td>
-                                <td>{{ cheapest_route['smelting']['steel_ingot']['source'] }}</td>
-                                <td>{{ cheapest_route['smelting']['steel_ingot']['price'] }}</td>
-                                <td>{{ cheapest_route['smelting']['steel_ingot']['tp_flip'] }}</td>
-                                <td>{{ cheapest_route['smelting']['steel_ingot']['tp_margin'] }}</td>
-                            </tr>
-                            <tr>
-                                <td scope="row"><a href="/material/starmetal_ingot">Starmetal Ingot</td>
-                                <td>{{ cheapest_route['smelting']['starmetal_ingot']['source'] }}</td>
-                                <td>{{ cheapest_route['smelting']['starmetal_ingot']['price'] }}</td>
-                                <td>{{ cheapest_route['smelting']['starmetal_ingot']['tp_flip'] }}</td>
-                                <td>{{ cheapest_route['smelting']['starmetal_ingot']['tp_margin'] }}</td>
-                            </tr>
-                            <tr>
-                                <td scope="row"><a href="/material/orichalcum_ingot">Orichalcum Ingot</td>
-                                <td>{{ cheapest_route['smelting']['orichalcum_ingot']['source'] }}</td>
-                                <td>{{ cheapest_route['smelting']['orichalcum_ingot']['price'] }}</td>
-                                <td>{{ cheapest_route['smelting']['orichalcum_ingot']['tp_flip'] }}</td>
-                                <td>{{ cheapest_route['smelting']['orichalcum_ingot']['tp_margin'] }}</td>
-                            </tr>
-                            <tr>
-                                <td scope="row"><a href="/material/asmodeum">Asmodeum</td>
-                                <td>{{ cheapest_route['smelting']['asmodeum']['source'] }}</td>
-                                <td>{{ cheapest_route['smelting']['asmodeum']['price'] }}</td>
-                                <td>{{ cheapest_route['smelting']['asmodeum']['tp_flip'] }}</td>
-                                <td>{{ cheapest_route['smelting']['asmodeum']['tp_margin'] }}</td>
-                            </tr>
-                            <tr>
-                                <td scope="row"><a href="/material/silver_ingot">Silver Ingot</td>
-                                <td>{{ cheapest_route['smelting']['silver_ingot']['source'] }}</td>
-                                <td>{{ cheapest_route['smelting']['silver_ingot']['price'] }}</td>
-                                <td>{{ cheapest_route['smelting']['silver_ingot']['tp_flip'] }}</td>
-                                <td>{{ cheapest_route['smelting']['silver_ingot']['tp_margin'] }}</td>
-                            </tr>
-                            <tr>
-                                <td scope="row"><a href="/material/gold_ingot">Gold Ingot</td>
-                                <td>{{ cheapest_route['smelting']['gold_ingot']['source'] }}</td>
-                                <td>{{ cheapest_route['smelting']['gold_ingot']['price'] }}</td>
-                                <td>{{ cheapest_route['smelting']['gold_ingot']['tp_flip'] }}</td>
-                                <td>{{ cheapest_route['smelting']['gold_ingot']['tp_margin'] }}</td>
-                            </tr>
-                            <tr>
-                                <td scope="row"><a href="/material/platinum_ingot">Platinum Ingot</td>
-                                <td>{{ cheapest_route['smelting']['platinum_ingot']['source'] }}</td>
-                                <td>{{ cheapest_route['smelting']['platinum_ingot']['price'] }}</td>
-                                <td>{{ cheapest_route['smelting']['platinum_ingot']['tp_flip'] }}</td>
-                                <td>{{ cheapest_route['smelting']['platinum_ingot']['tp_margin'] }}</td>
-                            </tr>
-                            <tr>
-                                <td scope="row"><a href="/material/orichalcum_platinum_ingot">Orichalcum Ingot (P)</td>
-                                <td>{{ cheapest_route['smelting']['orichalcum_platinum_ingot']['source'] }}</td>
-                                <td>{{ cheapest_route['smelting']['orichalcum_platinum_ingot']['price'] }}</td>
-                                <td>{{ cheapest_route['smelting']['orichalcum_platinum_ingot']['tp_flip'] }}</td>
-                                <td>{{ cheapest_route['smelting']['orichalcum_platinum_ingot']['tp_margin'] }}</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </li>
-                </ul>
+<form>
+    <div class="container">
+        <div class="active list-unstyled components">
+            
+            {% for i in range(0, template_order|length) %}
+            <div href="#homeSubmenu{{i}}" data-toggle="collapse" aria-expanded="false" class="btn btn-outline-dark dropdown-toggle collapse-main">{{template_order[i][0].title() | replace("_"," ")}}</div>
+            <ul class="collapse list-unstyled collapseall" id="homeSubmenu{{i}}">
+                <li>
+                    <table class="table table-striped">
+                        <thead>
+                        <tr>
+                            <th scope="col">Target</th>
+                            <th scope="col">Buy</th>
+                            <th scope="col">Avg. Cost</th>
+                            <th scope="col">TP Flip</th>
+                            <th scope="col">TP Margin %</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for material in template_order[i][1:] %}
+                        <tr>
+                            <td scope="row"><a href="/material/{{material | replace(" ","_")}}">{{material.title() | replace("_"," ")}}</a></td>
+                            <td><a href="/material/{{ cheapest_route[template_order[i][0]][material]['source'].lower() | replace(" ","_") }}">{{ cheapest_route[template_order[i][0]][material]['source'] }}</td>
+                            <td>{{ '%.2f'|format(cheapest_route[template_order[i][0]][material]['price'] | float) }}</td>
+                            <td>{{ '%.2f'|format(cheapest_route[template_order[i][0]][material]['tp_flip'] | float) }}</td>
+                            <td>{{ cheapest_route[template_order[i][0]][material]['tp_margin'] }}</td>
+                        </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </li>
+            </ul> 
+            {% endfor %}
 
-                <div href="#homeSubmenu3" data-toggle="collapse" aria-expanded="false" class="btn btn-outline-dark dropdown-toggle collapse-main">Stone Cutting</div>
-                <ul class="collapse list-unstyled collapseall" id="homeSubmenu3">
-                    <li>
-                        <table class="table table-striped">
-                            <thead>
-                            <tr>
-                                <th scope="col">Target</th>
-                                <th scope="col">Buy</th>
-                                <th scope="col">Avg. Cost</th>
-                                <th scope="col">TP Flip</th>
-                                <th scope="col">TP Margin %</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td scope="row"><a href="/material/stone_block">Stone Block</td>
-                                <td>{{ cheapest_route['stone_cutting']['stone_block']['source'] }}</td>
-                                <td>{{ cheapest_route['stone_cutting']['stone_block']['price'] }}</td>
-                                <td>{{ cheapest_route['stone_cutting']['stone_block']['tp_flip'] }}</td>
-                                <td>{{ cheapest_route['stone_cutting']['stone_block']['tp_margin'] }}</td>
-                            </tr>
-                            <tr>
-                                <td scope="row"><a href="/material/stone_brick">Stone Brick</td>
-                                <td>{{ cheapest_route['stone_cutting']['stone_brick']['source'] }}</td>
-                                <td>{{ cheapest_route['stone_cutting']['stone_brick']['price'] }}</td>
-                                <td>{{ cheapest_route['stone_cutting']['stone_brick']['tp_flip'] }}</td>
-                                <td>{{ cheapest_route['stone_cutting']['stone_brick']['tp_margin'] }}</td>
-                            </tr>
-                            <tr>
-                                <td scope="row"><a href="/material/lodestone_brick">Lodestone Brick</td>
-                                <td>{{ cheapest_route['stone_cutting']['lodestone_brick']['source'] }}</td>
-                                <td>{{ cheapest_route['stone_cutting']['lodestone_brick']['price'] }}</td>
-                                <td>{{ cheapest_route['stone_cutting']['lodestone_brick']['tp_flip'] }}</td>
-                                <td>{{ cheapest_route['stone_cutting']['lodestone_brick']['tp_margin'] }}</td>
-                            </tr>
-                            <tr>
-                                <td scope="row"><a href="/material/obsidian_voidstone">Obsidian Voidstone</td>
-                                <td>{{ cheapest_route['stone_cutting']['obsidian_voidstone']['source'] }}</td>
-                                <td>{{ cheapest_route['stone_cutting']['obsidian_voidstone']['price'] }}</td>
-                                <td>{{ cheapest_route['stone_cutting']['obsidian_voidstone']['tp_flip'] }}</td>
-                                <td>{{ cheapest_route['stone_cutting']['obsidian_voidstone']['tp_margin'] }}</td>
-                            </tr>
-                            <tr>
-                                <td scope="row"><a href="/material/runestone">Runestone</td>
-                                <td>{{ cheapest_route['stone_cutting']['runestone']['source'] }}</td>
-                                <td>{{ cheapest_route['stone_cutting']['runestone']['price'] }}</td>
-                                <td>{{ cheapest_route['stone_cutting']['runestone']['tp_flip'] }}</td>
-                                <td>{{ cheapest_route['stone_cutting']['runestone']['tp_margin'] }}</td>
-                            </tr>
-                            <tr>
-                                <td scope="row">Elemental Lodestone</td>
-                                <td>{{ cheapest_route['stone_cutting']['elemental_lodestone']['source'] }}</td>
-                                <td>{{ cheapest_route['stone_cutting']['elemental_lodestone']['price'] }}</td>
-                                <td>{{ cheapest_route['stone_cutting']['elemental_lodestone']['tp_flip'] }}</td>
-                                <td>{{ cheapest_route['stone_cutting']['elemental_lodestone']['tp_margin'] }}</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </li>
-                </ul> 
-
-                <div href="#homeSubmenu4" data-toggle="collapse" aria-expanded="false" class="btn btn-outline-dark dropdown-toggle collapse-main">Weaving</div>
-                <ul class="collapse list-unstyled collapseall" id="homeSubmenu4">
-                    <li>
-                        <table class="table table-striped">
-                            <thead>
-                            <tr>
-                                <th scope="col">Target</th>
-                                <th scope="col">Buy</th>
-                                <th scope="col">Avg. Cost</th>
-                                <th scope="col">TP Flip</th>
-                                <th scope="col">TP Margin %</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td scope="row"><a href="/material/linen">Linen</td>
-                                <td>{{ cheapest_route['weaving']['linen']['source'] }}</td>
-                                <td>{{ cheapest_route['weaving']['linen']['price'] }}</td>
-                                <td>{{ cheapest_route['weaving']['linen']['tp_flip'] }}</td>
-                                <td>{{ cheapest_route['weaving']['linen']['tp_margin'] }}</td>
-                            </tr>
-                            <tr>
-                                <td scope="row"><a href="/material/sateen">Sateen</td>
-                                <td>{{ cheapest_route['weaving']['sateen']['source'] }}</td>
-                                <td>{{ cheapest_route['weaving']['sateen']['price'] }}</td>
-                                <td>{{ cheapest_route['weaving']['sateen']['tp_flip'] }}</td>
-                                <td>{{ cheapest_route['weaving']['sateen']['tp_margin'] }}</td>
-                            </tr>
-                            <tr>
-                                <td scope="row"><a href="/material/silk">Silk</td>
-                                <td>{{ cheapest_route['weaving']['silk']['source'] }}</td>
-                                <td>{{ cheapest_route['weaving']['silk']['price'] }}</td>
-                                <td>{{ cheapest_route['weaving']['silk']['tp_flip'] }}</td>
-                                <td>{{ cheapest_route['weaving']['silk']['tp_margin'] }}</td>
-                            </tr>
-                            <tr>
-                                <td scope="row"><a href="/material/infused_silk">Infused Silk</td>
-                                <td>{{ cheapest_route['weaving']['infused_silk']['source'] }}</td>
-                                <td>{{ cheapest_route['weaving']['infused_silk']['price'] }}</td>
-                                <td>{{ cheapest_route['weaving']['infused_silk']['tp_flip'] }}</td>
-                                <td>{{ cheapest_route['weaving']['infused_silk']['tp_margin'] }}</td>
-                            </tr>
-                            <tr>
-                                <td scope="row"><a href="/material/phoenixweave">Phoenixweave</td>
-                                <td>{{ cheapest_route['weaving']['phoenixweave']['source'] }}</td>
-                                <td>{{ cheapest_route['weaving']['phoenixweave']['price'] }}</td>
-                                <td>{{ cheapest_route['weaving']['phoenixweave']['tp_flip'] }}</td>
-                                <td>{{ cheapest_route['weaving']['phoenixweave']['tp_margin'] }}</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </li>
-                </ul> 
-                
-                <div href="#homeSubmenu5" data-toggle="collapse" aria-expanded="false" class="btn btn-outline-dark dropdown-toggle collapse-main">Woodworking</div>
-                <ul class="collapse list-unstyled collapseall" id="homeSubmenu5">
-                    <li>
-                        <table class="table table-striped">
-                            <thead>
-                            <tr>
-                                <th scope="col">Target</th>
-                                <th scope="col">Buy</th>
-                                <th scope="col">Avg. Cost</th>
-                                <th scope="col">TP Flip</th>
-                                <th scope="col">TP Margin %</th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <tr>
-                                <td scope="row"><a href="/material/timber">Timber</td>
-                                <td>{{ cheapest_route['woodworking']['timber']['source'] }}</td>
-                                <td>{{ cheapest_route['woodworking']['timber']['price'] }}</td>
-                                <td>{{ cheapest_route['woodworking']['timber']['tp_flip'] }}</td>
-                                <td>{{ cheapest_route['woodworking']['timber']['tp_margin'] }}</td>
-                            </tr>
-                            <tr>
-                                <td scope="row"><a href="/material/lumber">Lumber</td>
-                                <td>{{ cheapest_route['woodworking']['lumber']['source'] }}</td>
-                                <td>{{ cheapest_route['woodworking']['lumber']['price'] }}</td>
-                                <td>{{ cheapest_route['woodworking']['lumber']['tp_flip'] }}</td>
-                                <td>{{ cheapest_route['woodworking']['lumber']['tp_margin'] }}</td>
-                            </tr>
-                            <tr>
-                                <td scope="row"><a href="/material/wyrdwood_planks">Wyrdwood Planks</td>
-                                <td>{{ cheapest_route['woodworking']['wyrdwood_planks']['source'] }}</td>
-                                <td>{{ cheapest_route['woodworking']['wyrdwood_planks']['price'] }}</td>
-                                <td>{{ cheapest_route['woodworking']['wyrdwood_planks']['tp_flip'] }}</td>
-                                <td>{{ cheapest_route['woodworking']['wyrdwood_planks']['tp_margin'] }}</td>
-                            </tr>
-                            <tr>
-                                <td scope="row"><a href="/material/ironwood_planks">Ironwood Planks</td>
-                                <td>{{ cheapest_route['woodworking']['ironwood_planks']['source'] }}</td>
-                                <td>{{ cheapest_route['woodworking']['ironwood_planks']['price'] }}</td>
-                                <td>{{ cheapest_route['woodworking']['ironwood_planks']['tp_flip'] }}</td>
-                                <td>{{ cheapest_route['woodworking']['ironwood_planks']['tp_margin'] }}</td>
-                            </tr>
-                            <tr>
-                                <td scope="row"><a href="/material/glittering_ebony">Glittering Ebony</td>
-                                <td>{{ cheapest_route['woodworking']['glittering_ebony']['source'] }}</td>
-                                <td>{{ cheapest_route['woodworking']['glittering_ebony']['price'] }}</td>
-                                <td>{{ cheapest_route['woodworking']['glittering_ebony']['tp_flip'] }}</td>
-                                <td>{{ cheapest_route['woodworking']['glittering_ebony']['tp_margin'] }}</td>
-                            </tr>
-                            </tbody>
-                        </table>
-                    </li>
-                </ul> 
-
-            </div>
         </div>
-    </form>
+    </div>
+</form>
 
-    <br></br>
-    {% include "scripts.html" %}
+<br></br>
+{% include "scripts.html" %}
 {% endblock %}

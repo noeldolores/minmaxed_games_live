@@ -19,14 +19,14 @@
             </div>-->
             <a class="nav-item nav-link text-white" id="faq" href="/markets">Markets</a>
         </ul>
-        <form class="form-inline my-2 my-lg-0" method="GET" name="search" id="search">
-            <input class="form-control mr-sm-2" type="text" name="search" aria-label="Search" list="materialList" autocomplete="off"
+        <form class="form-inline my-2 my-lg-0" method="GET" id="search">
+            <input class="form-control mr-sm-2 datafield" type="text" name="search" aria-label="Search" list="materialList" autocomplete="off" onkeydown="return /[a-z]/i.test(event.key)"
                 hx-get="/datalist" 
                 hx-trigger="keyup changed delay:500ms, search" 
                 hx-target="#materialList" >
             
             <datalist id="materialList"></datalist>
-            <button class="btn btn-outline-success my-2 my-sm-0" type="submit" method="POST">Search</button>
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form>
         
     </div>
