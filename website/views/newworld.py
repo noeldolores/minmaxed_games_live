@@ -1,5 +1,7 @@
 from flask import Blueprint, request, flash, render_template, redirect, url_for, escape, session
-from .. import player_data, calculations as calcs
+
+from ..scripts.newworld import calculations as calcs
+from ..scripts.newworld import player_data
 import os
 
 
