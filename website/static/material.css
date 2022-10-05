@@ -1,3 +1,8 @@
+html, body {
+  background-color: rgb(28, 28, 28);
+}
+
+
 #listspace {
   margin-top: 1.25rem;
   width: 100%;
@@ -7,6 +12,7 @@
 .collapse-main {
   margin-top: 0.25rem;
   width: 100%;
+  color: white;
 }
 
 .skillLevel {
@@ -15,6 +21,7 @@
 
 .header {
   font-weight: bold;
+  color: white;
 }
 
 .noHover{
@@ -23,6 +30,7 @@
 
 h1 {
   margin-top: 4rem;
+  color: white;
 }
 
 tr {
@@ -42,7 +50,7 @@ input[type=number] {
 }
 
 .htmx-settling tr.load td {
-  background: rgb(210, 240, 255);
+  background: rgb(145, 173, 187);
 }
 tr td {
   transition: all 0.75s;
@@ -57,13 +65,17 @@ tr td {
 }
 
 a:link {
-  color: rgb(0, 0, 0);
+  color: white;
   background-color: transparent;
   text-decoration: none;
 }
 
 a:visited {
-  color: rgb(0, 0, 0);
+  color: white;
   background-color: transparent;
   text-decoration: none;
+}
+
+.nav-link {
+  text-align: left;
 }

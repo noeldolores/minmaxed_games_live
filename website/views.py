@@ -313,7 +313,7 @@ def material(material):
         return render_template('component_material.html', material=material_display)
 
 
-@views.route('/material_table/<material>', methods=['GET', 'POST'])
+@views.route('/primary_material_table/<material>', methods=['GET', 'POST'])
 def material_table(material):
 
     material_check = material.replace(" ","_").lower()
@@ -327,7 +327,7 @@ def material_table(material):
     
     material_display = material.replace("_"," ").lower().title()
     
-    return render_template('material_table.html', data=data, quantity=quantity, material=material_display,material_data=material_data, component_data=component_data)
+    return render_template('primary_material_table.html', data=data, quantity=quantity, material=material_display,material_data=material_data, component_data=component_data)
 
 
 

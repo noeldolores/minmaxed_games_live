@@ -45,3 +45,11 @@ html {
 .datafield::-webkit-calendar-picker-indicator {
   display:none !important;
 }
+
+html {
+  background-color: rgb(28, 28, 28);
+}
+
+.nav-link {
+  text-align: left;
+}

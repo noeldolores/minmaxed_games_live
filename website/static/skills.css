@@ -1,9 +1,11 @@
 h4 {
   margin-top: 2rem;
+  color: white;
 }
 
 h1 {
   margin-top: 4rem;
+  color: white;
 }
 
 #topHeader {
@@ -22,6 +24,7 @@ input {
 label {
   margin-top: 4px;
   margin-bottom: 0px;
+  color: white;
 }
 
 .skillBoxes{
@@ -44,4 +47,12 @@ html {
 
 .datafield::-webkit-calendar-picker-indicator {
   display:none !important;
+}
+
+html, body {
+  background-color: rgb(28, 28, 28);
+}
+
+.nav-link {
+  text-align: left;
 }

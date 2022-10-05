@@ -15,7 +15,7 @@
         <form class="form-row justify-content-center">
             <div class="col-auto p-2">
                 <input type="number" id="quant_field" class="form-control" min="1" max="2147483646" value="{{quantity}}" name="update_quantity"
-                    hx-get="/material_table/{{material}}" 
+                    hx-get="/primary_material_table/{{material}}" 
                     hx-trigger="keyup[key=='Enter'] from:body, keyup[key!='Enter'] changed delay:500ms" 
                     hx-target="#ingredients" 
                     _="on keyup add .load to #values">
@@ -23,7 +23,7 @@
             </div>
         </form>
 
-        <table class="table table-striped table-hover" id="ingredients"  _="on htmx:load call #quant_field.blur()">
+        <table class="table table-striped table-secondary" id="ingredients"  _="on htmx:load call #quant_field.blur()">
             {% include "primary_material_table.html"%}
         </table>
         

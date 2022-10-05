@@ -1,7 +1,11 @@
 <thead>
     <tr>
         {% for key in data[0].keys() %}
-        <th scope="col"><a href="/material/{{key}}">{{ key.title() | replace("_"," ") }}</th>
+            {% if key == "elemental_lodestone" %}
+            <th scope="col" class="table-dark">{{ key.title() | replace("_"," ") }}</th>
+            {% else%}
+            <th scope="col" class="table-dark"><a href="/material/{{key}}">{{ key.title() | replace("_"," ") }}</th>
+            {% endif %}
         {% endfor %}
     </tr>
 </thead>
