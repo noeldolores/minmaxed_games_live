@@ -1,0 +1,101 @@
+.nav-link {
+  text-align: left;
+}
+
+.navbar-custom {
+  background-color: rgb(17, 20, 20);
+}
+
+.navbar-toggler {
+  background-color:white !important;
+}
+
+span.navbar-toggler-icon{
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='black' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
+  color: rgb(0, 0, 0);
+}
+
+html, body {
+  background-color: rgb(28, 28, 28);
+}
+
+h1 {
+  margin-top: 4rem;
+  color: white;
+}
+
+.price{
+  text-align: center; 
+}
+
+label {
+  margin-top: 4px;
+  margin-bottom: 0px;
+  color: white;
+}
+
+.savePrices {
+  margin-top: 2rem;
+  min-width: 150px;
+}  
+
+#listspace {
+  margin-top: 10px;
+  margin-bottom: -10px;
+  width: 100%;
+  text-align: center;
+}
+  
+.collapse-main {
+  margin-top: 0.25rem;
+  width: 100%;
+  color: white;
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+
+#htmx-swap {
+  text-align: center;
+}
+
+html {
+  overflow-y: scroll;
+}
+
+.alert {
+  margin-top: 4rem;
+}
+
+.datafield::-webkit-calendar-picker-indicator {
+  display:none !important;
+}
+
+.nav-link {
+  text-align: left;
+}
+
+a:link {
+  color: white;
+  background-color: transparent;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+a:visited {
+  color: white;
+  background-color: transparent;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.btn[aria-expanded="true"]{
+  background-color: rgb(10, 10, 10);
+}
+
+.btn-outline-secondary:hover {
+  background-color: rgb(15, 15, 15);
+}
+
+.btn-outline-secondary:not(:disabled):not(:disabled):active {
+  background-color: rgb(10, 10, 10);
+} 

@@ -2,7 +2,7 @@
 
 {% block head %}
 <title>Trade Post Prices - NewWorld Tools</title>
-<link id="style" rel="stylesheet" href="{{ url_for('static', filename='tradepost.css') }}"/>
+<link id="style" rel="stylesheet" href="{{ url_for('static', filename='css/tradepost.css') }}"/>
 {% endblock %}
 
 {% block content%}
@@ -17,7 +17,7 @@
             <div class="active list-unstyled components">
 
                 {% for i in range(0, template_order|length) %}
-                <div id="collapse" href="#homeSubmenu{{i}}" data-toggle="collapse" aria-expanded="false" class="btn btn-outline-secondary dropdown-toggle collapse-main">{{template_order[i][0].title() | replace("_"," ")}}</div>
+                <div id="collapse" href="#homeSubmenu{{i}}" data-toggle="collapse" aria-expanded="true" class="btn btn-outline-secondary dropdown-toggle collapse-main">{{template_order[i][0].title() | replace("_"," ")}}</div>
                 <ul class="collapse list-unstyled show collapseall" id="homeSubmenu{{i}}">
                     <li id="listspace">
                         <div class="form-row justify-content-center">
