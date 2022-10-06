@@ -1,5 +1,5 @@
 from flask import Blueprint, request, flash, render_template, redirect, url_for, escape, session
-
+import random
 from ..scripts.newworld import calculations as calcs
 from ..scripts.newworld import player_data
 import os
@@ -95,6 +95,30 @@ def determine_material_category(material):
     return None
 
 
+def random_material():
+    datalist = []
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    primary_file = os.path.join(basedir, '../static/newworld/txt/primary_ingredients.txt')
+    with open(primary_file) as file:
+        lines = file.readlines()
+        datalist = [line.rstrip().lower().replace(" ","_") for line in lines]
+    
+    # secondary_file = os.path.join(basedir, '../static/newworld/txt/secondary_ingredients.txt')
+    # with open(secondary_file) as file_2:
+    #     lines = file_2.readlines()
+    #     datalist.extend([line.rstrip().lower() for line in lines])
+        
+    # components_file = os.path.join(basedir, '../static/newworld/txt/components.txt')
+    # with open(components_file) as file_3:
+    #     lines = file_3.readlines()
+    #     datalist.extend([line.rstrip().lower() for line in lines])
+    
+    random_number = random.randint(0, len(datalist)-1)
+    random_material = datalist[random_number]
+    
+    return random_material
+
+
 @newworld.route('/', methods=['GET', 'POST'])
 def home():
     init_session()
@@ -102,7 +126,9 @@ def home():
     if search:
         return redirect(url_for("newworld.material", material=search))
 
-    return render_template('newworld/base.html')
+    rand_mat = random_material()
+    
+    return render_template('newworld/base.html', rand_mat=rand_mat)
 
 
 @newworld.route('/skills', methods=['GET', 'POST'])

@@ -81,3 +81,9 @@ label {
   margin-top: 2rem;
   min-width: 150px;
 }
+
+.home-button {
+  height: 200px;
+  width: 100%;
+  font-size: 2rem;
+}
