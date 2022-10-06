@@ -3,7 +3,7 @@ from flask import Flask
 def create_app():
   app = Flask(__name__)
   
-  app.config.from_object("config.DevelopmentConfig")
+  app.config.from_object("config.ProductionConfig")
   
   
   from .views.newworld import newworld
