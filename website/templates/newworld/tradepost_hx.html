@@ -1,0 +1,19 @@
+{% for i in range(0, template_order|length) %}
+<div id="collapse" href="#homeSubmenu{{i}}" data-toggle="collapse" aria-expanded="false" class="btn btn-outline-secondary dropdown-toggle collapse-main collapsed">{{template_order[i][0].title() | replace("_"," ")}}</div>
+<ul class="collapse list-unstyled collapseall" id="homeSubmenu{{i}}">
+    <li id="listspace">
+        <div class="form-row justify-content-center">
+            {% for material in template_order[i][1:] %}
+            <div class="col-auto">
+                <label for={{material}}>{{material.title() | replace("_"," ")}}</label>
+                <input type="number" step="0.01" id="{{material}}" name="{{material}}" class="form-control price" min="0" value="{{ '%.2f'|format(price_list[template_order[i][0]][material]) }}">
+            </div>
+            {% endfor %}
+        </div>
+    </li>
+</ul>
+{% endfor %}
+
+<div>
+    <button class="btn btn-outline-light savePrices" type="submit" name="save">Save</button>
+</div>

@@ -1,0 +1,83 @@
+<h4 align="center" >Crafting</h4>
+<div class="form-row justify-content-center">
+    <div class="col-auto">
+        <label for="arcana_level">Arcana</label>
+        <input type="number" id="arcana_level" name="arcana_level" class="form-control skillLevel" min="0" max="200" value="{{ skill_levels['crafting']['arcana'] }}">
+    </div>
+    <div class="col-auto">
+        <label for="armoring_level">Armoring</label>
+        <input type="number" id="armoring_level" name="armoring_level" class="form-control skillLevel" min="0" max="200" value="{{ skill_levels['crafting']['armoring'] }}">
+    </div>
+    <div class="col-auto">
+        <label for="cooking_level">Cooking</label> 
+        <input type="number" id="cooking_level" name="cooking_level" class="form-control skillLevel" min="0" max="200" value="{{ skill_levels['crafting']['cooking'] }}">
+    </div>
+    <div class="col-auto">
+        <label for="engineering_level">Engineering</label>
+        <input type="number" id="engineering_level" name="engineering_level" class="form-control skillLevel" min="0" max="200" value="{{ skill_levels['crafting']['engineering'] }}">
+    </div>
+    <div class="col-auto">
+        <label for="furnishing_level">Furnishing</label>
+        <input type="number" id="furnishing_level" name="furnishing_level" class="form-control skillLevel" min="0" max="200" value="{{ skill_levels['crafting']['furnishing'] }}">
+    </div>
+    <div class="col-auto">
+        <label for="jewelcrafting_level">Jewelcrafting</label>
+        <input type="number" id="jewelcrafting_level" name="jewelcrafting_level" class="form-control skillLevel" min="0" max="200" value="{{ skill_levels['crafting']['jewelcrafting'] }}">
+    </div>
+    <div class="col-auto">
+        <label for="weaponsmithing_level">Weaponsmithing</label>
+        <input type="number" id="weaponsmithing_level" name="weaponsmithing_level" class="form-control skillLevel" min="0" max="200" value="{{ skill_levels['crafting']['weaponsmithing'] }}">
+    </div>
+</div>
+
+<h4 align="center">Refining</h4>
+<div class="form-row row justify-content-center">
+    <div class="col-auto">
+        <label for="leatherworking_level">Leatherworking</label>
+        <input type="number" id="leatherworking_level" name="leatherworking_level" class="form-control skillLevel" min="0" max="200" value="{{ skill_levels['refining']['leatherworking'] }}">
+    </div>
+    <div class="col-auto">
+        <label for="smelting_level">Smelting</label>
+        <input type="number" id="smelting_level" name="smelting_level" class="form-control skillLevel" min="0" max="200" value="{{ skill_levels['refining']['smelting'] }}">
+    </div>
+    <div class="col-auto">
+        <label for="stone_cutting_level">Stone Cutting</label>
+        <input type="number" id="stone_cutting_level" name="stone_cutting_level" class="form-control skillLevel" min="0" max="200" value="{{ skill_levels['refining']['stone_cutting'] }}">
+    </div>
+    <div class="col-auto">
+        <label for="weaving_level">Weaving</label>
+        <input type="number" id="weaving_level" name="weaving_level" class="form-control skillLevel" min="0" max="200" value="{{ skill_levels['refining']['weaving'] }}">
+    </div>
+    <div class="col-auto">
+        <label for="woodworking_level">Woodworking</label>
+        <input type="number" id="woodworking_level" name="woodworking_level" class="form-control skillLevel" min="0" max="200" value="{{ skill_levels['refining']['woodworking'] }}">
+    </div>
+</div>
+
+<h4 align="center">Gathering</h4>
+<div class="form-row row justify-content-center">
+    <div class="col-auto">
+        <label for="fishing_level">Fishing</label>
+        <input type="number" id="fishing_level" name="fishing_level" class="form-control skillLevel" min="0" max="200" value="{{ skill_levels['gathering']['fishing'] }}">
+    </div>
+    <div class="col-auto">
+        <label for="harvesting_level">Harvesting</label>
+        <input type="number" id="harvesting_level" name="harvesting_level" class="form-control skillLevel" min="0" max="200" value="{{ skill_levels['gathering']['harvesting'] }}">
+    </div>
+    <div class="col-auto">
+        <label for="logging_level">Logging</label>
+        <input type="number" id="logging_level" name="logging_level" class="form-control skillLevel" min="0" max="200" value="{{ skill_levels['gathering']['logging'] }}">
+    </div>
+    <div class="col-auto">
+        <label for="mining_level">Mining</label>
+        <input type="number" id="mining_level" name="mining_level" class="form-control skillLevel" min="0" max="200" value="{{ skill_levels['gathering']['mining'] }}">
+    </div>
+    <div class="col-auto">
+        <label for="skinning_level">Skinning</label>
+        <input type="number" id="skinning_level" name="skinning_level" class="form-control skillLevel" min="0" max="200" value="{{ skill_levels['gathering']['skinning'] }}">
+    </div>
+</div>
+
+<div>
+    <button class="btn btn-outline-light saveSkillLevels" type="submit" name="save">Save</button>
+</div>

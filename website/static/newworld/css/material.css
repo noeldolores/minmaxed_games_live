@@ -1,5 +1,25 @@
+html, body {
+  background-color: rgb(28, 28, 28);
+}
+
+html {
+  overflow-y: scroll;
+}
+
 .nav-link {
   text-align: left;
+}
+
+a:link {
+  color: white;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+a:visited {
+  color: white;
+  background-color: transparent;
+  text-decoration: none;
 }
 
 .navbar-custom {
@@ -15,10 +35,17 @@ span.navbar-toggler-icon{
   color: rgb(0, 0, 0);
 }
 
-html, body {
-  background-color: rgb(28, 28, 28);
+.datafield::-webkit-calendar-picker-indicator {
+  display:none !important;
 }
 
+.text-dark:hover {
+  background-color: rgb(206, 206, 206);
+}
+
+.alert {
+  margin-top: 4rem;
+}
 
 #listspace {
   margin-top: 1.25rem;
@@ -75,24 +102,4 @@ tr td {
 
 #quant_field {
   text-align: center;
-}
-
-.datafield::-webkit-calendar-picker-indicator {
-  display:none !important;
-}
-
-a:link {
-  color: white;
-  background-color: transparent;
-  text-decoration: none;
-}
-
-a:visited {
-  color: white;
-  background-color: transparent;
-  text-decoration: none;
-}
-
-.nav-link {
-  text-align: left;
 }

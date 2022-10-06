@@ -6,18 +6,22 @@
 
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-            <a class="nav-link text-white" href="/newworld/skills">Skill Levels</a>
-            <a class="nav-link text-white" href="/newworld/gearsets">Gear Sets</a>
-            <a class="nav-link text-white" href="/newworld/tradepost">Trade Post</a>
-            <a class="nav-link text-white" href="/newworld/refining">Refining</a>
-            <!--<div id="dropdown-main">
             <li class="nav-item dropdown">
-                <a class="nav-link text-white" href="#" hx-get="/dropdown_show" hx-target="#dropdown-main">
-                Calculators
+                <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Start Here
                 </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="nav-link text-dark" href="/newworld/skills"><span class="nav_a">Skill Levels</span></a>
+                    <a class="nav-link text-dark" href="/newworld/gearsets"><span class="nav_a">Gear Sets</span></a>
+                </div>
             </li>
-            </div>
-            <a class="nav-item nav-link text-white" id="faq" href="/markets">Markets</a>-->
+            <li class="nav-item active">
+                <a class="nav-link text-white" href="/newworld/tradepost">Trade Post</a>
+            </li>
+            <li class="nav-item active">
+                <a class="nav-link text-white" href="/newworld/refining">Refining</a>
+            </li>
+            
         </ul>
         <form class="form-inline my-2 my-lg-0" method="GET" id="search">
             <input class="form-control mr-sm-2 datafield" type="text" name="search" aria-label="Search" list="materialList" autocomplete="off" onkeydown="return /[a-z]/i.test(event.key)"

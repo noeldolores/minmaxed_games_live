@@ -1,5 +1,25 @@
+html, body {
+  background-color: rgb(28, 28, 28);
+}
+
+html {
+  overflow-y: scroll;
+}
+
 .nav-link {
   text-align: left;
+}
+
+a:link {
+  color: white;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+a:visited {
+  color: white;
+  background-color: transparent;
+  text-decoration: none;
 }
 
 .navbar-custom {
@@ -13,6 +33,18 @@
 span.navbar-toggler-icon{
   background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='black' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
   color: rgb(0, 0, 0);
+}
+
+.datafield::-webkit-calendar-picker-indicator {
+  display:none !important;
+}
+
+.text-dark:hover {
+  background-color: rgb(206, 206, 206);
+}
+
+.alert {
+  margin-top: 4rem;
 }
 
 h4 {
@@ -51,36 +83,4 @@ label {
 .saveSkillLevels {
   margin-top: 2rem;
   min-width: 150px;
-}
-
-html {
-  overflow-y: scroll;
-}
-
-.alert {
-  margin-top: 4rem;
-}
-
-.datafield::-webkit-calendar-picker-indicator {
-  display:none !important;
-}
-
-html, body {
-  background-color: rgb(28, 28, 28);
-}
-
-.nav-link {
-  text-align: left;
-}
-
-a:link {
-  color: white;
-  background-color: transparent;
-  text-decoration: none;
-}
-
-a:visited {
-  color: white;
-  background-color: transparent;
-  text-decoration: none;
 }

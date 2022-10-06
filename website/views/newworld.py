@@ -112,6 +112,12 @@ def skills():
     if search:
         return redirect(url_for('newworld.material', material=search))
     
+    return render_template('newworld/skills.html', skill_levels=session['skill_levels'])
+
+
+@newworld.route('/skills_hx', methods=['GET', 'POST'])
+def skills_hx():
+    
     if request.method == 'POST':
         if "save" in request.form:
             session['skill_levels'] = {
@@ -139,8 +145,8 @@ def skills():
                     "skinning" : strip_leading_zeros(False, request.form['skinning_level'])
                 }  
             }
-    
-    return render_template('newworld/skills.html', skill_levels=session['skill_levels'])
+            
+    return render_template('newworld/skills_hx.html', skill_levels=session['skill_levels'])
 
 
 @newworld.route('/gearsets', methods=['GET', 'POST'])
@@ -148,9 +154,13 @@ def gearsets():
     init_session()
     search = search_function()
     if search:
-        return redirect(url_for('newworld.material', material=search))
-        
-    
+        return redirect(url_for('newworld.material', material=search)) 
+
+    return render_template('newworld/gearsets.html', gear_sets=session['gear_sets'])
+
+
+@newworld.route('/gearsets_hx', methods=['GET', 'POST'])
+def gearsets_hx():
     if request.method == 'POST':
         if "save" in request.form:
             for i in session['gear_sets'].keys():
@@ -160,7 +170,7 @@ def gearsets():
                     else:
                         session['gear_sets'][i][j] = False    
 
-    return render_template('newworld/gearsets.html', gear_sets=session['gear_sets'])
+    return render_template('newworld/gearsets_hx.html', gear_sets=session['gear_sets'])
 
 
 @newworld.route('/tradepost', methods=['GET', 'POST'])
@@ -170,6 +180,12 @@ def tradepost():
     if search:
         return redirect(url_for('newworld.material', material=search))
     
+    template_order = player_data.trade_post_order()
+    
+    return render_template('newworld/tradepost.html', price_list=session['price_list'], template_order=template_order)
+
+@newworld.route('/tradepost_hx', methods=['GET', 'POST'])
+def tradepost_hx():
     template_order = player_data.trade_post_order()
     
     if request.method == 'POST':
@@ -255,10 +271,10 @@ def tradepost():
                     "barbvine" : strip_leading_zeros(True, request.form['barbvine'])
                 } 
             }
+
+    return render_template('newworld/tradepost_hx.html', price_list=session['price_list'], template_order=template_order)
     
-    return render_template('newworld/tradepost.html', price_list=session['price_list'], template_order=template_order)
-
-
+    
 @newworld.route('/refining', methods=['GET', 'POST'])
 def refining():
     init_session()
@@ -309,7 +325,7 @@ def material(material):
         return render_template('newworld/component_material.html', material=material_display)
 
 
-@newworld.route('/primary_material_table/<material>', methods=['GET', 'POST'])
+@newworld.route('/primary_material_hx/<material>', methods=['GET', 'POST'])
 def material_table(material):
 
     material_check = material.replace(" ","_").lower()
@@ -323,7 +339,7 @@ def material_table(material):
     
     material_display = material.replace("_"," ").lower().title()
     
-    return render_template('newworld/primary_material_table.html', data=data, quantity=quantity, material=material_display,material_data=material_data, component_data=component_data)
+    return render_template('newworld/primary_material_hx.html', data=data, quantity=quantity, material=material_display,material_data=material_data, component_data=component_data)
 
 
 

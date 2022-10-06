@@ -1,5 +1,25 @@
+html, body {
+  background-color: rgb(28, 28, 28);
+}
+
+html {
+  overflow-y: scroll;
+}
+
 .nav-link {
   text-align: left;
+}
+
+a:link {
+  color: white;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+a:visited {
+  color: white;
+  background-color: transparent;
+  text-decoration: none;
 }
 
 .navbar-custom {
@@ -15,9 +35,18 @@ span.navbar-toggler-icon{
   color: rgb(0, 0, 0);
 }
 
-html, body {
-  background-color: rgb(28, 28, 28);
+.datafield::-webkit-calendar-picker-indicator {
+  display:none !important;
 }
+
+.text-dark:hover {
+  background-color: rgb(206, 206, 206);
+}
+
+.alert {
+  margin-top: 4rem;
+}
+
 
 h1 {
   margin-top: 4rem;
@@ -54,40 +83,16 @@ label {
   border-bottom-right-radius: 0 !important;
 }
 
-#htmx-swap {
+#tradepost_hx {
   text-align: center;
-}
-
-html {
-  overflow-y: scroll;
-}
-
-.alert {
-  margin-top: 4rem;
-}
-
-.datafield::-webkit-calendar-picker-indicator {
-  display:none !important;
-}
-
-.nav-link {
-  text-align: left;
-}
-
-a:link {
-  color: white;
-  background-color: transparent;
-  text-decoration: none;
-}
-
-a:visited {
-  color: white;
-  background-color: transparent;
-  text-decoration: none;
 }
 
 .btn[aria-expanded="true"]{
   background-color: rgb(10, 10, 10);
+}
+
+.btn[aria-expanded="false"]{
+  background-color: rgb(50, 50, 50);
 }
 
 .btn-outline-secondary:hover {
@@ -97,3 +102,7 @@ a:visited {
 .btn-outline-secondary:not(:disabled):not(:disabled):active {
   background-color: rgb(10, 10, 10);
 } 
+
+.custom_toggle {
+  width: 100%;
+}
