@@ -24,7 +24,7 @@
             
         </ul>
         <form class="form-inline my-2 my-lg-0" method="GET" id="search">
-            <input class="form-control mr-sm-2 datafield" type="text" name="search" aria-label="Search" list="materialList" autocomplete="off" onkeydown="return /[a-z]/i.test(event.key)" placeholder="Material Search..."
+            <input required class="form-control mr-sm-2 datafield" type="text" name="search" aria-label="Search" list="materialList" autocomplete="off" onkeydown="return /[a-z]/i.test(event.key)" placeholder="Material Search..."
                 hx-get="/newworld/datalist" 
                 hx-trigger="keyup changed delay:500ms, search" 
                 hx-target="#materialList" >
