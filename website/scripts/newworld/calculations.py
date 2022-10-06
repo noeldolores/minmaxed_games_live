@@ -220,7 +220,7 @@ def total_craft_bonus(skill_level, gear_set, discipline):
     tier_2 = 1 + 0.75 + max(skill_bonus - 0.02, 0) + gear_bonus
     tier_3 = 1 + 0.25 + max(skill_bonus - 0.05, 0) + gear_bonus
     tier_4 = 1 + max(skill_bonus - 0.07, 0) + gear_bonus
-    tier_5 = 1 + + max(skill_bonus - 0.2, 0) + gear_bonus
+    tier_5 = 1 + max(skill_bonus - 0.2, 0) + gear_bonus
     
     if discipline == "leatherworking":
         craft_bonus = {
@@ -270,6 +270,14 @@ def total_craft_bonus(skill_level, gear_set, discipline):
         craft_bonus = None
         
     return craft_bonus
+
+
+def tp_margin(tp_cost, lowest_cost):
+    if lowest_cost == 0:
+        return 0
+    
+    return round((tp_cost- lowest_cost) / lowest_cost * 100, 2)
+
         
 
 def cheapest_route_leatherworking(price_list, skill_level, gear_set):
@@ -340,31 +348,31 @@ def cheapest_route_leatherworking(price_list, skill_level, gear_set):
             "source": coarse_leather_data[0],
             "price" : round(coarse_leather_data[1], 2),
             "tp_flip": round(prices['coarse_leather'] - coarse_leather_data[1], 2),
-            "tp_margin": round((prices['coarse_leather'] - coarse_leather_data[1]) / coarse_leather_data[1] * 100, 2)
+            "tp_margin": tp_margin(prices['coarse_leather'], coarse_leather_data[1])
         },
         "rugged_leather": {
             "source": rugged_leather_data[0],
             "price" : round(rugged_leather_data[1], 2),
             "tp_flip": round(prices['rugged_leather'] - rugged_leather_data[1], 2),
-            "tp_margin": round((prices['rugged_leather'] - rugged_leather_data[1]) / rugged_leather_data[1] * 100, 2)
+            "tp_margin": tp_margin(prices['coarse_leather'], coarse_leather_data[1])
         },
         "layered_leather" : {
             "source": layered_leather_data[0],
             "price" : round(layered_leather_data[1], 2),
             "tp_flip": round(prices['layered_leather'] - layered_leather_data[1], 2),
-            "tp_margin": round((prices['layered_leather'] - layered_leather_data[1]) / layered_leather_data[1] * 100, 2)
+            "tp_margin": tp_margin(prices['layered_leather'], layered_leather_data[1])
         },
         "infused_leather" : {
             "source": infused_leather_data[0],
             "price" : round(infused_leather_data[1], 2),
             "tp_flip": round(prices['infused_leather'] - infused_leather_data[1], 2),
-            "tp_margin": round((prices['infused_leather'] - infused_leather_data[1]) / infused_leather_data[1] * 100, 2)
+            "tp_margin": tp_margin(prices['infused_leather'], infused_leather_data[1])
         },
         "runic_leather" : {
             "source": runic_leather_data[0],
             "price" : round(runic_leather_data[1], 2),
             "tp_flip": round(prices['runic_leather'] - runic_leather_data[1], 2),
-            "tp_margin": round((prices['runic_leather'] - runic_leather_data[1]) / runic_leather_data[1] * 100, 2)
+            "tp_margin": tp_margin(prices['runic_leather'], runic_leather_data[1])
         }
     }
     
@@ -483,55 +491,55 @@ def cheapest_route_smelting(price_list, skill_level, gear_set):
             "source": iron_ingot_data[0],
             "price" : round(iron_ingot_data[1], 2),
             "tp_flip": round(prices['iron_ingot'] - iron_ingot_data[1], 2),
-            "tp_margin": round((prices['iron_ingot'] - iron_ingot_data[1]) / iron_ingot_data[1] * 100, 2)
+            "tp_margin": tp_margin(prices['iron_ingot'], iron_ingot_data[1])
         },
         "steel_ingot": {
             "source": steel_ingot_data[0],
             "price" : round(steel_ingot_data[1], 2),
             "tp_flip": round(prices['steel_ingot'] - steel_ingot_data[1], 2),
-            "tp_margin": round((prices['steel_ingot'] - steel_ingot_data[1]) / steel_ingot_data[1] * 100, 2)
+            "tp_margin": tp_margin(prices['steel_ingot'], steel_ingot_data[1])
         },
         "starmetal_ingot" : {
             "source": starmetal_ingot_data[0],
             "price" : round(starmetal_ingot_data[1], 2),
             "tp_flip": round(prices['starmetal_ingot'] - starmetal_ingot_data[1], 2),
-            "tp_margin": round((prices['starmetal_ingot'] - starmetal_ingot_data[1]) / starmetal_ingot_data[1] * 100, 2)
+            "tp_margin": tp_margin(prices['starmetal_ingot'], starmetal_ingot_data[1])
         },
         "orichalcum_ingot" : {
             "source": orichalcum_ingot_data[0],
             "price" : round(orichalcum_ingot_data[1], 2),
             "tp_flip": round(prices['orichalcum_ingot'] - orichalcum_ingot_data[1], 2),
-            "tp_margin": round((prices['orichalcum_ingot'] - orichalcum_ingot_data[1]) / orichalcum_ingot_data[1] * 100, 2)
+            "tp_margin": tp_margin(prices['orichalcum_ingot'], orichalcum_ingot_data[1])
         },
         "asmodeum" : {
             "source": asmodeum_data[0],
             "price" : round(asmodeum_data[1], 2),
             "tp_flip": round(prices['asmodeum'] - asmodeum_data[1], 2),
-            "tp_margin": round((prices['asmodeum'] - asmodeum_data[1]) / asmodeum_data[1] * 100, 2)
+            "tp_margin": tp_margin(prices['asmodeum'], asmodeum_data[1])
         },
         "silver_ingot" : {
             "source": silver_ingot_data[0],
             "price" : round(silver_ingot_data[1], 2),
             "tp_flip": round(prices['silver_ingot'] - silver_ingot_data[1], 2),
-            "tp_margin": round((prices['silver_ingot'] - silver_ingot_data[1]) / silver_ingot_data[1] * 100, 2)
+            "tp_margin": tp_margin(prices['silver_ingot'], silver_ingot_data[1])
         },
         "gold_ingot": {
             "source": gold_ingot_data[0],
             "price" : round(gold_ingot_data[1], 2),
             "tp_flip": round(prices['gold_ingot'] - gold_ingot_data[1], 2),
-            "tp_margin": round((prices['gold_ingot'] - gold_ingot_data[1]) / gold_ingot_data[1] * 100, 2)
+            "tp_margin": tp_margin(prices['gold_ingot'], gold_ingot_data[1])
         },
         "platinum_ingot" : {
             "source": platinum_ingot_data[0],
             "price" : round(platinum_ingot_data[1], 2),
             "tp_flip": round(prices['platinum_ingot'] - platinum_ingot_data[1], 2),
-            "tp_margin": round((prices['platinum_ingot'] - platinum_ingot_data[1]) / platinum_ingot_data[1] * 100, 2)
+            "tp_margin": tp_margin(prices['platinum_ingot'], platinum_ingot_data[1])
         },
         "orichalcum_platinum_ingot" : {
             "source": orichalcum_ingot_platinum_data[0],
             "price" : round(orichalcum_ingot_platinum_data[1], 2),
             "tp_flip": round(prices['orichalcum_ingot'] - orichalcum_ingot_platinum_data[1], 2),
-            "tp_margin": round((prices['orichalcum_ingot'] - orichalcum_ingot_platinum_data[1]) / orichalcum_ingot_platinum_data[1] * 100, 2)
+            "tp_margin": tp_margin(prices['orichalcum_ingot'], orichalcum_ingot_platinum_data[1])
         },
     }
     
@@ -618,31 +626,31 @@ def cheapest_route_stone_cutting(price_list, skill_level, gear_set):
             "source": stone_block_data[0],
             "price" : round(stone_block_data[1], 2),
             "tp_flip": round(prices['stone_block'] - stone_block_data[1], 2),
-            "tp_margin": round((prices['stone_block'] - stone_block_data[1]) / stone_block_data[1] * 100, 2)
+            "tp_margin": tp_margin(prices['stone_block'], stone_block_data[1])
         },
         "stone_brick": {
             "source": stone_brick_data[0],
             "price" : round(stone_brick_data[1], 2),
             "tp_flip": round(prices['stone_brick'] - stone_brick_data[1], 2),
-            "tp_margin": round((prices['stone_brick'] - stone_brick_data[1]) / stone_brick_data[1] * 100, 2)
+            "tp_margin": tp_margin(prices['stone_brick'], stone_brick_data[1])
         },
         "lodestone_brick" : {
             "source": lodestone_brick_data[0],
             "price" : round(lodestone_brick_data[1], 2),
             "tp_flip": round(prices['lodestone_brick'] - lodestone_brick_data[1], 2),
-            "tp_margin": round((prices['lodestone_brick'] - lodestone_brick_data[1]) / lodestone_brick_data[1] * 100, 2)
+            "tp_margin": tp_margin(prices['lodestone_brick'], lodestone_brick_data[1])
         },
         "obsidian_voidstone" : {
             "source": obsidian_voidstone_data[0],
             "price" : round(obsidian_voidstone_data[1], 2),
             "tp_flip": round(prices['obsidian_voidstone'] - obsidian_voidstone_data[1], 2),
-            "tp_margin": round((prices['obsidian_voidstone'] - obsidian_voidstone_data[1]) / obsidian_voidstone_data[1] * 100, 2)
+            "tp_margin": tp_margin(prices['obsidian_voidstone'], obsidian_voidstone_data[1])
         },
         "runestone" : {
             "source": runestone_data[0],
             "price" : round(runestone_data[1], 2),
             "tp_flip": round(prices['runestone'] - runestone_data[1], 2),
-            "tp_margin": round((prices['runestone'] - runestone_data[1]) / runestone_data[1] * 100, 2)
+            "tp_margin": tp_margin(prices['runestone'], runestone_data[1])
         },
         "elemental_lodestone" : {
             "source": elemental_lodestone_data[0],
@@ -723,31 +731,31 @@ def cheapest_route_weaving(price_list, skill_level, gear_set):
             "source": linen_data[0],
             "price" : round(linen_data[1], 2),
             "tp_flip": round(prices['linen'] - linen_data[1], 2),
-            "tp_margin": round((prices['linen'] - linen_data[1]) / linen_data[1] * 100, 2)
+            "tp_margin": tp_margin(prices['linen'], linen_data[1])
         },
         "sateen": {
             "source": sateen_data[0],
             "price" : round(sateen_data[1], 2),
             "tp_flip": round(prices['sateen'] - sateen_data[1], 2),
-            "tp_margin": round((prices['sateen'] - sateen_data[1]) / sateen_data[1] * 100, 2)
+            "tp_margin": tp_margin(prices['sateen'], sateen_data[1])
         },
         "silk" : {
             "source": silk_data[0],
             "price" : round(silk_data[1], 2),
             "tp_flip": round(prices['silk'] - silk_data[1], 2),
-            "tp_margin": round((prices['silk'] - silk_data[1]) / silk_data[1] * 100, 2)
+            "tp_margin": tp_margin(prices['silk'], silk_data[1])
         },
         "infused_silk" : {
             "source": infused_silk_data[0],
             "price" : round(infused_silk_data[1], 2),
             "tp_flip": round(prices['infused_silk'] - infused_silk_data[1], 2),
-            "tp_margin": round((prices['infused_silk'] - infused_silk_data[1]) / infused_silk_data[1] * 100, 2)
+            "tp_margin": tp_margin(prices['infused_silk'], infused_silk_data[1])
         },
         "phoenixweave" : {
             "source": phoenixweave_data[0],
             "price" : round(phoenixweave_data[1], 2),
             "tp_flip": round(prices['phoenixweave'] - phoenixweave_data[1], 2),
-            "tp_margin": round((prices['phoenixweave'] - phoenixweave_data[1]) / phoenixweave_data[1] * 100, 2)
+            "tp_margin": tp_margin(prices['phoenixweave'], phoenixweave_data[1])
         }
     }
     
@@ -821,31 +829,31 @@ def cheapest_route_woodworking(price_list, skill_level, gear_set):
             "source": timber_data[0],
             "price" : round(timber_data[1], 2),
             "tp_flip": round(prices['timber'] - timber_data[1], 2),
-            "tp_margin": round((prices['timber'] - timber_data[1]) / timber_data[1] * 100, 2)
+            "tp_margin": tp_margin(prices['timber'], timber_data[1])
         },
         "lumber": {
             "source": lumber_data[0],
             "price" : round(lumber_data[1], 2),
             "tp_flip": round(prices['lumber'] - lumber_data[1], 2),
-            "tp_margin": round((prices['lumber'] - lumber_data[1]) / lumber_data[1] * 100, 2)
+            "tp_margin": tp_margin(prices['lumber'], lumber_data[1])
         },
         "wyrdwood_planks" : {
             "source": wyrdwood_planks_data[0],
             "price" : round(wyrdwood_planks_data[1], 2),
             "tp_flip": round(prices['wyrdwood_planks'] - wyrdwood_planks_data[1], 2),
-            "tp_margin": round((prices['wyrdwood_planks'] - wyrdwood_planks_data[1]) / wyrdwood_planks_data[1] * 100, 2)
+            "tp_margin": tp_margin(prices['wyrdwood_planks'], wyrdwood_planks_data[1])
         },
         "ironwood_planks" : {
             "source": ironwood_planks_data[0],
             "price" : round(ironwood_planks_data[1], 2),
             "tp_flip": round(prices['ironwood_planks'] - ironwood_planks_data[1], 2),
-            "tp_margin": round((prices['ironwood_planks'] - ironwood_planks_data[1]) / ironwood_planks_data[1] * 100, 2)
+            "tp_margin": tp_margin(prices['ironwood_planks'], ironwood_planks_data[1])
         },
         "glittering_ebony" : {
             "source": glittering_ebony_data[0],
             "price" : round(glittering_ebony_data[1], 2),
             "tp_flip": round(prices['glittering_ebony'] - glittering_ebony_data[1], 2),
-            "tp_margin": round((prices['glittering_ebony'] - glittering_ebony_data[1]) / glittering_ebony_data[1] * 100, 2)
+            "tp_margin": tp_margin(prices['glittering_ebony'], glittering_ebony_data[1])
         }
     }
     
