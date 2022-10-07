@@ -1,13 +1,13 @@
 {% extends "newworld/base.html" %} 
 
 {% block head %}
-<title>Skill Levels - NW Calculators</title>
+<title>Trade Skills - NW Calculators</title>
 <link id="style" rel="stylesheet" href="{{ url_for('static', filename='newworld/css/skills.css') }}"/>
 {% endblock %}
 
 {% block content %}
 <div class="skillBoxes container">
-    <h1 align="center" class="text-black">Skill Levels</h1>
+    <h1 align="center" class="text-black">Trade Skills</h1>
 
     <form hx-post="/newworld/skills_hx" hx-target="#skills_hx">
        <div id="skills_hx">
