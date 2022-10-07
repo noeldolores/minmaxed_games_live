@@ -28,7 +28,7 @@
                                 <th scope="col" class="table-dark">Buy</th>
                                 <th scope="col" class="table-dark">Avg. Cost</th>
                                 <th scope="col" class="table-dark">TP Flip</th>
-                                <th scope="col" class="table-dark">TP Margin %</th>
+                                <th scope="col" class="table-dark">Margin</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -42,7 +42,7 @@
                                     <td><a href="/newworld/material/{{ cheapest_route[template_order[i][0]][material]['source'].lower() | replace(" ","_") }}">{{ cheapest_route[template_order[i][0]][material]['source'] }}</td>
                                     <td>{{ '%.2f'|format(cheapest_route[template_order[i][0]][material]['price'] | float) }}</td>
                                     <td>{{ '%.2f'|format(cheapest_route[template_order[i][0]][material]['tp_flip'] | float) }}</td>
-                                    <td>{{ cheapest_route[template_order[i][0]][material]['tp_margin'] }}</td>
+                                    <td>{{ cheapest_route[template_order[i][0]][material]['tp_margin'] }}%</td>
                                 </tr>
                             {% endfor %}
                             </tbody>
