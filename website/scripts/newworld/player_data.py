@@ -250,7 +250,8 @@ refining_template = [
         "asmodeum",
         "silver_ingot",
         "gold_ingot",
-        "platinum_ingot"
+        "platinum_ingot",
+        "orichalcum_ingot_platinum"
     ],
     [   "stone_cutting",
         "stone_block",

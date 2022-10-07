@@ -91,7 +91,7 @@ conversions = {
             "gold_ingot": 2,
             "platinum_ore": 6
         },
-        "orichalcum_platinum_ingot" : {
+        "orichalcum_ingot_platinum" : {
             "tier" : 4,
             "primary" : "platinum_ingot",
             "orichalcum_ore": 8,
@@ -236,7 +236,7 @@ def total_craft_bonus(skill_level, gear_set, discipline):
             "steel_ingot": tier_2,
             "starmetal_ingot": tier_3,
             "orichalcum_ingot": tier_4,
-            "orichalcum_platinum_ingot": tier_4,
+            "orichalcum_ingot_platinum": tier_4,
             "asmodeum": tier_5,
             "silver_ingot": tier_1,
             "gold_ingot": 1 + 0.5 + max(skill_bonus - 0.05, 0) + gear_bonus,
@@ -443,16 +443,16 @@ def cheapest_route_smelting(price_list, skill_level, gear_set):
     silver_ingot_from_silver_ore = ( prices['silver_ore'] * conv['silver_ingot']['silver_ore'] ) / craft_bonus['silver_ingot']
     gold_ingot_from_silver_ore = ( (silver_ingot_from_silver_ore * conv['gold_ingot']['silver_ingot']) + (prices['gold_ore'] * conv['gold_ingot']['gold_ore']) + obsidian_flux) / craft_bonus['gold_ingot']
     platinum_ingot_from_silver_ore = ( (gold_ingot_from_silver_ore * conv['platinum_ingot']['gold_ingot']) + (prices['platinum_ore'] * conv['platinum_ingot']['platinum_ore']) + obsidian_flux) / craft_bonus['platinum_ingot']
-    orichalcum_ingot_platinum_from_silver_ore = ( (platinum_ingot_from_silver_ore * conv['orichalcum_platinum_ingot']['platinum_ingot']) + (prices['orichalcum_ore'] * conv['orichalcum_platinum_ingot']['orichalcum_ore']) + charcoal + obsidian_flux) / craft_bonus['orichalcum_ingot']
+    orichalcum_ingot_platinum_from_silver_ore = ( (platinum_ingot_from_silver_ore * conv['orichalcum_ingot_platinum']['platinum_ingot']) + (prices['orichalcum_ore'] * conv['orichalcum_ingot_platinum']['orichalcum_ore']) + charcoal + obsidian_flux) / craft_bonus['orichalcum_ingot']
     
     gold_ingot_from_silver_ingot = ( (prices['silver_ingot'] * conv['gold_ingot']['silver_ingot']) + (prices['gold_ore'] * conv['gold_ingot']['gold_ore']) + obsidian_flux) / craft_bonus['gold_ingot']
     platinum_ingot_from_silver_ingot = ( (gold_ingot_from_silver_ingot * conv['platinum_ingot']['gold_ingot']) + (prices['platinum_ore'] * conv['platinum_ingot']['platinum_ore']) + obsidian_flux) / craft_bonus['platinum_ingot']
-    orichalcum_ingot_platinum_from_silver_ingot = ( (platinum_ingot_from_silver_ingot * conv['orichalcum_platinum_ingot']['platinum_ingot']) + (prices['orichalcum_ore'] * conv['orichalcum_platinum_ingot']['orichalcum_ore']) + charcoal + obsidian_flux) / craft_bonus['orichalcum_ingot']
+    orichalcum_ingot_platinum_from_silver_ingot = ( (platinum_ingot_from_silver_ingot * conv['orichalcum_ingot_platinum']['platinum_ingot']) + (prices['orichalcum_ore'] * conv['orichalcum_ingot_platinum']['orichalcum_ore']) + charcoal + obsidian_flux) / craft_bonus['orichalcum_ingot']
     
     platinum_ingot_from_gold_ingot= ( (prices['gold_ingot'] * conv['platinum_ingot']['gold_ingot']) + (prices['platinum_ore'] * conv['platinum_ingot']['platinum_ore']) + obsidian_flux) / craft_bonus['platinum_ingot']
-    orichalcum_ingot_platinum_from_gold_ingot = ( (platinum_ingot_from_gold_ingot * conv['orichalcum_platinum_ingot']['platinum_ingot']) + (prices['orichalcum_ore'] * conv['orichalcum_platinum_ingot']['orichalcum_ore']) + charcoal + obsidian_flux) / craft_bonus['orichalcum_ingot']
+    orichalcum_ingot_platinum_from_gold_ingot = ( (platinum_ingot_from_gold_ingot * conv['orichalcum_ingot_platinum']['platinum_ingot']) + (prices['orichalcum_ore'] * conv['orichalcum_ingot_platinum']['orichalcum_ore']) + charcoal + obsidian_flux) / craft_bonus['orichalcum_ingot']
     
-    orichalcum_ingot_platinum_from_platinum_ingot = ( (prices['platinum_ingot'] * conv['orichalcum_platinum_ingot']['platinum_ingot']) + (prices['orichalcum_ore'] * conv['orichalcum_platinum_ingot']['orichalcum_ore']) + charcoal + obsidian_flux) / craft_bonus['orichalcum_ingot']
+    orichalcum_ingot_platinum_from_platinum_ingot = ( (prices['platinum_ingot'] * conv['orichalcum_ingot_platinum']['platinum_ingot']) + (prices['orichalcum_ore'] * conv['orichalcum_ingot_platinum']['orichalcum_ore']) + charcoal + obsidian_flux) / craft_bonus['orichalcum_ingot']
     
     silver_ingot = [
         ("Silver Ingot", prices['silver_ingot']),
@@ -535,7 +535,7 @@ def cheapest_route_smelting(price_list, skill_level, gear_set):
             "tp_flip": round(prices['platinum_ingot'] - platinum_ingot_data[1], 2),
             "tp_margin": tp_margin(prices['platinum_ingot'], platinum_ingot_data[1])
         },
-        "orichalcum_platinum_ingot" : {
+        "orichalcum_ingot_platinum" : {
             "source": orichalcum_ingot_platinum_data[0],
             "price" : round(orichalcum_ingot_platinum_data[1], 2),
             "tp_flip": round(prices['orichalcum_ingot'] - orichalcum_ingot_platinum_data[1], 2),
@@ -861,8 +861,7 @@ def cheapest_route_woodworking(price_list, skill_level, gear_set):
 
 
 def ingredients_needed_to_refine(discipline, material, quantity, skill_level, gear_set):
-    
-    if discipline == "smelting" and material in ["silver_ingot", "gold_ingot", "platinum_ingot", "orichalcum_platinum_ingot"]:
+    if discipline == "smelting" and material in ["silver_ingot", "gold_ingot", "platinum_ingot", "orichalcum_ingot_platinum"]:
         refine_conversions = conversions["smelting_precious"]
     else:
         refine_conversions = conversions[discipline]
@@ -965,7 +964,7 @@ def ingredients_needed_to_refine(discipline, material, quantity, skill_level, ge
     return ingredients, refining_component_dict, ingredients_list
     
     
-def determine_discipline(material):    
+def determine_discipline(material):
     for key in conversions.keys():
         if material in conversions[key]:
             if key == "smelting_precious":

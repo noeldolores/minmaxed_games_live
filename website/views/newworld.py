@@ -335,7 +335,6 @@ def material(material):
     if category == "primary":
         material_check = material.replace(" ","_").lower()
         discipline = calcs.determine_discipline(material_check)
-        
         if "update_quantity" in request.args:
             if request.args['update_quantity'] != "":
                 quantity = max(int(str(escape(request.args['update_quantity']))), 1)
@@ -353,7 +352,6 @@ def material(material):
 
 @newworld.route('/primary_material_hx/<material>', methods=['GET', 'POST'])
 def material_table(material):
-
     material_check = material.replace(" ","_").lower()
     discipline = calcs.determine_discipline(material_check)
     if "update_quantity" in request.args:

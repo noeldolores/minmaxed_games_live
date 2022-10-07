@@ -10,6 +10,7 @@ class Config(object):
   
 class DevelopmentConfig(Config):
   DEBUG = True
+  TESTING = True
   load_dotenv()
   SECRET_KEY = os.getenv("SECRET_KEY")
   
