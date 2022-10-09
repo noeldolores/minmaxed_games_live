@@ -23,7 +23,7 @@ a:visited {
 }
 
 .navbar-custom {
-  background-color: rgb(30, 30, 32);
+  background-color: rgb(17, 20, 20);
 }
 
 .navbar-toggler {
@@ -57,11 +57,6 @@ h1 {
 
 #topHeader {
   margin-top: 2rem;
-}
-
-input {
-  min-width: 135px;
-  
 }
 
 .skillLevel{

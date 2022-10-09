@@ -47,6 +47,9 @@ span.navbar-toggler-icon{
   margin-top: 4rem;
 }
 
+p1 {
+  color: white;
+}
 h4 {
   margin-top: 2rem;
   color: white;
@@ -61,7 +64,7 @@ h1 {
   margin-top: 2rem;
 }
 
-input {
+.skillLevel {
   min-width: 135px;
   
 }

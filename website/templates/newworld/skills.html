@@ -9,6 +9,11 @@
 <div class="skillBoxes container">
     <h1 align="center" class="text-black">Trade Skills</h1>
 
+    <div class="container col col-lg-8 col-sm-10 text-center">
+        <p1>Enter your skill levels below to generate data for the <a href="/newworld/refining" target="#"><u>Refining Cost</u></a> and <a href="/newworld/material/orichalcum_ingot" target="#"><u>Refining Ingredients</u></a> tables.</p1><br>
+        <p1>The data you enter will be saved to your browser for future visits.</p1>
+    </div>
+
     <form hx-post="/newworld/skills_hx" hx-target="#skills_hx">
        <div id="skills_hx">
             {% include "newworld/skills_hx.html" %}

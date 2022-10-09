@@ -1,7 +1,8 @@
 from flask import Blueprint, request, flash, render_template, redirect, url_for, escape, session
 import random
-from ..scripts.newworld import calculations as calcs
-from ..scripts.newworld import player_data
+from ..scripts.newworld import player_data, calculations as calcs, db_scripts
+from .. import db
+from ..models import Market, Item
 import os
 
 
@@ -15,6 +16,7 @@ def init_session():
         session['skill_levels'] = player_data.init_skill_levels()
         session['gear_sets'] = player_data.init_gear_sets()
         session['price_list'] = player_data.init_price_list()
+        session['api_loaded'] = False
         
         session.pop('_flashes', None)
         flash("We use only the necessary cookies to store the data you provide so it is available for your next visit. No data is shared with any third party. By continuing, you agree to this use of cookies.", category='success')
@@ -117,11 +119,12 @@ def random_material():
     random_material = datalist[random_number]
     
     return random_material
-
-
+        
+    
 @newworld.route('/', methods=['GET', 'POST'])
 def home():
     init_session()
+
     search = search_function()
     if search:
         return redirect(url_for("newworld.material", material=search))
@@ -134,6 +137,7 @@ def home():
 @newworld.route('/skills', methods=['GET', 'POST'])
 def skills():
     init_session()
+
     search = search_function()
     if search:
         return redirect(url_for('newworld.material', material=search))
@@ -143,7 +147,7 @@ def skills():
 
 @newworld.route('/skills_hx', methods=['GET', 'POST'])
 def skills_hx():
-    
+
     if request.method == 'POST':
         if "save" in request.form:
             session['skill_levels'] = {
@@ -178,6 +182,7 @@ def skills_hx():
 @newworld.route('/gearsets', methods=['GET', 'POST'])
 def gearsets():
     init_session()
+
     search = search_function()
     if search:
         return redirect(url_for('newworld.material', material=search)) 
@@ -187,6 +192,7 @@ def gearsets():
 
 @newworld.route('/gearsets_hx', methods=['GET', 'POST'])
 def gearsets_hx():
+
     if request.method == 'POST':
         if "save" in request.form:
             for i in session['gear_sets'].keys():
@@ -202,6 +208,7 @@ def gearsets_hx():
 @newworld.route('/tradepost', methods=['GET', 'POST'])
 def tradepost():
     init_session()
+
     search = search_function()
     if search:
         return redirect(url_for('newworld.material', material=search))
@@ -210,8 +217,10 @@ def tradepost():
     
     return render_template('newworld/tradepost.html', price_list=session['price_list'], template_order=template_order)
 
+
 @newworld.route('/tradepost_hx', methods=['GET', 'POST'])
 def tradepost_hx():
+
     template_order = player_data.trade_post_order()
     
     if request.method == 'POST':
@@ -304,45 +313,59 @@ def tradepost_hx():
 @newworld.route('/refining', methods=['GET', 'POST'])
 def refining():
     init_session()
+
+    search = search_function()
+    if search:
+        return redirect(url_for('newworld.material', material=search))
+
+    return render_template('newworld/refining.html')
+
+
+@newworld.route('/refining_hx', methods=['GET', 'POST'])
+def refining_hx():
+    init_session()
+
     search = search_function()
     if search:
         return redirect(url_for('newworld.material', material=search))
     
     template_order = player_data.refining_order()
     
+    price_list = {}
+    if session['api_loaded']:
+        if 'server_data' in session:
+            if 'items' in session['server_data']:
+                price_list = session['server_data']['items']
+    else:
+        price_list = session['price_list']
+    
     cheapest_route = {
-        "leatherworking": calcs.cheapest_route_leatherworking(session['price_list'], session['skill_levels']['refining']['leatherworking'], session['gear_sets']['leatherworking']),
-        "smelting": calcs.cheapest_route_smelting(session['price_list'], session['skill_levels']['refining']['smelting'], session['gear_sets']['smelting']),
-        "stone_cutting": calcs.cheapest_route_stone_cutting(session['price_list'], session['skill_levels']['refining']['stone_cutting'], session['gear_sets']['stone_cutting']),
-        "weaving": calcs.cheapest_route_weaving(session['price_list'], session['skill_levels']['refining']['weaving'], session['gear_sets']['weaving']),
-        "woodworking": calcs.cheapest_route_woodworking(session['price_list'], session['skill_levels']['refining']['woodworking'], session['gear_sets']['woodworking'])
+        "leatherworking": calcs.cheapest_route_leatherworking(price_list, session['skill_levels']['refining']['leatherworking'], session['gear_sets']['leatherworking']),
+        "smelting": calcs.cheapest_route_smelting(price_list, session['skill_levels']['refining']['smelting'], session['gear_sets']['smelting']),
+        "stone_cutting": calcs.cheapest_route_stone_cutting(price_list, session['skill_levels']['refining']['stone_cutting'], session['gear_sets']['stone_cutting']),
+        "weaving": calcs.cheapest_route_weaving(price_list, session['skill_levels']['refining']['weaving'], session['gear_sets']['weaving']),
+        "woodworking": calcs.cheapest_route_woodworking(price_list, session['skill_levels']['refining']['woodworking'], session['gear_sets']['woodworking'])
     }
 
-    return render_template('newworld/refining.html', cheapest_route=cheapest_route, template_order=template_order)
+    return render_template('newworld/refining_hx.html', cheapest_route=cheapest_route, template_order=template_order)
 
 
 @newworld.route('/material/<material>', methods=['GET', 'POST'])
 def material(material):
     init_session()
+
     search = search_function()
     if search:
         return redirect(url_for('newworld.material', material=search))
     
+    session['material_ref'] = material.replace(" ","_").lower()
+        
     category = determine_material_category(material.replace("_"," "))
     material_display = material.replace("_"," ").lower().title()
-    quantity = 1
     
     if category == "primary":
-        material_check = material.replace(" ","_").lower()
-        discipline = calcs.determine_discipline(material_check)
-        if "update_quantity" in request.args:
-            if request.args['update_quantity'] != "":
-                quantity = max(int(str(escape(request.args['update_quantity']))), 1)
+        return render_template('newworld/primary_material.html', material=material_display) 
 
-        material_data, component_data, data = calcs.ingredients_needed_to_refine(discipline, material_check, quantity, session['skill_levels']['refining'][discipline], session['gear_sets'][discipline])
-    
-        return render_template('newworld/primary_material.html', data=data, quantity=quantity, material=material_display,material_data=material_data, component_data=component_data) 
-     
     if category == "secondary":
         return render_template('newworld/secondary_material.html', material=material_display)
     
@@ -352,6 +375,16 @@ def material(material):
 
 @newworld.route('/primary_material_hx/<material>', methods=['GET', 'POST'])
 def material_table(material):
+    session['material_ref'] = material.replace(" ","_").lower()
+    
+    price_dict = {}
+    if session['api_loaded']:
+        if 'server_data' in session:
+            if 'items' in session['server_data']:
+                price_dict = session['server_data']['items']
+    else:
+        price_dict = session['price_list']
+    
     material_check = material.replace(" ","_").lower()
     discipline = calcs.determine_discipline(material_check)
     if "update_quantity" in request.args:
@@ -359,33 +392,25 @@ def material_table(material):
             quantity = 1
         else:
             quantity = max(int(str(escape(request.args['update_quantity']))), 1)
-    material_data, component_data, data = calcs.ingredients_needed_to_refine(discipline, material_check, quantity, session['skill_levels']['refining'][discipline], session['gear_sets'][discipline])
+    else:
+        quantity = 1
+        
+    data = calcs.ingredients_needed_to_refine(discipline, material_check, quantity, session['skill_levels']['refining'][discipline], session['gear_sets'][discipline])
     
+    refine_costs = []
+    for ref_ings in data:
+        cost = 0
+        for ingredient in ref_ings.keys():
+            if type(ref_ings[ingredient]) is int:
+                for _, mats in price_dict.items():
+                    if ingredient in mats:
+                        cost += (mats[ingredient] * ref_ings[ingredient])
+        tp_flip = (price_dict[discipline][material_check] * quantity) - cost
+        refine_costs.append((cost, tp_flip))
+
     material_display = material.replace("_"," ").lower().title()
     
-    return render_template('newworld/primary_material_hx.html', data=data, quantity=quantity, material=material_display,material_data=material_data, component_data=component_data)
-
-
-
-
-@newworld.route('/refined_material_ingredients', methods=['GET', 'POST'])
-def refined_material_ingredients():
-    init_session()
-    search = search_function()
-    if search:
-        return redirect(url_for('newworld.material', material=search))
-
-    return render_template('newworld/refined_material_ingredients.html')
-
-
-@newworld.route('/markets', methods=['GET', 'POST'])
-def markets():
-    init_session()
-    search = search_function()
-    if search:
-        return redirect(url_for('newworld.material', material=search))
-    
-    return render_template('newworld/markets.html')
+    return render_template('newworld/primary_material_hx.html', data=data, quantity=quantity, material=material_display, refine_costs=refine_costs) 
 
 
 @newworld.route('/datalist', methods=['GET', 'POST'])
@@ -422,6 +447,101 @@ def datalist():
                 return_length = min(5, len(parsed_list))
 
     return render_template('newworld/datalist.html', datalist=parsed_list[0:return_length])
+
+
+@newworld.route('/server_api', methods=['GET', 'POST'])
+def server_api():
+    init_session()
+    search = search_function()
+    if search:
+        return redirect(url_for('newworld.material', material=search))
+    
+    server_dict = {}
+    basedir = os.path.abspath(os.path.dirname(__file__))
+
+    server_list_file = os.path.join(basedir, '../static/newworld/txt/api_server_list.txt')
+    with open(server_list_file) as file:
+        lines = file.readlines()
+        for line in lines:
+            name, num = line.rstrip().lower().split(",")
+            server_dict[name] = num
+            
+    if "load_server" in request.form:
+        if "servers" in request.form:
+            server_id = request.form["servers"]
+            market_dict = db_scripts.load_market_server(server_id)
+            
+            item_dict = market_dict['items']
+            item_ref = player_data.trade_post_order()
+            
+            server_prices = {}
+            for item_list in item_ref:
+                
+                header = item_list[0]
+                server_prices[header] = {}
+                for item in item_list:
+                    if item in item_dict:
+                        server_prices[header][item] = item_dict[item]
+            
+            session['server_data'] = {
+                'name' : market_dict['name'],
+                'last_update': market_dict['last_update'],
+                'items': server_prices
+            }
+            
+            session['api_loaded'] = True
+                
+    template_order = player_data.trade_post_order()
+
+    price_list = session['price_list']
+    if 'server_data' in session:
+        if 'items' in session['server_data']:
+            price_list = session['server_data']['items']
+            
+    return render_template('newworld/server_api.html', server_dict=server_dict, price_list=price_list, template_order=template_order)
+
+
+
+@newworld.route('/server_api_hx', methods=['GET', 'POST'])
+def server_api_hx():
+    
+    template_order = player_data.trade_post_order()
+
+    price_list = session['price_list']
+    if 'server_data' in session:
+        if 'items' in session['server_data']:
+            price_list = session['server_data']['items']
+                
+    return render_template('newworld/server_api_hx.html', price_list=price_list, template_order=template_order)
+
+
+@newworld.route('/navbar_api_hx', methods=['GET', 'POST'])
+def navbar_api_hx():
+    is_loaded = session['api_loaded']
+    
+    if is_loaded:
+        session['api_loaded'] = False
+        status = 'Load API'
+        css_class = "btn-outline-secondary"
+        
+    else:
+        session['api_loaded'] = True
+        status = 'API Active'
+        css_class = "btn-outline-success"
+
+    return render_template('newworld/navbar_api_hx.html', status=status, css_class=css_class)
+
+    
+
+
+@newworld.route('/refined_material_ingredients', methods=['GET', 'POST'])
+def refined_material_ingredients():
+    init_session()
+    search = search_function()
+    if search:
+        return redirect(url_for('newworld.material', material=search))
+
+    return render_template('newworld/refined_material_ingredients.html')
 
 
 @newworld.route('/dropdown_show', methods=['GET', 'POST'])

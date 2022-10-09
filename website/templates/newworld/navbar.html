@@ -13,14 +13,21 @@
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                     <a class="nav-link text-dark" href="/newworld/skills"><span class="nav_a">Trade Skills</span></a>
                     <a class="nav-link text-dark" href="/newworld/gearsets"><span class="nav_a">Gear Sets</span></a>
+                    <a class="nav-link text-dark" href="/newworld/server_api">Select Server</a>
                 </div>
             </li>
             <li class="nav-item active">
                 <a class="nav-link text-white" href="/newworld/tradepost">Trade Post</a>
             </li>
             <li class="nav-item active">
-                <a class="nav-link text-white" href="/newworld/refining">Refining Cost</a>
+                <a class="nav-link text-white pr-3" href="/newworld/refining">Refining Cost</a>
             </li>
+            
+            {% if 'server_data' in session %}
+            <li class="nav-item active form-check-inline" id="api_toggle">
+                {% include '/newworld/navbar_api_hx.html'%}
+            </li>
+            {% endif %}
             
         </ul>
         <form class="form-inline my-2 my-lg-0" method="GET" id="search">

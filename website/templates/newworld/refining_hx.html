@@ -1,0 +1,41 @@
+<div>
+    <button id="refining_toggle" class="btn btn-outline-light custom_toggle" _="on click call me.blur() if my.innerText == 'Show All' remove .collapsed from #collapse add .show to .collapseall set .collapse-main's @aria-expanded to 'true' set my.innerText to 'Hide All' else add .collapsed to #collapse remove .show from .collapseall set .collapse-main's @aria-expanded to 'false' set my.innerText to 'Show All'">Hide All</button>
+</div>
+
+<div class="container active list-unstyled components">
+            
+    {% for i in range(0, template_order|length) %}
+    <div id="collapse" href="#homeSubmenu{{i}}" data-toggle="collapse" aria-expanded="true" class="btn btn-outline-secondary dropdown-toggle collapse-main">{{template_order[i][0].title() | replace("_"," ")}}</div>
+    <ul class="collapse list-unstyled collapseall show" id="homeSubmenu{{i}}">
+        <li>
+            <table class="table table-striped table-secondary">
+                <thead>
+                <tr>
+                    <th scope="col" class="table-dark" style="width: 25%">Target</th>
+                    <th scope="col" class="table-dark" style="width: 25%">Buy</th>
+                    <th scope="col" class="table-dark" style="width: 17%">Avg. Cost</th>
+                    <th scope="col" class="table-dark" style="width: 17%">TP Flip</th>
+                    <th scope="col" class="table-dark" style="width: 16%">Margin</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for material in template_order[i][1:] %}
+                    <tr>
+                    {% if material == "elemental_lodestone"%}
+                        <td scope="row"><a href="/newworld/material/{{ cheapest_route[template_order[i][0]][material]['source'].lower() | replace(" ","_") }}">{{material.title() | replace("_"," ")}}</a></td>
+                    {% else %}
+                        <td scope="row"><a href="/newworld/material/{{material | replace(" ","_")}}">{{material.title() | replace("_"," ")}}</a></td>
+                    {% endif %}
+                        <td><a href="/newworld/material/{{ cheapest_route[template_order[i][0]][material]['source'].lower() | replace(" ","_") }}">{{ cheapest_route[template_order[i][0]][material]['source'] }}</td>
+                        <td>{{ '%.2f'|format(cheapest_route[template_order[i][0]][material]['price'] | float) }}</td>
+                        <td>{{ '%.2f'|format(cheapest_route[template_order[i][0]][material]['tp_flip'] | float) }}</td>
+                        <td>{{ cheapest_route[template_order[i][0]][material]['tp_margin'] }}%</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </li>
+    </ul> 
+    {% endfor %}
+
+</div>

@@ -337,7 +337,7 @@ def cheapest_route_leatherworking(price_list, skill_level, gear_set):
         ("Layered Leather", runic_leather_from_layered_leather),
         ("Infused Leather", runic_leather_from_infused_leather)
     ]
-    
+
     coarse_leather_data = cost_comparison(coarse_leather)
     rugged_leather_data = cost_comparison(rugged_leather)
     layered_leather_data = cost_comparison(layered_leather)
@@ -923,9 +923,9 @@ def ingredients_needed_to_refine(discipline, material, quantity, skill_level, ge
     test_refine = refining_component.copy()
           
     refining_component.insert(0, int(sum(refining_component)))
-    refining_component_dict = {
-        refine_conversions['refining_component']: refining_component
-    }
+    # refining_component_dict = {
+    #     refine_conversions['refining_component']: refining_component
+    # }
     
     # Need to clean up, can probably combine with the original script
     final_refine = []
@@ -961,7 +961,7 @@ def ingredients_needed_to_refine(discipline, material, quantity, skill_level, ge
                                         if kk == "charcoal":
                                             ingredients_list[i][kk] = int(ingredients_list[i][refine_conversions['refining_component']] * 2)
                                     
-    return ingredients, refining_component_dict, ingredients_list
+    return ingredients_list
     
     
 def determine_discipline(material):

@@ -47,43 +47,65 @@ span.navbar-toggler-icon{
   margin-top: 4rem;
 }
 
-p1 {
-  color: white;
-}
-
-.gearsets-h1 {
+h1 {
   margin-top: 4rem;
   color: white;
 }
 
-.gearsets-h4 {
-  margin-top: 2rem;
+p1 {
   color: white;
 }
 
-.gearsets-input {
-  margin-left: 4rem;
-  margin-right: 4rem;
-  transform: scale(2);
-  -webkit-transform: scale(2);
-}
-
-.gearsets-label {
-  font-size: 18px;
-  margin-bottom: 4px;
+label {
+  margin-top: 4px;
+  margin-bottom: 0px;
   color: white;
 }
 
-.saveGearsets {
+.price{
+  text-align: center; 
+}
+
+.loadMarket {
   margin-top: 2rem;
   min-width: 150px;
-  
 }
 
-.gearsets {
+#listspace {
+  margin-top: 10px;
+  margin-bottom: -10px;
+  width: 100%;
+  text-align: center;
+}
+  
+.collapse-main {
+  margin-top: 0.25rem;
+  width: 100%;
+  color: white;
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
+}
+
+#server_api_hx {
   text-align: center;
 }
 
-.nav-link {
-  text-align: left;
+.btn[aria-expanded="true"]{
+  background-color: rgb(10, 10, 10);
+}
+
+.btn[aria-expanded="false"]{
+  background-color: rgb(50, 50, 50);
+}
+
+.btn-outline-secondary:hover {
+  background-color: rgb(20, 20, 20);
+}
+
+.btn-outline-secondary:not(:disabled):not(:disabled):active {
+  background-color: rgb(10, 10, 10);
+} 
+
+.custom_toggle {
+  width: 100%;
 }

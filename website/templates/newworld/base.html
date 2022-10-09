@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/css/bootstrap.min.css" integrity="sha384-zCbKRCUGaJDkqS1kPbPd7TveP5iyJE0EjAuZQTgFLD2ylzuqKfdKlfG/eSrtxUkn" crossorigin="anonymous">
-    
+
     {% block head %}
     <title>NW Calculators</title>
     <link  id="style" rel="stylesheet" href="{{ url_for('static', filename='newworld/css/base.css') }}"/>
@@ -53,28 +53,28 @@
       </div>
       <div class="row justify-content-center">
         <div class="col-lg-4 col-md-5 col-sm-6">
-          <a class="nav-link" href="/newworld/tradepost"><button type="button" class="btn btn-secondary btn-lg btn-block mb-2 mt-2 home-button">Trade Post<br><span style="font-size:1.35rem">(fill this out)</span></button></a>
+          <a class="nav-link" href="/newworld/server_api"><button type="button" class="btn btn-secondary btn-lg btn-block mb-2 mt-2 home-button">Server API<br><span style="font-size:1.35rem">(choose server)</span></button></a>
         </div>
         <div class="col-lg-4 col-md-5 col-sm-6">
-          <a class="nav-link" href="/newworld/refining"><button type="button" class="btn btn-secondary btn-lg btn-block mb-2 mt-2 home-button">Refining Cost<br><span style="font-size:1.35rem">(behold, results!)</span></button></a>
+          <a class="nav-link" href="/newworld/tradepost"><button type="button" class="btn btn-secondary btn-lg btn-block mb-2 mt-2 home-button">Trade Post<br><span style="font-size:1.35rem">(fill this out)</span></button></a>
         </div>
       </div>
       <div class="row justify-content-center">
+        <div class="col-lg-4 col-md-5 col-sm-6">
+          <a class="nav-link" href="/newworld/refining"><button type="button" class="btn btn-info btn-lg btn-block mb-2 mt-2 home-button">Refining Cost<br><span style="font-size:1.35rem">(behold, results!)</span></button></a>
+        </div>
         <div class="col-lg-4 col-md-5 col-sm-6">
           <a class="nav-link" href="/newworld/material/{{rand_mat}}"><button type="button" class="btn btn-info btn-lg btn-block mb-2 mt-2 home-button">Material Calculator<br><span style="font-size:1.35rem">(random)</span></button></a>
         </div>
       </div>
 
     </div>
-
-
     {% endblock %}
     
     <script src="{{ url_for('static', filename='newworld/js/htmx.min.js') }}"></script>
     <script src="https://unpkg.com/hyperscript.org@0.9.7"></script>
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.5.1/dist/jquery.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-fQybjgWLrvvRgtW6bFlB7jaZrFsaBXjsOMm/tB9LTS58ONXgqbR9W8oWht/amnpF" crossorigin="anonymous"></script>
-
     <script>
         $('.alert').alert()
     </script>

@@ -8,27 +8,30 @@
 {% block content%}
 <h1 align="center" class="text-black" id="topHeader">{{material}}</h1>
 
+<div class="container col col-lg-6 col-sm-10 text-center">
+    <p1>This table shows the total required ingredients to create {{material}}.</p1><br>
+    <p1>The rows are separate refining routes that each start at a different base tier.</p1><br>
+    <p1><b>Raw Cost</b>: For lower quantities this will be more than the <b>Avg. Cost</b> listed on the <a href="/newworld/refining" target="#"><u>Refining Cost</u></a> tables.</p1><br>
+    <p1><b>TP Flip</b>: Potential profit/loss from selling back to the Trade Post. This does not account for taxes or fees.</p1><br>
+    <p1>Update the quantity box below, and the table will refresh after a short pause.</p1><br>
+</div>
+
 <div class="container">
     <div class="active list-unstyled components">
 
         <form class="form-row justify-content-center">
             <div class="col-sm-auto col-md-5 col-lg-5 p-2 input-group">
-                <input type="number" id="quant_field" class="form-control" min="1" max="2147483646" value="{{quantity}}" name="update_quantity"
+                <input type="number" id="quant_field" class="form-control" min="1" max="2147483646" placeholder="1" value="{{quantity}}" name="update_quantity"
                     hx-get="/newworld/primary_material_hx/{{material}}" 
-                    hx-trigger="keyup[key=='Enter'] from:body, keyup[key!='Enter'] changed delay:1s" 
-                    hx-target="#ingredients" 
+                    hx-trigger="keyup[key=='Enter'] from:body, keyup[key!='Enter'] changed delay:650ms" 
+                    hx-target="#material_container" 
                     _="on keyup add .load to #values">
                 <input type="text" style="display: none;"/>
-                <!--<div class="input-group-append">
-                    <button class="btn btn-outline-light" type="submit">Button</button>
-                </div>-->
             </div>
         </form>
 
-        <table class="table table-striped table-secondary" id="ingredients"  _="on htmx:load call #quant_field.blur()">
-            {% include "newworld/primary_material_hx.html"%}
-        </table>
-        
+        <div id="material_container" _="init fetch /newworld/primary_material_hx/{{session['material_ref']}} put the result into #material_container"><div>
+
     </div>
 </div>
 {% endblock %}

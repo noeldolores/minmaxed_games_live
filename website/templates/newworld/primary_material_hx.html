@@ -1,20 +1,27 @@
-<thead>
-    <tr>
-        {% for key in data[0].keys() %}
-            {% if key == "elemental_lodestone" %}
-            <th scope="col" class="table-dark">{{ key.title() | replace("_"," ") }}</th>
-            {% else%}
-            <th scope="col" class="table-dark"><a href="/newworld/material/{{key}}">{{ key.title() | replace("_"," ") }}</th>
-            {% endif %}
+<table class="table table-striped table-secondary" id="ingredients"  _="on htmx:load call #quant_field.blur()">
+    <thead>
+        <tr>
+            {% for key in data[0].keys() %}
+                {% if key == "elemental_lodestone" %}
+                <th scope="col" class="table-dark" style="width: {{(100 / (data[0]|length + 2))|round|int}}%">{{ key.title() | replace("_"," ") }}</th>
+                {% else%}
+                <th scope="col" class="table-dark" style="width: {{(100 / (data[0]|length + 2))|round|int}}%"><a href="/newworld/material/{{key}}">{{ key.title() | replace("_"," ") }}</th>
+                {% endif %}
+            {% endfor %}
+                <th scope="col" class="table-dark" style="width: {{(100 / (data[0]|length + 2))|round|int}}%">Raw Cost</th>
+                <th scope="col" class="table-dark" style="width: {{(100 / (data[0]|length + 2))|round|int}}%">TP Flip</th>
+        </tr>
+    </thead>
+
+    <tbody>
+        {% for i in range(0, data|length) %}
+        <tr id="values">
+            {% for value in data[i].values() %}
+            <td scope="row">{{ value }}</td>
+            {% endfor %}
+            <td scope="row">{{ '%.2f'|format(refine_costs[i][0]) }}</td> 
+            <td scope="row">{{ '%.2f'|format(refine_costs[i][1]) }}</td>
+        </tr>
         {% endfor %}
-    </tr>
-</thead>
-{% for material in data %}
-<tbody>
-    <tr id="values">
-        {% for value in material.values() %}
-        <td scope="row">{{ value }}</td>
-        {% endfor %}
-    </tr>
-</tbody>
-{% endfor %}
+    </tbody>
+</table>
