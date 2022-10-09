@@ -81,3 +81,15 @@ def load_market_server(server_id):
         return market_dict
     else:
         return False
+    
+    
+def main():
+    try:
+        full_pull = request_nwmarketprices()
+    except Exception as e:
+        full_pull = False
+        print(f"create_id_query_list: {e}", flush=True)
+    print(full_pull)    
+    
+if __name__ == "__main__":
+  main()
