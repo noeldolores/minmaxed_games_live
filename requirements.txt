@@ -2,3 +2,5 @@ flask
 flask_sqlalchemy
 bs4
 pytz
+requests
+mysql-connector-python
