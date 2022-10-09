@@ -4,8 +4,7 @@ import json
 import os
 from datetime import datetime
 import pytz
-from ... import db
-from ...models import Market, Item
+from website import app, db, models
 
 
 def str_to_datetime(date_string):
@@ -34,13 +33,13 @@ def request_nwmarketprices():
     
     # Iterate through each server and retrieve data
     for key, value in server_dict.items():
-        server = Market.query.filter_by(name=key).first()
+        server = models.Market.query.filter_by(name=key).first()
         
         if not server:
             # Create new market table
-            server = Market(name=key, server_id=value)
-            db.session.add(server)
-            db.session.commit()
+            server = models.Market(name=key, server_id=value)
+            models.Market.session.add(server)
+            models.Market.session.commit()
         
         # Retrieve Data
         url = f"https://nwmarketprices.com/api/latest-prices/{value}/"
@@ -50,34 +49,28 @@ def request_nwmarketprices():
             item_list = json.loads(str(soup))
             
             for item in item_list:
-                item_check = Item.query.filter_by(item_id=item['ItemId']).first()
+                item_check = models.Item.query.filter_by(item_id=item['ItemId']).first()
                 if item_check:
                     item_check.price = item['Price']
                     item_check.availability = item['Availability']
                     item_check.last_update = str_to_datetime(item['LastUpdated'])
                 else:
-                    new_item = Item(last_update=str_to_datetime(item['LastUpdated']), item_id=item['ItemId'], name=item['ItemName'], price=item['Price'], availability=item['Availability'], market_id=server.id)
+                    new_item = models.Item(last_update=str_to_datetime(item['LastUpdated']), item_id=item['ItemId'], name=item['ItemName'], price=item['Price'], availability=item['Availability'], market_id=server.id)
                     db.session.add(new_item)
             db.session.commit()
         else:
             return False
     return True
-        
 
-def load_market_server(server_id):
-    server = Market.query.filter_by(server_id=server_id).first()
+
+def main():
+    with app.app_context():
+        try:
+            full_pull = request_nwmarketprices()
+        except Exception as e:
+            full_pull = False
+            print(f"create_id_query_list: {e}", flush=True)
+        print(full_pull)    
     
-    market_dict = {}
-    item_dict = {}
-    if server:
-        for item in server.items:
-            item_name = item.name.lower().replace(" ","_")
-            item_dict[item_name] = float(item.price)
-        
-        market_dict['name'] = server.name
-        market_dict['last_update'] = datetime_to_str(server.last_update)
-        market_dict['items'] = item_dict
-    
-        return market_dict
-    else:
-        return False
+if __name__ == "__main__":
+  main()
