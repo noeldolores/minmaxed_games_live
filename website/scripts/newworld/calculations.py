@@ -969,7 +969,6 @@ def ingredients_needed_to_refine(discipline, material, quantity, skill_level, ge
                 for _, mats in price_dict.items():
                     if ingredient in mats:
                         cost += (mats[ingredient] * ref_ings[ingredient])
-        cost = cost / craft_bonus
         tp_flip = (price_dict[discipline][material] * quantity) - cost
         refine_costs.append((cost, tp_flip))
 
