@@ -398,18 +398,18 @@ def material_table(material):
     else:
         quantity = 1
 
-    data = calcs.ingredients_needed_to_refine(discipline, material_check, quantity, session['skill_levels']['refining'][discipline], session['gear_sets'][discipline])
+    data, refine_costs = calcs.ingredients_needed_to_refine(discipline, material_check, quantity, session['skill_levels']['refining'][discipline], session['gear_sets'][discipline], price_dict)
 
-    refine_costs = []
-    for ref_ings in data:
-        cost = 0
-        for ingredient in ref_ings.keys():
-            if type(ref_ings[ingredient]) is int:
-                for _, mats in price_dict.items():
-                    if ingredient in mats:
-                        cost += (mats[ingredient] * ref_ings[ingredient])
-        tp_flip = (price_dict[discipline][material_check] * quantity) - cost
-        refine_costs.append((cost, tp_flip))
+    # refine_costs = []
+    # for ref_ings in data:
+    #     cost = 0
+    #     for ingredient in ref_ings.keys():
+    #         if type(ref_ings[ingredient]) is int:
+    #             for _, mats in price_dict.items():
+    #                 if ingredient in mats:
+    #                     cost += (mats[ingredient] * ref_ings[ingredient])
+    #     tp_flip = (price_dict[discipline][material_check] * quantity) - cost
+    #     refine_costs.append((cost, tp_flip))
 
     material_display = material.replace("_"," ").lower().title()
 
