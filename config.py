@@ -6,21 +6,20 @@ class Config(object):
   TESTING = False
   load_dotenv()
   SECRET_KEY = os.getenv("SECRET_KEY")
-  
-  
+
+
 class DevelopmentConfig(Config):
   DEBUG = True
   TESTING = True
   SQLALCHEMY_TRACK_MODIFICATIONS = False
-  DB_NAME = "database.db" 
+  DB_NAME = "database.db"
   load_dotenv()
   SECRET_KEY = os.getenv("SECRET_KEY")
-  
-  
+
+
 class ProductionConfig(Config):
   DEBUG = False
   TESTING = False
-  DB_NAME = "noeldolores$minmaxed_newworld"
   SQLALCHEMY_TRACK_MODIFICATIONS = False
   SQLALCHEMY_DATABASE_URI = "mysql+mysqlconnector://{username}:{password}@{hostname}/{databasename}".format(
     username="noeldolores",

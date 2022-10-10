@@ -22,9 +22,8 @@ def request_nwmarketprices():
 
     # Retrieve server name/id dictionary
     server_dict = {}
-    basedir = os.path.abspath(os.path.dirname(__file__))
-    print(basedir)
-    server_list_file = os.path.join(basedir, '/static/newworld/txt/api_server_list.txt')
+
+    server_list_file = '/home/noeldolores/minmaxed_games/website/static/newworld/txt/api_server_list.txt'
     with open(server_list_file) as file:
         lines = file.readlines()
         for line in lines:
@@ -38,8 +37,8 @@ def request_nwmarketprices():
         if not server:
             # Create new market table
             server = models.Market(name=key, server_id=value)
-            models.Market.session.add(server)
-            models.Market.session.commit()
+            db.session.add(server)
+            db.session.commit()
 
         # Retrieve Data
         url = f"https://nwmarketprices.com/api/latest-prices/{value}/"
@@ -49,7 +48,7 @@ def request_nwmarketprices():
             item_list = json.loads(str(soup))
 
             for item in item_list:
-                item_check = models.Item.query.filter_by(item_id=item['ItemId']).first()
+                item_check = models.Item.query.filter_by(market_id=server.server_id).filter_by(item_id=item['ItemId']).first()
                 if item_check:
                     item_check.price = item['Price']
                     item_check.availability = item['Availability']
