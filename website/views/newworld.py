@@ -341,8 +341,6 @@ def refining_hx():
     else:
         price_list = session['price_list']
 
-    print(session['price_list'])
-
     cheapest_route = {
         "leatherworking": calcs.cheapest_route_leatherworking(price_list, session['skill_levels']['refining']['leatherworking'], session['gear_sets']['leatherworking']),
         "smelting": calcs.cheapest_route_smelting(price_list, session['skill_levels']['refining']['smelting'], session['gear_sets']['smelting']),
