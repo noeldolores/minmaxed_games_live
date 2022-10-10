@@ -479,6 +479,8 @@ def server_api():
             while not market_dict or tries==10:
                 market_dict = db_scripts.load_market_server(server_id)
                 tries += 1
+            if tries >= 10:
+                print("Load server failed after 10 tries")
                 
             if market_dict:
                 item_dict = market_dict['items']
