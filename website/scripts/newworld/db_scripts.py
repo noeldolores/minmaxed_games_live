@@ -18,6 +18,7 @@ def load_market_server(server_id):
     except Exception as e:
         server = None
         print(e)
+        db.session.rollback()
         db.session.remove()
     market_dict = {}
     item_dict = {}

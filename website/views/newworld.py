@@ -480,6 +480,7 @@ def server_api():
                 tries += 1
             if tries >= 10:
                 print("Load server failed after 10 tries")
+                db.session.rollback()
                 db.session.remove()
                 
             if market_dict:

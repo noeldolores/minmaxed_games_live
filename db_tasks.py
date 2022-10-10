@@ -70,6 +70,7 @@ def main():
             full_pull = request_nwmarketprices()
         except Exception as e:
             full_pull = False
+            db.session.rollback()
             db.session.remove()
             print(f"create_id_query_list: {e}", flush=True)
         print(full_pull)
