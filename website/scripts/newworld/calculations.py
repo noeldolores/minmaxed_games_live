@@ -227,8 +227,8 @@ def total_craft_bonus(skill_level, gear_set, discipline):
             "coarse_leather": tier_1,
             "rugged_leather": tier_2,
             "layered_leather": tier_3,
-            "infused_leather": 1 + max(skill_bonus - 0.07, 0) + gear_bonus,
-            "runic_leather": 1 + + max(skill_bonus - 0.2, 0) + gear_bonus
+            "infused_leather": tier_4,
+            "runic_leather": tier_5
         }
     elif discipline == "smelting":
         craft_bonus = {
