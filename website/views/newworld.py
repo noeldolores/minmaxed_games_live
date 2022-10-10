@@ -1,3 +1,4 @@
+from termios import VLNEXT
 from flask import Blueprint, request, flash, render_template, redirect, url_for, escape, session
 import random
 from ..scripts.newworld import player_data, calculations as calcs, db_scripts
@@ -503,10 +504,22 @@ def server_api():
 
     template_order = player_data.trade_post_order()
 
+    # price_list = session['price_list']
+    # if 'server_data' in session:
+    #     if 'items' in session['server_data']:
+    #         price_list = session['server_data']['items']
     price_list = session['price_list']
     if 'server_data' in session:
         if 'items' in session['server_data']:
-            price_list = session['server_data']['items']
+            price_list_server = session['server_data']['items']
+            
+            for key, value in session['price_list'].items():
+                for mat in value.keys():
+                    if key not in price_list_server:
+                        price_list_server[key] = {}
+                    if mat not in price_list_server[key]:
+                        price_list_server[key][mat] = price_list[key][mat]
+            price_list = price_list_server.copy()
 
     return render_template('newworld/server_api.html', server_dict=server_dict, price_list=price_list, template_order=template_order)
 
@@ -520,7 +533,16 @@ def server_api_hx():
     price_list = session['price_list']
     if 'server_data' in session:
         if 'items' in session['server_data']:
-            price_list = session['server_data']['items']
+            price_list_server = session['server_data']['items']
+            
+            for key, value in session['price_list'].items():
+                for mat in value.keys():
+                    if key not in price_list_server:
+                        price_list_server[key] = {}
+                    if mat not in price_list_server[key]:
+                        price_list_server[key][mat] = price_list[key][mat]
+            price_list = price_list_server.copy()
+            #price_list = session['server_data']['items']
 
     return render_template('newworld/server_api_hx.html', price_list=price_list, template_order=template_order)
 
