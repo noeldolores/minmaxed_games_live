@@ -474,15 +474,6 @@ def server_api():
             server_id = request.form["servers"]
             market_dict = db_scripts.load_market_server(server_id)
 
-            tries = 0
-            while not market_dict or tries==10:
-                market_dict = db_scripts.load_market_server(server_id)
-                tries += 1
-            if tries >= 10:
-                print("Load server failed after 10 tries")
-                db.session.rollback()
-                db.session.remove()
-                
             if market_dict:
                 item_dict = market_dict['items']
                 item_ref = player_data.trade_post_order()
@@ -512,7 +503,7 @@ def server_api():
     if 'server_data' in session:
         if 'items' in session['server_data']:
             price_list_server = session['server_data']['items']
-            
+
             for key, value in session['price_list'].items():
                 for mat in value.keys():
                     if key not in price_list_server:
@@ -534,7 +525,7 @@ def server_api_hx():
     if 'server_data' in session:
         if 'items' in session['server_data']:
             price_list_server = session['server_data']['items']
-            
+
             for key, value in session['price_list'].items():
                 for mat in value.keys():
                     if key not in price_list_server:

@@ -9,6 +9,8 @@ def create_app():
   app.config.from_object("config.ProductionConfig")
 
   db.init_app(app)
+  with app.app_context():
+    db.create_all()
 
   from .views.newworld import newworld
   from .views.index import index
@@ -19,9 +21,4 @@ def create_app():
   return app
 
 
-def create_database(app):
-  db.create_all(app=app)
-
-
 app = create_app()
-app.app_context().push()
