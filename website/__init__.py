@@ -1,9 +1,8 @@
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 
-db = SQLAlchemy(session_options={"autoflush": False})
+db = SQLAlchemy()
 DB_NAME = "noeldolores$minmaxed_newworld"
-#DB_NAME = "database.db"
 
 def create_app():
   app = Flask(__name__)

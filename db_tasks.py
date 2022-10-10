@@ -39,6 +39,7 @@ def request_nwmarketprices():
             server = models.Market(name=key, server_id=value)
             db.session.add(server)
             db.session.commit()
+            db.session.remove()
 
         # Retrieve Data
         url = f"https://nwmarketprices.com/api/latest-prices/{value}/"
@@ -57,6 +58,7 @@ def request_nwmarketprices():
                     new_item = models.Item(last_update=str_to_datetime(item['LastUpdated']), item_id=item['ItemId'], name=item['ItemName'], price=item['Price'], availability=item['Availability'], market_id=server.id)
                     db.session.add(new_item)
             db.session.commit()
+            db.session.remove()
         else:
             return False
     return True
@@ -68,6 +70,7 @@ def main():
             full_pull = request_nwmarketprices()
         except Exception as e:
             full_pull = False
+            db.session.remove()
             print(f"create_id_query_list: {e}", flush=True)
         print(full_pull)
 

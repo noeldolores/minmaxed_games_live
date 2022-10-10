@@ -1,7 +1,3 @@
-import requests
-from bs4 import BeautifulSoup
-import json
-import os
 from datetime import datetime
 import pytz
 from ... import db
@@ -22,6 +18,7 @@ def load_market_server(server_id):
     except Exception as e:
         server = None
         print(e)
+        db.session.remove()
     market_dict = {}
     item_dict = {}
     if server:
@@ -33,6 +30,7 @@ def load_market_server(server_id):
         market_dict['last_update'] = datetime_to_str(server.last_update)
         market_dict['items'] = item_dict
 
+        db.session.remove()
         return market_dict
     else:
         return None
