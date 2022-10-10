@@ -475,25 +475,29 @@ def server_api():
             server_id = request.form["servers"]
             market_dict = db_scripts.load_market_server(server_id)
 
-            item_dict = market_dict['items']
-            item_ref = player_data.trade_post_order()
+            tries = 0
+            while not market_dict or tries==10:
+                market_dict = db_scripts.load_market_server(server_id)
+                tries += 1
+                
+            if market_dict:
+                item_dict = market_dict['items']
+                item_ref = player_data.trade_post_order()
 
-            server_prices = {}
-            for item_list in item_ref:
+                server_prices = {}
+                for item_list in item_ref:
+                    header = item_list[0]
+                    server_prices[header] = {}
+                    for item in item_list:
+                        if item in item_dict:
+                            server_prices[header][item] = item_dict[item]
 
-                header = item_list[0]
-                server_prices[header] = {}
-                for item in item_list:
-                    if item in item_dict:
-                        server_prices[header][item] = item_dict[item]
-
-            session['server_data'] = {
-                'name' : market_dict['name'],
-                'last_update': market_dict['last_update'],
-                'items': server_prices
-            }
-
-            session['api_loaded'] = True
+                session['server_data'] = {
+                    'name' : market_dict['name'],
+                    'last_update': market_dict['last_update'],
+                    'items': server_prices
+                }
+                session['api_loaded'] = True
 
     template_order = player_data.trade_post_order()
 
