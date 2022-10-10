@@ -7,7 +7,7 @@
             {% for material in template_order[i][1:] %}
             <div class="col-auto">
                 <label for={{material}}><a href="/newworld/material/{{material}}" target="#">{{material.title() | replace("_"," ")}}</a></label>
-                <input disabled style="background-color:rgb(200, 200, 200)" required type="number" step="0.01" id="{{material}}" name="{{material}}" class="form-control price" min="0" value="{{ '%.2f'|format(price_list[template_order[i][0]][material]) }}">
+                <input disabled style="background-color:rgb(200, 200, 200)" type="text" step="0.01" id="{{material}}" name="{{material}}" class="form-control price" min="0" value="{{ '%.2f'|format(price_list[template_order[i][0]][material]) }}">
             </div>
             {% endfor %}
         </div>
