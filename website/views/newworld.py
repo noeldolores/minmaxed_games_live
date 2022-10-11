@@ -408,7 +408,10 @@ def material_table(material):
                 for _, mats in price_dict.items():
                     if ingredient in mats:
                         cost += (mats[ingredient] * ref_ings[ingredient])
-        tp_flip = (price_dict[discipline][material_check] * quantity) - cost
+        if material_check == "orichalcum_ingot_platinum":
+            tp_flip = (price_dict[discipline]["orichalcum_ingot"] * quantity) - cost
+        else:
+            tp_flip = (price_dict[discipline][material_check] * quantity) - cost
         refine_costs.append((cost, tp_flip))
 
     material_display = material.replace("_"," ").lower().title()
