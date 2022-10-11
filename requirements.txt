@@ -4,3 +4,4 @@ bs4
 pytz
 requests
 mysql-connector-python
+python-dotenv
