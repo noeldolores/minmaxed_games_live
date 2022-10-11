@@ -860,7 +860,7 @@ def cheapest_route_woodworking(price_list, skill_level, gear_set):
     return woodworking
 
 
-def ingredients_needed_to_refine(discipline, material, quantity, skill_level, gear_set, price_dict):
+def ingredients_needed_to_refine(discipline, material, quantity, skill_level, gear_set):
     if discipline == "smelting" and material in ["silver_ingot", "gold_ingot", "platinum_ingot", "orichalcum_ingot_platinum"]:
         refine_conversions = conversions["smelting_precious"]
     else:
@@ -960,19 +960,8 @@ def ingredients_needed_to_refine(discipline, material, quantity, skill_level, ge
                                         ingredients_list[i][kk] = ingredients[kk]
                                         if kk == "charcoal":
                                             ingredients_list[i][kk] = int(ingredients_list[i][refine_conversions['refining_component']] * 2)
-    
-    refine_costs = []
-    for ref_ings in ingredients_list:
-        cost = 0
-        for ingredient in ref_ings.keys():
-            if type(ref_ings[ingredient]) is int:
-                for _, mats in price_dict.items():
-                    if ingredient in mats:
-                        cost += (mats[ingredient] * ref_ings[ingredient])
-        tp_flip = (price_dict[discipline][material] * quantity) - cost
-        refine_costs.append((cost, tp_flip))
 
-    return ingredients_list, refine_costs
+    return ingredients_list
 
 
 def determine_discipline(material):
