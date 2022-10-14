@@ -1,6 +1,5 @@
 #!/usr/bin/python3
 
-
 # Player Levels - store in cookies
 skill_levels = {
     "crafting" : {
@@ -69,7 +68,7 @@ gear_sets = {
 
 # Price List - store in cookies
 price_list = {
-    "refining_components" : {
+    "refining_component" : {
         "aged_tannin" : 0,
         "obsidian_flux" : 0,
         "obsidian_sandpaper" : 0,
@@ -99,13 +98,18 @@ price_list = {
         "orichalcum_ingot" : 0,
         "tolvium" : 0,
         "cinnabar" : 0,
-        "asmodeum" : 0,
+        "asmodeum" : 0
+    },
+    "smelting_precious" : {
         "silver_ore" : 0,
         "silver_ingot" : 0,
         "gold_ore" : 0,
         "gold_ingot" : 0,
         "platinum_ore" : 0,
-        "platinum_ingot" : 0
+        "platinum_ingot" : 0,
+        "charcoal" : 0,
+        "orichalcum_ore" : 0,
+        "orichalcum_ingot_platinum" : 0
     },
     "stone_cutting" : {
         "stone" : 0,
@@ -152,7 +156,7 @@ price_list = {
 
 
 trade_post_template = [
-    [   "refining_components",
+    [   "refining_component",
         "aged_tannin",
         "obsidian_flux",
         "obsidian_sandpaper",
@@ -182,7 +186,9 @@ trade_post_template = [
         "orichalcum_ingot",
         "tolvium",
         "cinnabar",
-        "asmodeum",
+        "asmodeum"
+    ],
+    [   "smelting_precious",
         "silver_ore",
         "silver_ingot",
         "gold_ore",
@@ -247,7 +253,9 @@ refining_template = [
         "steel_ingot",
         "starmetal_ingot",
         "orichalcum_ingot",
-        "asmodeum",
+        "asmodeum"
+    ],
+    [   "smelting_precious",
         "silver_ingot",
         "gold_ingot",
         "platinum_ingot",

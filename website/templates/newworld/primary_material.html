@@ -6,16 +6,18 @@
 {% endblock %}
 
 {% block content%}
+<br>
 <h1 align="center" class="text-black" id="topHeader">{{material}}</h1>
-
+<br>
 <div class="container col col-lg-6 col-sm-10 text-center">
-    <p1>This table shows the total required ingredients to create {{material}}.</p1><br>
-    <p1>The rows are separate refining routes that each start at a different base tier.</p1><br>
-    <p1><b>Raw Cost</b>: For lower quantities this will be more than the <b>Avg. Cost</b> listed on the <a href="/newworld/refining" target="#"><u>Refining Cost</u></a> tables.</p1><br>
-    <p1><b>TP Flip</b>: Potential profit/loss from selling back to the Trade Post. This does not account for taxes or fees.</p1><br>
-    <p1>Update the quantity box below, and the table will refresh after a short pause.</p1><br>
+    <p1>This table shows the ingredients to create {{material}}, and its total (each) market data.</p1><br>
+    <p1>Rows are separate refining routes that each start at a different base tier.</p1><br>
+    <p1 ><b style="color:aqua;">Output:</b> The estimated quantity received after all applicable bonuses.</p1><br>
+    <p1 ><b style="color:orange;">Value:</b> The Trade Post value of the output quantity.</p1><br>
+    <p1 ><b style="color:red;">Cost:</b> The purchase price of ingredients required to receive the quantity from refinement.</p1><br>
+    <p1><b style="color:green;">Profit:</b> The Value minus the Cost of the Output quantity.</p1><br>
 </div>
-
+<br>
 <div class="container">
     <div class="active list-unstyled components">
 
@@ -34,4 +36,5 @@
 
     </div>
 </div>
+<br>
 {% endblock %}

@@ -122,10 +122,49 @@ def random_material():
     return random_material
 
 
+def dictionary_key_replacements():
+    if 'refining_components' in session['price_list']:
+        session['price_list']['refining_component'] = session['price_list']['refining_components']
+        print("Rename: " + str(session['price_list'].pop('refining_components', None)))
+        
+    if 'smelting_precious' not in session['price_list']:
+        session['price_list']['smelting_precious'] = {
+            "silver_ore" : 0,
+            "silver_ingot" : 0,
+            "gold_ore" : 0,
+            "gold_ingot" : 0,
+            "platinum_ore" : 0,
+            "platinum_ingot" : 0,
+            "charcoal" : 0,
+            "orichalcum_ore" : 0,
+            "orichalcum_ingot_platinum" : 0
+        }
+    
+    if 'server_data' in session:
+        if 'items' in session['server_data']:
+            if 'refining_components' in session['server_data']['items']:
+                session['server_data']['items']['refining_component'] = session['server_data']['items']['refining_components']
+                print("Rename: " + str(session['server_data']['items'].pop('refining_components', None)))
+            
+            if 'smelting_precious' not in session['server_data']['items']:
+                session['server_data']['items']['smelting_precious'] = {
+                    "silver_ore" : 0,
+                    "silver_ingot" : 0,
+                    "gold_ore" : 0,
+                    "gold_ingot" : 0,
+                    "platinum_ore" : 0,
+                    "platinum_ingot" : 0,
+                    "charcoal" : 0,
+                    "orichalcum_ore" : 0,
+                    "orichalcum_ingot_platinum" : 0
+                }
+                
+                
 @newworld.route('/', methods=['GET', 'POST'])
 def home():
     init_session()
-
+    dictionary_key_replacements()
+    
     search = search_function()
     if search:
         return redirect(url_for("newworld.material", material=search))
@@ -138,6 +177,7 @@ def home():
 @newworld.route('/skills', methods=['GET', 'POST'])
 def skills():
     init_session()
+    dictionary_key_replacements()
 
     search = search_function()
     if search:
@@ -183,6 +223,7 @@ def skills_hx():
 @newworld.route('/gearsets', methods=['GET', 'POST'])
 def gearsets():
     init_session()
+    dictionary_key_replacements()
 
     search = search_function()
     if search:
@@ -209,6 +250,7 @@ def gearsets_hx():
 @newworld.route('/tradepost', methods=['GET', 'POST'])
 def tradepost():
     init_session()
+    dictionary_key_replacements()
 
     search = search_function()
     if search:
@@ -221,13 +263,12 @@ def tradepost():
 
 @newworld.route('/tradepost_hx', methods=['GET', 'POST'])
 def tradepost_hx():
-
     template_order = player_data.trade_post_order()
 
     if request.method == 'POST':
         if "save" in request.form:
             session['price_list'] = {
-                "refining_components" : {
+                "refining_component" : {
                     "aged_tannin": strip_leading_zeros(True, request.form['aged_tannin']),
                     "obsidian_flux": strip_leading_zeros(True, request.form['obsidian_flux']),
                     "obsidian_sandpaper": strip_leading_zeros(True, request.form['obsidian_sandpaper']),
@@ -258,12 +299,18 @@ def tradepost_hx():
                     "charcoal" : strip_leading_zeros(True, request.form['charcoal']),
                     "tolvium" : strip_leading_zeros(True, request.form['tolvium']),
                     "cinnabar" : strip_leading_zeros(True, request.form['cinnabar']),
+                    
+                },
+                "smelting_precious" : {
                     "silver_ore" : strip_leading_zeros(True, request.form['silver_ore']),
                     "silver_ingot" : strip_leading_zeros(True, request.form['silver_ingot']),
                     "gold_ingot" : strip_leading_zeros(True, request.form['gold_ingot']),
                     "platinum_ingot" : strip_leading_zeros(True, request.form['platinum_ingot']),
                     "gold_ore" : strip_leading_zeros(True, request.form['gold_ore']),
-                    "platinum_ore" : strip_leading_zeros(True, request.form['platinum_ore'])
+                    "platinum_ore" : strip_leading_zeros(True, request.form['platinum_ore']),
+                    "charcoal" : strip_leading_zeros(True, request.form['charcoal']),
+                    "orichalcum_ore" : strip_leading_zeros(True, request.form['orichalcum_ore']),
+                    "orichalcum_ingot_platinum" : strip_leading_zeros(True, request.form['orichalcum_ingot'])
                 },
                 "stone_cutting" : {
                     "stone": strip_leading_zeros(True, request.form['stone']),
@@ -314,6 +361,7 @@ def tradepost_hx():
 @newworld.route('/refining', methods=['GET', 'POST'])
 def refining():
     init_session()
+    dictionary_key_replacements()
 
     search = search_function()
     if search:
@@ -326,10 +374,6 @@ def refining():
 def refining_hx():
     init_session()
 
-    search = search_function()
-    if search:
-        return redirect(url_for('newworld.material', material=search))
-
     template_order = player_data.refining_order()
 
     price_list = session['price_list']
@@ -341,21 +385,26 @@ def refining_hx():
     else:
         price_list = session['price_list']
 
-    cheapest_route = {
-        "leatherworking": calcs.cheapest_route_leatherworking(price_list, session['skill_levels']['refining']['leatherworking'], session['gear_sets']['leatherworking']),
-        "smelting": calcs.cheapest_route_smelting(price_list, session['skill_levels']['refining']['smelting'], session['gear_sets']['smelting']),
-        "stone_cutting": calcs.cheapest_route_stone_cutting(price_list, session['skill_levels']['refining']['stone_cutting'], session['gear_sets']['stone_cutting']),
-        "weaving": calcs.cheapest_route_weaving(price_list, session['skill_levels']['refining']['weaving'], session['gear_sets']['weaving']),
-        "woodworking": calcs.cheapest_route_woodworking(price_list, session['skill_levels']['refining']['woodworking'], session['gear_sets']['woodworking'])
-    }
-
+    # cheapest_route = {
+    #     "leatherworking": calcs.cheapest_route_leatherworking(price_list, session['skill_levels']['refining']['leatherworking'], session['gear_sets']['leatherworking']),
+    #     "smelting": calcs.cheapest_route_smelting(price_list, session['skill_levels']['refining']['smelting'], session['gear_sets']['smelting']),
+    #     "stone_cutting": calcs.cheapest_route_stone_cutting(price_list, session['skill_levels']['refining']['stone_cutting'], session['gear_sets']['stone_cutting']),
+    #     "weaving": calcs.cheapest_route_weaving(price_list, session['skill_levels']['refining']['weaving'], session['gear_sets']['weaving']),
+    #     "woodworking": calcs.cheapest_route_woodworking(price_list, session['skill_levels']['refining']['woodworking'], session['gear_sets']['woodworking'])
+    # }
+    
+    
+    all_tiers_all_routes = calcs.tp_cost_to_refine_all_routes_all_tiers(price_list, session['skill_levels']['refining'], session['gear_sets'])
+    cheapest_route = calcs.cheapest_tp_cost_route_to_refine_each_tier(price_list, all_tiers_all_routes)
+    
     return render_template('newworld/refining_hx.html', cheapest_route=cheapest_route, template_order=template_order)
 
 
 @newworld.route('/material/<material>', methods=['GET', 'POST'])
 def material(material):
     init_session()
-
+    dictionary_key_replacements()
+    
     search = search_function()
     if search:
         return redirect(url_for('newworld.material', material=search))
@@ -398,21 +447,30 @@ def material_table(material):
     else:
         quantity = 1
 
-    data = calcs.ingredients_needed_to_refine(discipline, material_check, quantity, session['skill_levels']['refining'][discipline], session['gear_sets'][discipline])
+    
+    if discipline == "smelting_precious":
+        skill_level = session['skill_levels']['refining']['smelting']
+        gear_set = session['gear_sets']['smelting']
+    else:
+        skill_level = session['skill_levels']['refining'][discipline]
+        gear_set = session['gear_sets'][discipline]
+        
+    data, refine_costs, output, total_value = calcs.ingredients_needed_to_refine(discipline, material_check, quantity, skill_level, gear_set, price_dict)
 
-    refine_costs = []
-    for ref_ings in data:
-        cost = 0
-        for ingredient in ref_ings.keys():
-            if type(ref_ings[ingredient]) is int:
-                for _, mats in price_dict.items():
-                    if ingredient in mats:
-                        cost += (mats[ingredient] * ref_ings[ingredient])
-        if material_check == "orichalcum_ingot_platinum":
-            tp_flip = (price_dict[discipline]["orichalcum_ingot"] * quantity) - cost
-        else:
-            tp_flip = (price_dict[discipline][material_check] * quantity) - cost
-        refine_costs.append((cost, tp_flip))
+    # refine_costs = []
+    # for ref_ings in data:
+    #     cost = 0
+    #     for ingredient in ref_ings.keys():
+    #         if type(ref_ings[ingredient]) is int:
+    #             for _, mats in price_dict.items():
+    #                 if ingredient in mats:
+    #                     cost += (mats[ingredient] * ref_ings[ingredient])
+    
+    #     if material_check == "orichalcum_ingot_platinum":
+    #         tp_flip = (price_dict[discipline]["orichalcum_ingot"] * quantity) - cost
+    #     else:
+    #         tp_flip = (price_dict[discipline][material_check] * quantity) - cost
+    #     refine_costs.append((cost, tp_flip))
 
     material_display = material.replace("_"," ").lower().title()
 
@@ -458,6 +516,8 @@ def datalist():
 @newworld.route('/server_api', methods=['GET', 'POST'])
 def server_api():
     init_session()
+    dictionary_key_replacements()
+    
     search = search_function()
     if search:
         return redirect(url_for('newworld.material', material=search))
