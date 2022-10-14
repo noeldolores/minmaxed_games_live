@@ -474,7 +474,7 @@ def material_table(material):
 
     material_display = material.replace("_"," ").lower().title()
 
-    return render_template('newworld/primary_material_hx.html', data=data, quantity=quantity, material=material_display, refine_costs=refine_costs)
+     return render_template('newworld/primary_material_hx.html', data=data, quantity=quantity, material=material_display, refine_costs=refine_costs, output=output, total_value=total_value)
 
 
 @newworld.route('/datalist', methods=['GET', 'POST'])
