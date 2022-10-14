@@ -29,10 +29,12 @@
             </li>
             {% endif %}
         </ul>
+        <br>
+        <div class="nav-item active form-check-inline">
+            <a href="https://discord.com/invite/ACnsS59ERb" target="#" class="btn btn-sm btn-outline-primary mr-2" role="button" style="color: white;">Contact</a>
+        </div>
+        
         <form class="form-inline my-2 my-lg-0" method="GET" id="search">
-            <li class="nav-item active form-check-inline">
-                <a href="https://discord.com/invite/ACnsS59ERb" target="#" class="btn btn-outline-light" role="button" style="color: red;">Bug Report</a>
-            </li>
             <input required class="form-control mr-sm-2 datafield" type="text" name="search" aria-label="Search" list="materialList" autocomplete="off" onkeydown="return /[a-z]/i.test(event.key)" placeholder="Material Search..."
                 hx-get="/newworld/datalist" 
                 hx-trigger="keyup changed delay:500ms, search" 
