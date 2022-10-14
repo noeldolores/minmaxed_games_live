@@ -45,13 +45,6 @@
             <div>
                 <button class="btn btn-outline-light custom_toggle" _="on click call me.blur() if my.innerText == 'Show All' remove .collapsed from #collapse set .collapse-main's @aria-expanded to 'true' add .show to .collapseall set my.innerText to 'Hide All' else add .collapsed to #collapse remove .show from .collapseall set .collapse-main's @aria-expanded to 'false' set my.innerText to 'Show All'">Show All</button>
             </div>
-
-            <form hx-post="/newworld/server_api_hx" hx-target="#server_api_hx">
-                <div class="container" id="server_api_hx">  
-                    {% include "newworld/server_api_hx.html" %}
-                </div>
-            </form>
-            
         </div>
     </div>
     <br>
