@@ -41,6 +41,7 @@ def request_nwmarketprices():
             db.session.commit()
 
         # Retrieve Data
+        dates_list=[]
         url = f"https://nwmarketprices.com/api/latest-prices/{value}/"
         response = requests.request(method='GET', url=url)
         if response.status_code == 200:
@@ -56,6 +57,11 @@ def request_nwmarketprices():
                 else:
                     new_item = models.Item(last_update=str_to_datetime(item['LastUpdated']), item_id=item['ItemId'], name=item['ItemName'], price=item['Price'], availability=item['Availability'], market_id=server.id)
                     db.session.add(new_item)
+                    
+                dates_list.append(str_to_datetime(item['LastUpdated']))
+
+            if len(dates_list) > 0:
+                server.last_update=max(dates_list)        
             db.session.commit()
         else:
             return False
