@@ -443,10 +443,9 @@ def material_table(material):
         if request.args['update_quantity'] == "":
             quantity = 1
         else:
-            quantity = max(int(str(escape(request.args['update_quantity']))), 1)
+            quantity = max(int(request.args['update_quantity']), 1)
     else:
         quantity = 1
-
     
     if discipline == "smelting_precious":
         skill_level = session['skill_levels']['refining']['smelting']
@@ -455,26 +454,11 @@ def material_table(material):
         skill_level = session['skill_levels']['refining'][discipline]
         gear_set = session['gear_sets'][discipline]
         
-    data, refine_costs, output, total_value = calcs.ingredients_needed_to_refine(discipline, material_check, quantity, skill_level, gear_set, price_dict)
-
-    # refine_costs = []
-    # for ref_ings in data:
-    #     cost = 0
-    #     for ingredient in ref_ings.keys():
-    #         if type(ref_ings[ingredient]) is int:
-    #             for _, mats in price_dict.items():
-    #                 if ingredient in mats:
-    #                     cost += (mats[ingredient] * ref_ings[ingredient])
-    
-    #     if material_check == "orichalcum_ingot_platinum":
-    #         tp_flip = (price_dict[discipline]["orichalcum_ingot"] * quantity) - cost
-    #     else:
-    #         tp_flip = (price_dict[discipline][material_check] * quantity) - cost
-    #     refine_costs.append((cost, tp_flip))
+    data, refine_costs, number_of_crafts, total_value, output = calcs.ingredients_needed_to_refine(discipline, material_check, quantity, skill_level, gear_set, price_dict)
 
     material_display = material.replace("_"," ").lower().title()
 
-    return render_template('newworld/primary_material_hx.html', data=data, quantity=quantity, material=material_display, refine_costs=refine_costs, output=output, total_value=total_value)
+    return render_template('newworld/primary_material_hx.html', data=data, quantity=quantity, material=material_display, refine_costs=refine_costs, number_of_crafts=number_of_crafts, total_value=total_value, output=output)
 
 
 @newworld.route('/datalist', methods=['GET', 'POST'])

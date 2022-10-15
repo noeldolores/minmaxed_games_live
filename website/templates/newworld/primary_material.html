@@ -12,10 +12,10 @@
 <div class="container col col-lg-6 col-sm-10 text-center">
     <p1>This table shows the ingredients to create {{material}}, and its total (each) market data.</p1><br>
     <p1>Rows are separate refining routes that each start at a different base tier.</p1><br>
-    <p1 ><b style="color:aqua;">Output:</b> The estimated quantity received after all applicable bonuses.</p1><br>
+    <p1 ><b style="color:aqua;">Craft:</b> The estimated number to craft in order to receive the specified quantity. A (number) appears when the output is greater than the specified quantity.</p1><br>
     <p1 ><b style="color:orange;">Value:</b> The Trade Post value of the output quantity.</p1><br>
     <p1 ><b style="color:red;">Cost:</b> The purchase price of ingredients required to receive the quantity from refinement.</p1><br>
-    <p1><b style="color:green;">Profit:</b> The Value minus the Cost of the Output quantity.</p1><br>
+    <p1><b style="color:green;">Profit:</b> The Value minus the Cost of the output quantity.</p1><br>
 </div>
 <br>
 <div class="container">
@@ -23,7 +23,7 @@
 
         <form class="form-row justify-content-center">
             <div class="col-sm-auto col-md-5 col-lg-5 p-2 input-group">
-                <input type="number" id="quant_field" class="form-control" min="1" max="2147483646" placeholder="1" value="{{quantity}}" name="update_quantity"
+                <input type="number" onkeydown="if(event.key==='.'){event.preventDefault();}" id="quant_field" class="form-control" min="1" max="2147483646" placeholder="1" value="{{quantity}}" name="update_quantity"
                     hx-get="/newworld/primary_material_hx/{{material}}" 
                     hx-trigger="keyup[key=='Enter'] from:body, keyup[key!='Enter'] changed delay:650ms" 
                     hx-target="#material_container" 

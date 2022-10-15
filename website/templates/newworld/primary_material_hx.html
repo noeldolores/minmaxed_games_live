@@ -1,6 +1,10 @@
 <div class="form-row justify-content-center mb-2">
     <div class="col-auto">
-        <span class="mr-2"style="color:aqua;">Output</span><input disabled type="text" class="material-box" value={{output}}>
+        {% if quantity == output %}
+            <span class="mr-2"style="color:aqua;">Craft</span><input disabled type="text" class="material-box" value="{{number_of_crafts|string}}">
+        {% else %}
+        <span class="mr-2"style="color:aqua;">Craft</span><input disabled type="text" class="material-box" value="{{number_of_crafts|string}} ({{output|string}})">
+        {% endif %}
     </div>
     <div class="col-auto">
         <input disabled type="text" class="material-box" value={{'%.2f'|format(total_value)}}><span class="ml-2"style="color:orange;">Value</span>

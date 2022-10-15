@@ -540,7 +540,7 @@ def ingredients_needed_to_refine(discipline, material, quantity, skill_level, ge
     total_required = ingredients_list[-1][primary_ing]
     required_per_craft = refine_conversions[material][primary_ing]
     
-    number_of_crafts = total_required / required_per_craft      
+    number_of_crafts = int(total_required / required_per_craft)     
     output = round(number_of_crafts * craft_bonus_dict[material])    
         
     refine_costs = []
@@ -562,7 +562,7 @@ def ingredients_needed_to_refine(discipline, material, quantity, skill_level, ge
 
         refine_costs.append((cost, cost_each, profit_craft, profit_craft_each))
 
-    return ingredients_list, refine_costs, output, total_value
+    return ingredients_list, refine_costs, number_of_crafts, total_value, output
 
 
 def determine_discipline(material):
