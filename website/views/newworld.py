@@ -263,6 +263,7 @@ def tradepost():
 
 @newworld.route('/tradepost_hx', methods=['GET', 'POST'])
 def tradepost_hx():
+    dictionary_key_replacements()
     template_order = player_data.trade_post_order()
 
     if request.method == 'POST':
@@ -373,7 +374,8 @@ def refining():
 @newworld.route('/refining_hx', methods=['GET', 'POST'])
 def refining_hx():
     init_session()
-
+    dictionary_key_replacements()
+    
     template_order = player_data.refining_order()
 
     price_list = session['price_list']
@@ -385,15 +387,6 @@ def refining_hx():
     else:
         price_list = session['price_list']
 
-    # cheapest_route = {
-    #     "leatherworking": calcs.cheapest_route_leatherworking(price_list, session['skill_levels']['refining']['leatherworking'], session['gear_sets']['leatherworking']),
-    #     "smelting": calcs.cheapest_route_smelting(price_list, session['skill_levels']['refining']['smelting'], session['gear_sets']['smelting']),
-    #     "stone_cutting": calcs.cheapest_route_stone_cutting(price_list, session['skill_levels']['refining']['stone_cutting'], session['gear_sets']['stone_cutting']),
-    #     "weaving": calcs.cheapest_route_weaving(price_list, session['skill_levels']['refining']['weaving'], session['gear_sets']['weaving']),
-    #     "woodworking": calcs.cheapest_route_woodworking(price_list, session['skill_levels']['refining']['woodworking'], session['gear_sets']['woodworking'])
-    # }
-    
-    
     all_tiers_all_routes = calcs.tp_cost_to_refine_all_routes_all_tiers(price_list, session['skill_levels']['refining'], session['gear_sets'])
     cheapest_route = calcs.cheapest_tp_cost_route_to_refine_each_tier(price_list, all_tiers_all_routes)
     
@@ -426,6 +419,8 @@ def material(material):
 
 @newworld.route('/primary_material_hx/<material>', methods=['GET', 'POST'])
 def material_table(material):
+    dictionary_key_replacements()
+    
     session['material_ref'] = material.replace(" ","_").lower()
 
     price_dict = session['price_list']
