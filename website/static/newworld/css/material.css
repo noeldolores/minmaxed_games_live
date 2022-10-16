@@ -111,3 +111,22 @@ tr td {
 #quant_field {
   text-align: center;
 }
+
+.craft_bonus{
+  position: absolute;
+  color:green;
+  left: 195px;
+  top: 20%;
+  font-weight: 650;
+  font-size: small;
+}
+
+span {
+  display: inline-flex;
+  align-items: center;
+}
+
+.nav-material {
+  top: 56px;
+  height: fit-content;
+}

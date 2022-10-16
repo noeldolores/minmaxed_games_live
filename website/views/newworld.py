@@ -402,16 +402,25 @@ def material(material):
     if search:
         return redirect(url_for('newworld.material', material=search))
 
-    session['material_ref'] = material.replace(" ","_").lower()
-
     category = determine_material_category(material.replace("_"," "))
     material_display = material.replace("_"," ").lower().title()
 
+    discipline = calcs.determine_discipline(material)
+    material_nav_items = list(player_data.init_price_list()[discipline].keys())
+    
+    check_to_remove = ['charcoal', 'molten_lodestone', 'loamy_lodestone', 'shocking_lodestone', 'crystalline_lodestone', 'freezing_lodestone', 'putrid_lodestone', 'gleaming_lodestone']
+    for remove in check_to_remove:
+        if remove in material_nav_items:
+            material_nav_items.remove(remove)
+    if discipline == "smelting_precious":
+        material_nav_items.remove("orichalcum_ore")
+    
+    
     if category == "primary":
-        return render_template('newworld/primary_material.html', material=material_display)
+        return render_template('newworld/primary_material.html', material=material_display, material_nav_items=material_nav_items)
 
     if category == "secondary":
-        return render_template('newworld/secondary_material.html', material=material_display)
+        return render_template('newworld/secondary_material.html', material=material_display, material_nav_items=material_nav_items)
 
     if category == "component":
         return render_template('newworld/component_material.html', material=material_display)
@@ -449,11 +458,11 @@ def material_table(material):
         skill_level = session['skill_levels']['refining'][discipline]
         gear_set = session['gear_sets'][discipline]
         
-    data, refine_costs, number_of_crafts, total_value, output = calcs.ingredients_needed_to_refine(discipline, material_check, quantity, skill_level, gear_set, price_dict)
+    data, refine_costs, number_of_crafts, total_value, output, craft_bonus, specific_elemental_lodestone = calcs.ingredients_needed_to_refine(discipline, material_check, quantity, skill_level, gear_set, price_dict)
 
     material_display = material.replace("_"," ").lower().title()
 
-    return render_template('newworld/primary_material_hx.html', data=data, quantity=quantity, material=material_display, refine_costs=refine_costs, number_of_crafts=number_of_crafts, total_value=total_value, output=output)
+    return render_template('newworld/primary_material_hx.html', data=data, quantity=quantity, material=material_display, refine_costs=refine_costs, number_of_crafts=number_of_crafts, total_value=total_value, output=output, craft_bonus=craft_bonus, ele_lodestone=specific_elemental_lodestone)
 
 
 @newworld.route('/datalist', methods=['GET', 'POST'])
@@ -537,10 +546,6 @@ def server_api():
 
     template_order = player_data.trade_post_order()
 
-    # price_list = session['price_list']
-    # if 'server_data' in session:
-    #     if 'items' in session['server_data']:
-    #         price_list = session['server_data']['items']
     price_list = session['price_list']
     if 'server_data' in session:
         if 'items' in session['server_data']:
@@ -580,8 +585,14 @@ def server_api_hx():
     return render_template('newworld/server_api_hx.html', price_list=price_list, template_order=template_order)
 
 
-@newworld.route('/navbar_api_hx', methods=['GET', 'POST'])
-def navbar_api_hx():
+@newworld.route('/navbar_api_hx', defaults={'material':None}, methods=['GET', 'POST'])
+@newworld.route('/navbar_api_hx/<material>', methods=['GET', 'POST'])
+def navbar_api_hx(material):
+    
+    material_hx = None
+    if material:
+        material_hx = material.lower().replace(" ","_") 
+
     is_loaded = session['api_loaded']
 
     if is_loaded:
@@ -594,7 +605,7 @@ def navbar_api_hx():
         status = 'API Active'
         css_class = "btn-outline-success"
 
-    return render_template('newworld/navbar_api_hx.html', status=status, css_class=css_class)
+    return render_template('newworld/navbar_api_hx.html', status=status, css_class=css_class, material=material_hx)
 
 
 

@@ -540,8 +540,12 @@ def ingredients_needed_to_refine(discipline, material, quantity, skill_level, ge
     total_required = ingredients_list[-1][primary_ing]
     required_per_craft = refine_conversions[material][primary_ing]
     
-    number_of_crafts = int(total_required / required_per_craft)     
+    number_of_crafts = int(total_required / required_per_craft)
     output = round(number_of_crafts * craft_bonus_dict[material])    
+    
+    specific_elemental_lodestone = None
+    if discipline == "stone_cutting":
+        specific_elemental_lodestone = elemental_lodestone_calcs(price_dict[discipline])
         
     refine_costs = []
     for ref_ings in ingredients_list:
@@ -552,6 +556,8 @@ def ingredients_needed_to_refine(discipline, material, quantity, skill_level, ge
                     cost += (price_dict[discipline][ingredient] * ref_ings[ingredient])
                 elif ingredient in price_dict['refining_component']:
                     cost += (price_dict['refining_component'][ingredient] * ref_ings[ingredient])
+                elif ingredient == "elemental_lodestone":
+                    cost += specific_elemental_lodestone[1] * ref_ings[ingredient]
         
         
         total_value = price_dict[discipline][material] * output
@@ -562,11 +568,16 @@ def ingredients_needed_to_refine(discipline, material, quantity, skill_level, ge
 
         refine_costs.append((cost, cost_each, profit_craft, profit_craft_each))
 
-    return ingredients_list, refine_costs, number_of_crafts, total_value, output
+    return ingredients_list, refine_costs, number_of_crafts, total_value, output, craft_bonus_dict[material], specific_elemental_lodestone
 
 
 def determine_discipline(material):
     for key in conversions.keys():
         if material in conversions[key]:
             return key
+        
+    for key, value in conversions.items():
+        for k in value.keys():
+            if material in value[k]:
+                return key
     return None

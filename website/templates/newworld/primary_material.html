@@ -6,18 +6,26 @@
 {% endblock %}
 
 {% block content%}
+<div>
+    {% include "newworld/navbar_material.html"%}
+</div>
+
+<h1 align="center" id="topHeader">{{material}}</h1>
+
 <br>
-<h1 align="center" class="text-black" id="topHeader">{{material}}</h1>
-<br>
+
 <div class="container col col-lg-6 col-sm-10 text-center">
     <p1>This table shows the ingredients to create {{material}}.</p1><br>
     <p1>Rows are separate refining routes that each start at a different base tier. Market data is : <b>total</b> (<b>each</b>).</p1><br>
-    <p1 ><b style="color:aqua;">Craft:</b> The estimated number to craft in order to receive the specified quantity. A (number) appears when the output is greater than the specified quantity after all bonuses.</p1><br>
+    <p1 ><b style="color:aqua;">Craft:</b> The estimated number to craft in order to receive the specified quantity.
+        A (number) appears when the output is greater than the specified quantity after your <span style="color: green">xCraft Bonus</span>.</p1><br>
     <p1 ><b style="color:orange;">Value:</b> The Trade Post value of the output quantity.</p1><br>
     <p1 ><b style="color:red;">Cost:</b> The purchase price of ingredients required to receive the quantity from refinement.</p1><br>
     <p1><b style="color:green;">Profit:</b> The Value minus the Cost of the output quantity.</p1><br>
 </div>
+
 <br>
+
 <div class="container">
     <div class="active list-unstyled components">
 
@@ -32,9 +40,10 @@
             </div>
         </form>
 
-        <div id="material_container" _="init fetch /newworld/primary_material_hx/{{session['material_ref']}} put the result into #material_container"><div>
+        <div id="material_container" _="init fetch /newworld/primary_material_hx/{{material.lower()|replace(" ","_")}} put the result into #material_container"><div>
 
     </div>
 </div>
 <br>
+
 {% endblock %}

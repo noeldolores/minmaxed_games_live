@@ -1,0 +1,13 @@
+<nav class="navbar navbar-expand navbar-light bg-dark nav-material">
+    <div class="container-fluid justify-content-center">
+        <form class="row">
+            {% for item in material_nav_items %}
+                {% if material.lower()|replace(" ","_") == item %}
+                <a href="/newworld/material/{{item}}" class="btn btn-sm btn-outline-info mr-2 ml-2" role="button">{{item.title()|replace("_"," ") }}</a>
+                {% else %}
+                <a href="/newworld/material/{{item}}" class="btn btn-sm btn-dark mr-2 ml-2" role="button">{{item.title()|replace("_"," ") }}</a>
+                {% endif %}
+            {% endfor %}
+        </form>
+    </div>
+</nav>

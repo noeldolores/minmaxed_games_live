@@ -1,13 +1,18 @@
 <div class="form-row justify-content-center mb-2">
     <div class="col-auto">
+        <div class="form-row">
         {% if quantity == output %}
-            <span class="mr-2"style="color:aqua;">Craft</span><input disabled type="text" class="material-box" value="{{number_of_crafts|string}}">
+            <span class="mr-2"style="color:aqua;">Craft</span><input disabled type="text" class="material-box mr-2" value="{{number_of_crafts|string}}"><p class="craft_bonus" title="Craft Bonus">x{{craft_bonus|string}}</p>
         {% else %}
-        <span class="mr-2"style="color:aqua;">Craft</span><input disabled type="text" class="material-box" value="{{number_of_crafts|string}} ({{output|string}})">
+            <span class="mr-2"style="color:aqua;">Craft</span><input disabled type="text" class="material-box mr-2" value="{{number_of_crafts|string}} ({{output|string}})"><p class="craft_bonus" title="Craft Bonus">x{{craft_bonus|string}}</p>
         {% endif %}
+        </div>
     </div>
     <div class="col-auto">
-        <input disabled type="text" class="material-box" value={{'%.2f'|format(total_value)}}><span class="ml-2"style="color:orange;">Value</span>
+        <div class="form-row">
+   
+            <input disabled type="text" class="material-box ml-2" value={{'%.2f'|format(total_value)}}><span class="ml-2"style="color:orange;">Value</span>
+        </div>
     </div>
 </div>
 <table class="table table-striped table-secondary" id="ingredients"  _="on htmx:load call #quant_field.blur()">
@@ -15,9 +20,9 @@
         <tr>
             {% for key in data[0].keys() %}
                 {% if key == "elemental_lodestone" %}
-                <th scope="col" class="table-dark" style="width: {{(100 / (data[0]|length + 2))|round|int}}%">{{ key.title() | replace("_"," ") }}</th>
+                <th scope="col" class="table-dark" style="width: {{(100 / (data[0]|length + 2))|round|int}}%">{{ ele_lodestone[0].title()|replace("_"," ") }}</th>
                 {% else%}
-                <th scope="col" class="table-dark" style="width: {{(100 / (data[0]|length + 2))|round|int}}%"><a href="/newworld/material/{{key}}">{{ key.title() | replace("_"," ") }}</th>
+                <th scope="col" class="table-dark" style="width: {{(100 / (data[0]|length + 2))|round|int}}%"><a href="/newworld/material/{{key}}">{{ key.title()|replace("_"," ") }}</th>
                 {% endif %}
             {% endfor %}
                 <th scope="col" class="table-dark" style="width: {{(100 / (data[0]|length + 2))|round|int}}%; color:red;">Cost</th>
