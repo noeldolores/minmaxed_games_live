@@ -406,14 +406,10 @@ def material(material):
     material_display = material.replace("_"," ").lower().title()
 
     discipline = calcs.determine_discipline(material)
-    material_nav_items = list(player_data.init_price_list()[discipline].keys())
-    
-    check_to_remove = ['charcoal', 'molten_lodestone', 'loamy_lodestone', 'shocking_lodestone', 'crystalline_lodestone', 'freezing_lodestone', 'putrid_lodestone', 'gleaming_lodestone']
-    for remove in check_to_remove:
-        if remove in material_nav_items:
-            material_nav_items.remove(remove)
-    if discipline == "smelting_precious":
-        material_nav_items.remove("orichalcum_ore")
+    material_list = player_data.refining_order()
+    for item in material_list:
+        if item[0] == discipline:
+            material_nav_items = item[1:]
     
     
     if category == "primary":
