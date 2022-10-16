@@ -13,14 +13,25 @@
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                     <a class="nav-link text-dark" href="/newworld/skills"><span class="nav_a">Trade Skills</span></a>
                     <a class="nav-link text-dark" href="/newworld/gearsets"><span class="nav_a">Gear Sets</span></a>
-                    <a class="nav-link text-dark" href="/newworld/server_api">Server</a>
+                    <a class="nav-link text-dark" href="/newworld/taxes_and_fees"><span class="nav_a">Taxes & Fees</span></a>
                 </div>
             </li>
-            <li class="nav-item active">
-                <a class="nav-link text-white" href="/newworld/tradepost">Trade Post</a>
+            <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Server
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="nav-link text-dark" href="/newworld/tradepost">Trade Post</a>
+                    <a class="nav-link text-dark" href="/newworld/server_api">API Select</a>
+                </div>
             </li>
-            <li class="nav-item active">
-                <a class="nav-link text-white pr-3" href="/newworld/refining">Refining</a>
+            <li class="nav-item dropdown mr-2">
+                <a class="nav-link dropdown-toggle text-white" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Tools
+                </a>
+                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                    <a class="nav-link text-dark pr-3" href="/newworld/refining">Refining</a>
+                </div>
             </li>
             
             {% if 'server_data' in session %}
@@ -28,6 +39,7 @@
                 {% include '/newworld/navbar_api_hx.html'%}
             </li>
             {% endif %}
+            
         </ul>
         <br>
         <div class="nav-item active form-check-inline">
@@ -35,6 +47,8 @@
         </div>
         
         <form class="form-inline my-2 my-lg-0" method="GET" id="search">
+           
+
             <input required class="form-control mr-sm-2 datafield" type="text" name="search" aria-label="Search" list="materialList" autocomplete="off" onkeydown="return /[a-z]/i.test(event.key)" placeholder="Material Search..."
                 hx-get="/newworld/datalist" 
                 hx-trigger="keyup changed delay:500ms, search" 

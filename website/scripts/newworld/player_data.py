@@ -1,5 +1,27 @@
 #!/usr/bin/python3
 
+
+#taxes and fees - store in cookies
+taxes_fees = {
+    "refining_station" : {
+        "tier_2" : 0.01,
+        "tier_3" : 0.04,
+        "tier_4" : 0.07,
+        "tier_5" : 0.13,
+        "tier_5_L" : 0.19,
+    },
+    "trade_post" : {
+        "tax" : 2.5,
+        "discount" : 0,
+        "duration" : "1_Day"
+    },
+    "territory" : {
+        "company_owned" : False,
+        "first_light" : False
+    }
+}
+
+
 # Player Levels - store in cookies
 skill_levels = {
     "crafting" : {
@@ -299,3 +321,6 @@ def trade_post_order():
 
 def refining_order():
     return refining_template
+
+def init_taxes_and_fees():
+    return taxes_fees

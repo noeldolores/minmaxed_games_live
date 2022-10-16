@@ -1,0 +1,104 @@
+html, body {
+    background-color: rgb(30, 30, 32);
+}
+
+html {
+    overflow-y: scroll;
+}
+
+.nav-link {
+    text-align: left;
+}
+
+a:link {
+    color: white;
+    background-color: transparent;
+    text-decoration: none;
+}
+
+a:visited {
+    color: white;
+    background-color: transparent;
+    text-decoration: none;
+}
+
+.navbar-custom {
+    background-color: rgb(17, 20, 20);
+}
+
+.navbar-toggler {
+    background-color:white !important;
+}
+
+span.navbar-toggler-icon{
+    background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='black' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
+    color: rgb(0, 0, 0);
+}
+
+.datafield::-webkit-calendar-picker-indicator {
+    display:none !important;
+}
+
+.text-dark:hover {
+    background-color: rgb(206, 206, 206);
+}
+
+.alert {
+    margin-top: 4rem;
+}
+
+h1 {
+    margin-top: 4rem;
+    color: white;
+}
+
+p1 {
+    color: white;
+}
+
+.tax-rate {
+    min-width: 200px;
+    text-align: center; 
+}
+
+label {
+    margin-top: 4px;
+    margin-bottom: 0px;
+    color: white;
+    text-align: center;
+}
+
+h4 {
+    margin-top: 2rem;
+    color: white;
+}
+
+.gearsets-input {
+    margin-left: 4rem;
+    margin-right: 4rem;
+    transform: scale(2);
+    -webkit-transform: scale(2);
+}
+
+.gearsets-label {
+    font-size: 18px;
+    margin-bottom: 4px;
+    color: white;
+}
+
+.taxes {
+    text-align: center;
+}
+
+.saveTaxes {
+    margin-top: 2rem;
+    min-width: 150px;
+}
+
+.taxBoxes{
+    text-align: center;
+}
+
+.saveTaxes {
+    transition: all 0.35s;
+}

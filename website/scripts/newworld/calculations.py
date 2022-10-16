@@ -212,15 +212,18 @@ def gear_set_bonus(gear_set):
     return bonus
 
 
-def total_craft_bonus(skill_level, gear_set, discipline):
+def total_craft_bonus(skill_level, gear_set, discipline, first_light):
+    fl_bonus = 0
+    if first_light == True:
+        fl_bonus = 0.1
     skill_bonus = int(skill_level) * 0.001
     gear_bonus = 0.02 * (sum(int(i) > 0 for i in gear_set.values()))
 
-    tier_1 = 1 + skill_bonus + gear_bonus
-    tier_2 = 1 + 0.75 + max(skill_bonus - 0.02, 0) + gear_bonus
-    tier_3 = 1 + 0.25 + max(skill_bonus - 0.05, 0) + gear_bonus
-    tier_4 = 1 + max(skill_bonus - 0.07, 0) + gear_bonus
-    tier_5 = 1 + max(skill_bonus - 0.2, 0) + gear_bonus
+    tier_1 = 1 + skill_bonus + gear_bonus + fl_bonus
+    tier_2 = 1 + 0.75 + max(skill_bonus - 0.02, 0) + gear_bonus + fl_bonus
+    tier_3 = 1 + 0.25 + max(skill_bonus - 0.05, 0) + gear_bonus + fl_bonus
+    tier_4 = 1 + max(skill_bonus - 0.07, 0) + gear_bonus + fl_bonus
+    tier_5 = 1 + max(skill_bonus - 0.2, 0) + gear_bonus + fl_bonus
 
     if discipline == "leatherworking":
         craft_bonus = {
@@ -239,14 +242,14 @@ def total_craft_bonus(skill_level, gear_set, discipline):
             "orichalcum_ingot_platinum": tier_4,
             "asmodeum": tier_5,
             "silver_ingot": tier_1,
-            "gold_ingot": 1 + 0.5 + max(skill_bonus - 0.05, 0) + gear_bonus,
-            "platinum_ingot": 1 + 0.25 + max(skill_bonus - 0.07, 0) + gear_bonus #check rate for plat ori
+            "gold_ingot": 1 + 0.5 + max(skill_bonus - 0.05, 0) + gear_bonus + fl_bonus,
+            "platinum_ingot": 1 + 0.25 + max(skill_bonus - 0.07, 0) + gear_bonus + fl_bonus#check rate for plat ori
         }
     elif discipline == "smelting_precious":
         craft_bonus = {
             "silver_ingot": tier_1,
-            "gold_ingot": 1 + 0.5 + max(skill_bonus - 0.05, 0) + gear_bonus,
-            "platinum_ingot": 1 + 0.25 + max(skill_bonus - 0.07, 0) + gear_bonus, #check rate for plat ori
+            "gold_ingot": 1 + 0.5 + max(skill_bonus - 0.05, 0) + gear_bonus + fl_bonus,
+            "platinum_ingot": 1 + 0.25 + max(skill_bonus - 0.07, 0) + gear_bonus + fl_bonus, #check rate for plat ori
             "orichalcum_ingot_platinum": tier_4
         }
     elif discipline == "stone_cutting":
@@ -298,7 +301,10 @@ def elemental_lodestone_calcs(prices):
     return cost_comparison(prices_elemental_lodestones)
 
 
-def tp_cost_to_refine_all_routes_all_tiers(price_list, skill_level, gear_set):
+def tp_cost_to_refine_all_routes_all_tiers(price_list, skill_level, gear_set, taxes_fees):
+    tax_rate = 1 + (taxes_fees['trade_post']['tax'] / 100) -  (taxes_fees['trade_post']['discount'] / 100)
+    first_light_bonus = taxes_fees['territory']['first_light']
+    
     refining_dict_full = {}
     for discipline, discipline_data in conversions.items():
         prices = price_list[discipline]
@@ -312,7 +318,7 @@ def tp_cost_to_refine_all_routes_all_tiers(price_list, skill_level, gear_set):
             skill = skill_level[discipline]
             gear = gear_set[discipline]
 
-        craft_bonus = total_craft_bonus(skill, gear, discipline)
+        craft_bonus = total_craft_bonus(skill, gear, discipline, first_light_bonus)
         
         # Init Discipline / Material
         refining_dict_full[discipline] = {}
@@ -322,9 +328,9 @@ def tp_cost_to_refine_all_routes_all_tiers(price_list, skill_level, gear_set):
 
         
         # Add Target from TP
-        for material in refining_dict_full[discipline].keys():
+        for material in refining_dict_full[discipline].keys():    
             name = material.replace("_"," ").title()
-            tp_price = prices[material]
+            tp_price = prices[material] * tax_rate
             refining_dict_full[discipline][material][name] = tp_price
 
             # Add Primary Ingrediennt
@@ -335,42 +341,50 @@ def tp_cost_to_refine_all_routes_all_tiers(price_list, skill_level, gear_set):
             # Pricing 
             quant_req = conv[material][primary]
             
-            sub_primary = prices[primary] * quant_req
+            tier = conv[material]['tier']
+            station_fee = worbench_tax(tier, taxes_fees)
+            
+            sub_primary = (prices[primary] * quant_req * tax_rate) + station_fee
             sub_component = (conv[material]['tier'] > 1) * component
-            #sub_extra_parts = sum([ (prices[key] * conv[material][key]) for key in conv[material].keys() if key!="tier" and key!="primary" and key!=primary])
             
             sub_extra_parts = 0
             for key in conv[material].keys():
                 if key!="tier" and key!="primary" and key!=primary:
                     if key!="elemental_lodestone":
-                        sub_extra_parts += ( prices[key] * conv[material][key] )
+                        sub_extra_parts += ( prices[key] * conv[material][key] * tax_rate)
                     else:
                         ele_lode = elemental_lodestone_calcs(prices)
-                        sub_extra_parts += ( ele_lode[1] * conv[material][key] )
+                        sub_extra_parts += ( ele_lode[1] * conv[material][key] * tax_rate)
             
             sub_total = sub_component + sub_extra_parts
-            
             bonus = craft_bonus[material]
 
             refining_dict_full[discipline][material][primary_name] = ( sub_primary + sub_total) / bonus
-            
-
+                
             # Check if Primary Ingredients have primaries
             if primary in conv:
                 primary_2 = conv[primary]['primary']
                 primary_2_name = primary_2.replace("_"," ").title()
-
+                
                 sub_primary =  refining_dict_full[discipline][primary][primary_2_name] * quant_req
-                    
-                refining_dict_full[discipline][material][primary_2_name] = ( sub_primary + sub_total) / bonus
-        
+                
+                tier = conv[primary]['tier']
+                station_fee = worbench_tax(tier, taxes_fees)
+                station_total = station_fee * quant_req
+                
+                refining_dict_full[discipline][material][primary_2_name] = ( sub_primary + sub_total + station_total) / bonus
+
                 if primary_2 in conv:
                     primary_3 = conv[primary_2]['primary']
                     primary_3_name = primary_3.replace("_"," ").title()
 
                     sub_primary =  refining_dict_full[discipline][primary][primary_3_name] * quant_req
+                    
+                    tier = conv[primary_2]['tier']
+                    station_fee = worbench_tax(tier, taxes_fees)
+                    station_total = station_fee * quant_req
 
-                    refining_dict_full[discipline][material][primary_3_name] = ( sub_primary + sub_total) / bonus
+                    refining_dict_full[discipline][material][primary_3_name] = ( sub_primary + sub_total + station_total) / bonus
 
                     if primary_3 in conv:
                         primary_4 = conv[primary_3]['primary']
@@ -378,7 +392,11 @@ def tp_cost_to_refine_all_routes_all_tiers(price_list, skill_level, gear_set):
                         
                         sub_primary =  refining_dict_full[discipline][primary][primary_4_name] * quant_req
 
-                        refining_dict_full[discipline][material][primary_4_name] = ( sub_primary + sub_total) / bonus
+                        tier = conv[primary_3]['tier']
+                        station_fee = worbench_tax(tier, taxes_fees)
+                        station_total = station_fee * quant_req
+                        
+                        refining_dict_full[discipline][material][primary_4_name] = ( sub_primary + sub_total + station_total) / bonus
 
                         if primary_4 in conv:
                             primary_5 = conv[primary_4]['primary']
@@ -386,23 +404,33 @@ def tp_cost_to_refine_all_routes_all_tiers(price_list, skill_level, gear_set):
                             
                             sub_primary =  refining_dict_full[discipline][primary][primary_5_name] * quant_req
 
-                            refining_dict_full[discipline][material][primary_5_name] = ( sub_primary + sub_total) / bonus
-                    
+                            tier = conv[primary_4]['tier']
+                            station_fee = worbench_tax(tier, taxes_fees)
+                            station_total = station_fee * quant_req
+
+                            refining_dict_full[discipline][material][primary_5_name] = ( sub_primary + sub_total + station_total) / bonus
+    
     return refining_dict_full
 
 
-def cheapest_tp_cost_route_to_refine_each_tier(price_list, refining_dict_full):
+def cheapest_tp_cost_route_to_refine_each_tier(price_list, refining_dict_full, taxes_fees):
     refining_dict_cheapest = {}
     for discipline, discipline_data in refining_dict_full.items():
         refining_dict_cheapest[discipline] = {}
         for material, material_data in discipline_data.items():
             _price_data = cost_comparison(list(material_data.items()))
+            
+            trade_post_value = price_list[discipline][material]
+            trade_tax_sell = determing_trade_post_sell_fee(trade_post_value, taxes_fees)
+            post_tax_value = trade_post_value - trade_tax_sell
+            
             refining_dict_cheapest[discipline][material] = {
                 "source": _price_data[0],
                 "price" : round(_price_data[1], 2),
-                "tp_flip": round(price_list[discipline][material] - _price_data[1], 2),
-                "tp_margin": tp_margin(price_list[discipline][material], _price_data[1])
+                "tp_flip": round(post_tax_value - _price_data[1], 2),
+                "tp_margin": tp_margin(post_tax_value, _price_data[1])
             }
+            
         if discipline == "stone_cutting":
             ele_lode = elemental_lodestone_calcs(price_list[discipline])
             refining_dict_cheapest[discipline]["elemental_lodestone"] = {
@@ -414,13 +442,11 @@ def cheapest_tp_cost_route_to_refine_each_tier(price_list, refining_dict_full):
     return refining_dict_cheapest
 
 
-def ingredients_needed_to_refine(discipline, material, quantity, skill_level, gear_set, price_dict):
-    # if discipline == "smelting" and material in ["silver_ingot", "gold_ingot", "platinum_ingot", "orichalcum_ingot_platinum"]:
-    #     refine_conversions = conversions["smelting_precious"]
-    # else:
+def ingredients_needed_to_refine(discipline, material, quantity, skill_level, gear_set, price_dict, taxes_fees):
     refine_conversions = conversions[discipline]
     tier = refine_conversions[material]['tier']
-
+    first_light_bonus = taxes_fees['territory']['first_light']
+    
     # Init ingredients list and set value of highest tier primary ingredient
     ingredients = {}
     primary_ingredients = []
@@ -437,7 +463,7 @@ def ingredients_needed_to_refine(discipline, material, quantity, skill_level, ge
                                 target_refine_quant = quantity
                                 quant_needed_per_refine = refine_conversions[key][primary_ingredients[-1]]
                                 
-                                craft_bonus = total_craft_bonus(skill_level, gear_set, discipline)[target_refine]
+                                craft_bonus = total_craft_bonus(skill_level, gear_set, discipline, first_light_bonus)[target_refine]
                                 ingredients[primary_ingredients[-1]] = quant_needed_per_refine * math.ceil(target_refine_quant * quant_needed_per_refine / craft_bonus / quant_needed_per_refine)
 
                                 if tier != 1:
@@ -449,7 +475,6 @@ def ingredients_needed_to_refine(discipline, material, quantity, skill_level, ge
                             ingredients[value] = 0
 
     # Put primary ingredients list in tier order: high->low
-    
     primary_ingredients.reverse()
     
     num_crafts = []
@@ -467,7 +492,7 @@ def ingredients_needed_to_refine(discipline, material, quantity, skill_level, ge
             target_refine_quant = ingredients[primary_ingredients[i - 1]]
 
             quant_needed_per_refine = refine_conversions[primary_ingredients[i - 1]][primary_ingredients[i]]
-            craft_bonus = total_craft_bonus(skill_level, gear_set, discipline)[target_refine]
+            craft_bonus = total_craft_bonus(skill_level, gear_set, discipline, first_light_bonus)[target_refine]
 
             ingredients[primary_ingredients[i]] = quant_needed_per_refine * math.ceil(target_refine_quant * quant_needed_per_refine / craft_bonus / quant_needed_per_refine)
 
@@ -529,8 +554,9 @@ def ingredients_needed_to_refine(discipline, material, quantity, skill_level, ge
                                                     ingredients_list[i]['elemental_lodestone'] += int(1 * ingredients['lodestone_brick'] / refine_conversions['obsidian_voidstone']['lodestone_brick'])
         
 
-    # Cost Calculations                                  
-    craft_bonus_dict = total_craft_bonus(skill_level, gear_set, discipline)
+    # Cost Calculations           
+    tax_rate = 1 + (taxes_fees['trade_post']['tax'] / 100) -  (taxes_fees['trade_post']['discount'] / 100)               
+    craft_bonus_dict = total_craft_bonus(skill_level, gear_set, discipline, first_light_bonus)
     
     if len(num_crafts) > 0:
         primary_ing = num_crafts[0] 
@@ -546,29 +572,54 @@ def ingredients_needed_to_refine(discipline, material, quantity, skill_level, ge
     specific_elemental_lodestone = None
     if discipline == "stone_cutting":
         specific_elemental_lodestone = elemental_lodestone_calcs(price_dict[discipline])
-        
+
+    refining_tiers = len(primary_ingredients)
     refine_costs = []
     for ref_ings in ingredients_list:
         cost = 0
         for ingredient in ref_ings.keys():
             if type(ref_ings[ingredient]) is int:
+                # Add taxes and fees
+                if ingredient in primary_ingredients:
+                    _tier = primary_ingredients.index(ingredient)
+                    if _tier < refining_tiers:
+                        for i in range(_tier, refining_tiers):
+                            if primary_ingredients[i] != refine_conversions[material]['primary']:
+                                num_required = ingredients[primary_ingredients[i]]
+                                num_per_craft = refine_conversions[primary_ingredients[i+1]][primary_ingredients[i]]
+                                station_tier = refine_conversions[primary_ingredients[i+1]]['tier']
+                            else:
+                                num_required = ingredients[refine_conversions[material]['primary']]
+                                num_per_craft = refine_conversions[material][primary_ingredients[i]]
+                                station_tier = refine_conversions[material]['tier']
+
+                            num_crafts = int(num_required/num_per_craft)                            
+                            station_fee = worbench_tax(tier, taxes_fees) * num_crafts
+                            cost += station_fee
+                # Add material cost
                 if ingredient in price_dict[discipline]:
-                    cost += (price_dict[discipline][ingredient] * ref_ings[ingredient])
+                    cost += price_dict[discipline][ingredient] * ref_ings[ingredient] * tax_rate
                 elif ingredient in price_dict['refining_component']:
-                    cost += (price_dict['refining_component'][ingredient] * ref_ings[ingredient])
+                    cost += price_dict['refining_component'][ingredient] * ref_ings[ingredient] * tax_rate
                 elif ingredient == "elemental_lodestone":
-                    cost += specific_elemental_lodestone[1] * ref_ings[ingredient]
+                    cost += specific_elemental_lodestone[1] * ref_ings[ingredient] * tax_rate
+        
+
         
         
-        total_value = price_dict[discipline][material] * output
-        profit_craft = (total_value - cost)
+        
+        value_pre_tax = price_dict[discipline][material] * output
+
+        trade_tax_sell = determing_trade_post_sell_fee(value_pre_tax, taxes_fees)
+        value_post_tax = value_pre_tax - trade_tax_sell
+        profit_craft = (value_post_tax - cost)
 
         cost_each = cost / output
         profit_craft_each = profit_craft / output
 
         refine_costs.append((cost, cost_each, profit_craft, profit_craft_each))
 
-    return ingredients_list, refine_costs, number_of_crafts, total_value, output, craft_bonus_dict[material], specific_elemental_lodestone
+    return ingredients_list, refine_costs, number_of_crafts, value_post_tax, output, craft_bonus_dict[material], specific_elemental_lodestone
 
 
 def determine_discipline(material):
@@ -581,3 +632,56 @@ def determine_discipline(material):
             if material in value[k]:
                 return key
     return None
+
+
+def worbench_tax(refine_tier, taxes):
+    sub_total = 0
+    if refine_tier == 1:
+        sub_total =  taxes['refining_station']['tier_2']
+    if refine_tier == 2:
+        sub_total =  taxes['refining_station']['tier_3']
+    if refine_tier == 3:
+        sub_total =  taxes['refining_station']['tier_4']
+    if refine_tier == 4:
+        sub_total =  taxes['refining_station']['tier_5']
+    if refine_tier == 5:
+        sub_total =  taxes['refining_station']['tier_5_L']
+    
+    if taxes['territory']['company_owned'] == True:
+        return sub_total * 0.7
+    return sub_total
+
+
+def determing_trade_post_sell_fee(value, taxes):
+    company_owned = taxes['territory']['company_owned']
+    company_discount = 1
+    if company_owned == True:
+        company_discount = 0.7
+        
+    duration_fees = {
+        "1_Day": 0.4956,
+        "3_Days": 0.9912,
+        "7_Days": 1.9824,
+        "14_Days": 3.9648,
+    }
+    per_value = {
+        "1_Day": 1,
+        "3_Days": 1.25,
+        "7_Days": 1.5,
+        "14_Days": 1.75,
+    }
+    duration = taxes['trade_post']['duration']
+  
+    base_fee = duration_fees[duration]
+    tax_rate = taxes['trade_post']['tax'] / 100
+    discount_rate = taxes['trade_post']['discount'] / 100
+    
+    list_fee = abs(base_fee * (1 + tax_rate - discount_rate))
+    
+    per_value_multiplier = per_value[duration]
+    fee_per_value = (abs(tax_rate - discount_rate)/10) * per_value_multiplier
+    total_value_fee = value * fee_per_value
+    
+    total_listing_fee = (list_fee + total_value_fee) * company_discount
+    
+    return total_listing_fee

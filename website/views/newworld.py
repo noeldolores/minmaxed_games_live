@@ -17,6 +17,7 @@ def init_session():
         session['skill_levels'] = player_data.init_skill_levels()
         session['gear_sets'] = player_data.init_gear_sets()
         session['price_list'] = player_data.init_price_list()
+        session['taxes_fees'] = player_data.init_taxes_and_fees()
         session['api_loaded'] = False
 
         session.pop('_flashes', None)
@@ -158,7 +159,9 @@ def dictionary_key_replacements():
                     "orichalcum_ore" : 0,
                     "orichalcum_ingot_platinum" : 0
                 }
-                
+    if 'taxes_fees' not in session:
+        session['taxes_fees'] = player_data.init_taxes_and_fees()
+        
                 
 @newworld.route('/', methods=['GET', 'POST'])
 def home():
@@ -387,8 +390,10 @@ def refining_hx():
     else:
         price_list = session['price_list']
 
-    all_tiers_all_routes = calcs.tp_cost_to_refine_all_routes_all_tiers(price_list, session['skill_levels']['refining'], session['gear_sets'])
-    cheapest_route = calcs.cheapest_tp_cost_route_to_refine_each_tier(price_list, all_tiers_all_routes)
+    taxes_fees = session['taxes_fees']
+    
+    all_tiers_all_routes = calcs.tp_cost_to_refine_all_routes_all_tiers(price_list, session['skill_levels']['refining'], session['gear_sets'], taxes_fees)
+    cheapest_route = calcs.cheapest_tp_cost_route_to_refine_each_tier(price_list, all_tiers_all_routes, taxes_fees)
     
     return render_template('newworld/refining_hx.html', cheapest_route=cheapest_route, template_order=template_order)
 
@@ -454,7 +459,9 @@ def material_table(material):
         skill_level = session['skill_levels']['refining'][discipline]
         gear_set = session['gear_sets'][discipline]
         
-    data, refine_costs, number_of_crafts, total_value, output, craft_bonus, specific_elemental_lodestone = calcs.ingredients_needed_to_refine(discipline, material_check, quantity, skill_level, gear_set, price_dict)
+    taxes_fees = session['taxes_fees']
+    
+    data, refine_costs, number_of_crafts, total_value, output, craft_bonus, specific_elemental_lodestone = calcs.ingredients_needed_to_refine(discipline, material_check, quantity, skill_level, gear_set, price_dict, taxes_fees)
 
     material_display = material.replace("_"," ").lower().title()
 
@@ -604,6 +611,48 @@ def navbar_api_hx(material):
     return render_template('newworld/navbar_api_hx.html', status=status, css_class=css_class, material=material_hx)
 
 
+@newworld.route('/taxes_and_fees', methods=['GET', 'POST'])
+def taxes_and_fees():
+    init_session()
+    dictionary_key_replacements()
+
+    search = search_function()
+    if search:
+        return redirect(url_for('newworld.material', material=search))
+    
+    taxes_fees = session['taxes_fees']              
+                        
+    return render_template('newworld/taxes_and_fees.html', taxes_fees=taxes_fees)
+    
+
+@newworld.route('/taxes_and_fees_hx', methods=['GET', 'POST'])
+def taxes_and_fees_hx():
+    init_session()
+    dictionary_key_replacements()
+
+    search = search_function()
+    if search:
+        return redirect(url_for('newworld.material', material=search))
+    
+    if request.method == 'POST':
+        if "save" in request.form:
+            for i in session['taxes_fees'].keys():
+                if i == "territory":
+                    for j in session['taxes_fees'][i].keys():
+                        if j in request.form:
+                            session['taxes_fees'][i][j] = True
+                        else:
+                            session['taxes_fees'][i][j] = False
+                else:
+                    for j in session['taxes_fees'][i].keys():
+                        if j == 'duration':
+                            session['taxes_fees'][i][j] = request.form[j]
+                        else:
+                            session['taxes_fees'][i][j] = float(request.form[j])   
+    
+    taxes_fees = session['taxes_fees']              
+                
+    return render_template('newworld/taxes_and_fees_hx.html', taxes_fees=taxes_fees)
 
 
 @newworld.route('/refined_material_ingredients', methods=['GET', 'POST'])

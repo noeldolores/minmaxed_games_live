@@ -1,0 +1,63 @@
+<br>
+<h4 class="gearsets-h4" align="center" style="color: orange;">Refining Station</h4>
+<div class="form-row justify-content-center">
+    <div class="col-auto">
+        <label for="tier_2" class="taxes" title="Coarse Leather, Iron Ingot, Silver Ingot, Stone Block, Linen, Timber">Tier 2</label>
+        <input required type="number" id="tier_2" name="tier_2" class="form-control tax-rate" min="0" step="0.01" value={{taxes_fees['refining_station']['tier_2']}}>
+    </div>
+    <div class="col-auto">
+        <label for="tier_3" class="taxes" title="Rugged Leather, Steel Ingot, Gold Ingot, Stone Brick, Sateen, Lumber">Tier 3</label>
+        <input required type="number" id="tier_3" name="tier_3" class="form-control tax-rate" min="0" step="0.01" value={{taxes_fees['refining_station']['tier_3']}}>
+    </div>
+    <div class="col-auto">
+        <label for="tier_4" class="taxes" title="Layered Leather, Starmetal Ingot, Platinum Ingot, Lodestone Brick, Silk, Wyrdwood Planks">Tier 4</label>
+        <input required type="number" id="tier_4" name="tier_4" class="form-control tax-rate" min="0" step="0.01" value={{taxes_fees['refining_station']['tier_4']}}>
+    </div>
+    <div class="col-auto">
+        <label for="tier_5" class="taxes" title="Infused Leather, Orichalcum Ingot,  Obsidian Voidstone, Infused Silk, Ironwood Planks">Tier 5</label>
+        <input required type="number" id="tier_5" name="tier_5" class="form-control tax-rate" min="0" step="0.01" value={{taxes_fees['refining_station']['tier_5']}}>
+    </div>
+    <div class="col-auto">
+        <label for="tier_5_L" class="taxes" title="Runic Leather, Asmodeum, Platinum Ingot, Runestone, Phoenixweave, Glittering Ebony">Tier 5 (Legendary)</label>
+        <input required type="number" id="tier_5_L" name="tier_5_L" class="form-control tax-rate" min="0" step="0.01" value={{taxes_fees['refining_station']['tier_5_L']}}>
+    </div>
+</div>
+
+<br>
+<h4 class="gearsets-h4" align="center" style="color: green;">Trade Post</h4>
+<div class="form-row justify-content-center">
+    <div class="col-auto">
+        <label for="tax" class="taxes">Trading Tax %</label>
+        <input required type="number" id="tax" name="tax" class="form-control tax-rate" min="0" step="0.1" value={{taxes_fees['trade_post']['tax']}}>
+    </div>
+    <div class="col-auto">
+        <label for="discount" class="taxes">Standing Discount %</label>
+        <input required type="number" id="discount" name="discount" class="form-control tax-rate" min="0" step="0.01" value={{taxes_fees['trade_post']['discount']}}>
+    </div>
+    <div class="col-auto">
+        <label for="duration" class="taxes">Listing Duration</label>
+        <select type="number" id="duration" name="duration" class="form-control tax-rate" value={{taxes_fees['trade_post']['duration']}}>
+            <option value="{{taxes_fees['trade_post']['duration']}}" selected hidden>{{taxes_fees['trade_post']['duration']|replace("_"," ")}}</option>
+            <option value="1_Day">1 Day</option>
+            <option value="3_Days">3 Days</option>
+            <option value="7_Days">7 Days</option>
+            <option value="14_Days">14 Days</option>
+        </select>
+    </div>
+</div>
+
+<br>
+<h4 class="taxes"style="color: cyan;">Territory Bonuses</h4>
+<div class="form-row justify-content-center">
+    <div class="col-auto taxes mr-4">
+        <label for="company_owned" class="taxes gearsets-label">Company Owned Territory</label>
+        <br>
+        <input class="gearsets-input" type="checkbox" id="company_owned" name="company_owned" {{ "checked" if taxes_fees['territory']['company_owned'] else "" }}>
+    </div>
+    <div class="col-auto taxes ml-4">
+        <label for="first_light" class="taxes gearsets-label">First Light Faction Control</label>
+        <br>
+        <input class="gearsets-input" type="checkbox" id="first_light" name="first_light" {{ "checked" if taxes_fees['territory']['first_light'] else "" }}>
+    </div>
+</div>
+
