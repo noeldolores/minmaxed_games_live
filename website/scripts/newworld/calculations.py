@@ -302,7 +302,7 @@ def elemental_lodestone_calcs(prices):
 
 
 def tp_cost_to_refine_all_routes_all_tiers(price_list, skill_level, gear_set, taxes_fees):
-    tax_rate = 1 + (taxes_fees['trade_post']['tax'] / 100) -  (taxes_fees['trade_post']['discount'] / 100)
+    #tax_rate = 1 + (taxes_fees['trade_post']['tax'] / 100) -  (taxes_fees['trade_post']['discount'] / 100)
     first_light_bonus = taxes_fees['territory']['first_light']
     
     refining_dict_full = {}
@@ -330,7 +330,8 @@ def tp_cost_to_refine_all_routes_all_tiers(price_list, skill_level, gear_set, ta
         # Add Target from TP
         for material in refining_dict_full[discipline].keys():    
             name = material.replace("_"," ").title()
-            tp_price = prices[material] * tax_rate
+            #tp_price = prices[material] * tax_rate
+            tp_price = apply_trade_post_tax_buy(prices[material], taxes_fees)
             refining_dict_full[discipline][material][name] = tp_price
 
             # Add Primary Ingrediennt
@@ -344,17 +345,20 @@ def tp_cost_to_refine_all_routes_all_tiers(price_list, skill_level, gear_set, ta
             tier = conv[material]['tier']
             station_fee = worbench_tax(tier, taxes_fees)
             
-            sub_primary = (prices[primary] * quant_req * tax_rate) + station_fee
+            #sub_primary = (prices[primary] * quant_req * tax_rate) + station_fee
+            sub_primary = (apply_trade_post_tax_buy(prices[primary] * quant_req, taxes_fees)) + station_fee
             sub_component = (conv[material]['tier'] > 1) * component
             
             sub_extra_parts = 0
             for key in conv[material].keys():
                 if key!="tier" and key!="primary" and key!=primary:
                     if key!="elemental_lodestone":
-                        sub_extra_parts += ( prices[key] * conv[material][key] * tax_rate)
+                        #sub_extra_parts += ( prices[key] * conv[material][key] * tax_rate)
+                        sub_extra_parts += apply_trade_post_tax_buy(prices[key] * conv[material][key], taxes_fees)
                     else:
                         ele_lode = elemental_lodestone_calcs(prices)
-                        sub_extra_parts += ( ele_lode[1] * conv[material][key] * tax_rate)
+                        #sub_extra_parts += ( ele_lode[1] * conv[material][key] * tax_rate)
+                        sub_extra_parts += apply_trade_post_tax_buy(ele_lode[1] * conv[material][key], taxes_fees)
             
             sub_total = sub_component + sub_extra_parts
             bonus = craft_bonus[material]
@@ -421,9 +425,10 @@ def cheapest_tp_cost_route_to_refine_each_tier(price_list, refining_dict_full, t
             _price_data = cost_comparison(list(material_data.items()))
             
             trade_post_value = price_list[discipline][material]
+            
             trade_tax_sell = determing_trade_post_sell_fee(trade_post_value, taxes_fees)
             post_tax_value = trade_post_value - trade_tax_sell
-            
+                
             refining_dict_cheapest[discipline][material] = {
                 "source": _price_data[0],
                 "price" : round(_price_data[1], 2),
@@ -555,7 +560,7 @@ def ingredients_needed_to_refine(discipline, material, quantity, skill_level, ge
         
 
     # Cost Calculations           
-    tax_rate = 1 + (taxes_fees['trade_post']['tax'] / 100) -  (taxes_fees['trade_post']['discount'] / 100)               
+    #tax_rate = 1 + (taxes_fees['trade_post']['tax'] / 100) -  (taxes_fees['trade_post']['discount'] / 100)               
     craft_bonus_dict = total_craft_bonus(skill_level, gear_set, discipline, first_light_bonus)
     
     if len(num_crafts) > 0:
@@ -587,22 +592,25 @@ def ingredients_needed_to_refine(discipline, material, quantity, skill_level, ge
                             if primary_ingredients[i] != refine_conversions[material]['primary']:
                                 num_required = ingredients[primary_ingredients[i]]
                                 num_per_craft = refine_conversions[primary_ingredients[i+1]][primary_ingredients[i]]
-                                station_tier = refine_conversions[primary_ingredients[i+1]]['tier']
+                                #station_tier = refine_conversions[primary_ingredients[i+1]]['tier']
                             else:
                                 num_required = ingredients[refine_conversions[material]['primary']]
                                 num_per_craft = refine_conversions[material][primary_ingredients[i]]
-                                station_tier = refine_conversions[material]['tier']
+                                #station_tier = refine_conversions[material]['tier']
 
                             num_crafts = int(num_required/num_per_craft)                            
                             station_fee = worbench_tax(tier, taxes_fees) * num_crafts
                             cost += station_fee
                 # Add material cost
                 if ingredient in price_dict[discipline]:
-                    cost += price_dict[discipline][ingredient] * ref_ings[ingredient] * tax_rate
+                    #cost += price_dict[discipline][ingredient] * ref_ings[ingredient] * tax_rate
+                    cost += apply_trade_post_tax_buy(price_dict[discipline][ingredient] * ref_ings[ingredient], taxes_fees)
                 elif ingredient in price_dict['refining_component']:
-                    cost += price_dict['refining_component'][ingredient] * ref_ings[ingredient] * tax_rate
+                    #cost += price_dict['refining_component'][ingredient] * ref_ings[ingredient] * tax_rate
+                    cost += apply_trade_post_tax_buy(price_dict['refining_component'][ingredient] * ref_ings[ingredient], taxes_fees)
                 elif ingredient == "elemental_lodestone":
-                    cost += specific_elemental_lodestone[1] * ref_ings[ingredient] * tax_rate
+                    #cost += specific_elemental_lodestone[1] * ref_ings[ingredient] * tax_rate
+                    cost += apply_trade_post_tax_buy(specific_elemental_lodestone[1] * ref_ings[ingredient], taxes_fees)
         
 
         
@@ -685,3 +693,12 @@ def determing_trade_post_sell_fee(value, taxes):
     total_listing_fee = (list_fee + total_value_fee) * company_discount
     
     return total_listing_fee
+
+def apply_trade_post_tax_buy(cost, taxes):
+    tax_rate = taxes['trade_post']['tax'] / 100
+    discount_rate = 1 - taxes['trade_post']['discount'] / 100 
+    
+    sub_tax = tax_rate * cost
+    discounted_tax = discount_rate * sub_tax
+    
+    return cost + discounted_tax
