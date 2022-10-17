@@ -21,6 +21,9 @@
 
             <form method="post">
                 <select class="form-control" name="servers">
+                    {% if 'server_data' in session %}
+                    <option hidden disable value={{server_dict[session['server_data']['name']|lower]}}>{{session['server_data']['name']|title}}</option>
+                    {%endif%}
                     {% for key, value in server_dict.items() %}
                     <option value={{value}}>{{key|title}}</option>
                     {% endfor %}
