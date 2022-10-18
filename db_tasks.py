@@ -32,19 +32,26 @@ def request_nwmarketprices():
 
     # Iterate through each server and retrieve data
     for key, value in server_dict.items():
+        print(f"Starting: {key}", flush=True)
+        
         server = models.Market.query.filter_by(name=key).first()
 
         if not server:
+            print(f"Creating New: {key}", flush=True)
             # Create new market table
             server = models.Market(name=key, server_id=value)
             db.session.add(server)
             db.session.commit()
-
+        else:
+            print(f"Found Existing Table for: {key}", flush=True)
+            
         # Retrieve Data
         dates_list=[]
         url = f"https://nwmarketprices.com/api/latest-prices/{value}/"
         response = requests.request(method='GET', url=url)
         if response.status_code == 200:
+            print(f"Successfully Connected", flush=True)
+            
             soup = BeautifulSoup(response.content, "html.parser")
             item_list = json.loads(str(soup))
 
@@ -61,9 +68,12 @@ def request_nwmarketprices():
                 dates_list.append(str_to_datetime(item['LastUpdated']))
 
             if len(dates_list) > 0:
-                server.last_update=max(dates_list)        
+                server.last_update=max(dates_list)
+            
+            print(f"Updated {len(dates_list)} items. Updated to {max(dates_list)}", flush=True)       
             db.session.commit()
         else:
+            print(f"Unable to connect to {key}. Response from server: {response.status_code}", flush=True)
             return False
     return True
 
