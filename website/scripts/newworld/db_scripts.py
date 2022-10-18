@@ -35,7 +35,7 @@ def load_market_server(server_id):
         market_dict['last_update'] = datetime_to_str(server.last_update)
         market_dict['items'] = item_dict
 
-        db.session.remove()
+        #db.session.remove()
         return market_dict
     else:
         return None
