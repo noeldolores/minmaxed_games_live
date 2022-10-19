@@ -647,6 +647,8 @@ def taxes_and_fees_hx():
                     for j in session['taxes_fees'][i].keys():
                         if j == 'duration':
                             session['taxes_fees'][i][j] = request.form[j]
+                        elif j == 'tax':
+                            session['taxes_fees'][i][j] = 2.5
                         else:
                             session['taxes_fees'][i][j] = float(request.form[j])   
     

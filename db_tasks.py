@@ -32,7 +32,7 @@ def request_nwmarketprices():
 
     # Iterate through each server and retrieve data
     for key, value in server_dict.items():
-        print(f"Starting: {key}", flush=True)
+        print(f"Starting Update for {key}", flush=True)
         
         server = models.Market.query.filter_by(name=key).first()
 
