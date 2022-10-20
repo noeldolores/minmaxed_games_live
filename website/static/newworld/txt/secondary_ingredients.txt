@@ -14,13 +14,6 @@ Gold Ore
 Platinum Ore
 Stone
 Lodestone
-Molten Lodestone
-Loamy Lodestone
-Shocking Lodestone
-Crystalline Lodestone
-Freezing Lodestone
-Putrid Lodestone
-Gleaming Lodestone
 Fibers
 Silk Threads
 Wirefiber
