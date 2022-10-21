@@ -1,7 +1,7 @@
 <div class="form-row justify-content-center mb-2">
     <div class="col-auto"  data-toggle="collapse" data-target="#collapse_value">
         <div class="form-row">
-        {% if _data['craft']['input'] == _data['craft']['output'] %}
+        {% if quantity == _data['craft']['output'] %}
             <span class="mr-2"style="color:aqua;">Craft</span><input disabled type="text" class="material-box mr-2 hover-enabled" value="{{_data['craft']['input']|string}}"><p class="craft_bonus" title="Craft Bonus">x{{_data['craft']['bonus']|string}}</p>
         {% else %}
             <span class="mr-2"style="color:aqua;">Craft</span><input disabled type="text" class="material-box mr-2 hover-enabled" value="{{_data['craft']['input']|string}} ({{_data['craft']['output']|string}})"><p class="craft_bonus" title="Craft Bonus">x{{_data['craft']['bonus']|string}}</p>
@@ -84,7 +84,7 @@
             <td scope="row"></td>
             {% endfor %}
         </tr>
-        
+
         {% endfor %}
     </tbody>
 </table>
