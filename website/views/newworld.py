@@ -394,8 +394,8 @@ def refining_hx():
 
     taxes_fees = session['taxes_fees']
     
-    all_tiers_all_routes = calcs.tp_cost_to_refine_all_routes_all_tiers(price_list, session['skill_levels']['refining'], session['gear_sets'], taxes_fees)
-    cheapest_route = calcs.cheapest_tp_cost_route_to_refine_each_tier(price_list, all_tiers_all_routes, taxes_fees)
+    all_tiers_all_routes, financial_data = calcs.tp_cost_to_refine_all_routes_all_tiers(price_list, session['skill_levels']['refining'], session['gear_sets'], taxes_fees)
+    cheapest_route = calcs.cheapest_tp_cost_route_to_refine_each_tier(price_list, all_tiers_all_routes, taxes_fees, financial_data)
     
     return render_template('newworld/refining_hx.html', cheapest_route=cheapest_route, template_order=template_order)
 
