@@ -417,7 +417,9 @@ def material(material):
     for item in material_list:
         if item[0] == discipline:
             material_nav_items = item[1:]
-    
+
+    if 'elemental_lodestone' in material_nav_items:
+        material_nav_items.remove('elemental_lodestone')
     
     if category == "primary":
         return render_template('newworld/primary_material.html', material=material_display, material_nav_items=material_nav_items)
