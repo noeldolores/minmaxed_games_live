@@ -7,28 +7,36 @@
 
 {% block content %}
 <div class="taxBoxes container">
-    <br>
-    <h1 align="center" class="text-black">Taxes & Fees</h1>
-    <br>
-    <div class="container col col-lg-10 col-sm-10 text-center">
-        <p1>The ability to view your Territory Standing bonuses seems to still be <a style="color: #d8e6ad;" href="https://forums.newworld.com/t/territory-standings-bonus-percentages/671187/2" target="#">bugged or removed</a>, so here are some workarounds:</p1><br>
-        <p1><span style="color: orange;">Refining Station:</span> Please visit a workstation to view your <a style="color: #d8e6ad;" href="{{ url_for('static', filename='newworld/images/refining_station_tax.png') }}" target="#">taxes</a> for refining. Mouse over each tier to see an item list.</p1><br>
-        <p1><span style="color: green;">Trading Tax:</span> As of the Brimstones Sand patch, this is now fixed at 2.5%</p1><br>
-        <p1><span style="color: green;">Standing Discount:</span> Visit the Trading Post and select an item that is at least 100g. To calculate your discount:</p1><br>
-        <p1>Territory Standing Discount / Listing Fee. <a style="color: #d8e6ad;" href="{{ url_for('static', filename='newworld/images/trading_tax_standing_discount.png') }}" target="#">Example</a>: 2148.91 / 11250 = 19.1</p1><br>
-        <p1><span style="color: green;">Listing Duration:</span> This sets the default for all calculators / tools. The shorter the duration, the cheaper your fees will be.</p1><br>
-        <p1><span style="color: cyan;">Company Owned Territory:</span> Grants a 30% discount to trading post and workstation fees within your territory.</p1><br>
-        <p1><span style="color: cyan;">First Light Control:</span> Grants a +10% output bonus to crafting / refining.</p1><br>
-        <p1>The data you enter will be saved to your browser for future visits.</p1>
+    <br><br>
+    <br><br>
+    <div class="card bg-secondary border-info">
+        <div class="card-header button btn-outline-info" id="headingOne" type="button" data-toggle="collapse" data-target="#collapseOne">
+            <h1>Taxes & Fees</h1>
+        </div>
+
+        <div id="collapseOne" class="collapse">
+            <div class="card-body bg-dark">
+                <p1 style=>The ability to view your Territory Standing bonuses seems to still be <a style="color: #d8e6ad;" href="https://forums.newworld.com/t/territory-standings-bonus-percentages/671187/2" target="#">bugged or removed</a>, so here are some workarounds:</p1><br>
+                <p1><span style="color: orange;">Refining Station:</span> Please visit a workstation to view your <a style="color: #d8e6ad;" href="{{ url_for('static', filename='newworld/images/refining_station_tax.png') }}" target="#">taxes</a> for refining. Mouse over each tier to see an item list.</p1><br>
+                <p1><span style="color: green;">Trading Tax:</span> As of the Brimstones Sand patch, this is now fixed at 2.5%</p1><br>
+                <p1><span style="color: green;">Standing Discount:</span> Visit the Trading Post and select an item that is at least 100g. To calculate your discount:</p1><br>
+                <p1>Territory Standing Discount / Listing Fee. <a style="color: #d8e6ad;" href="{{ url_for('static', filename='newworld/images/trading_tax_standing_discount.png') }}" target="#">Example</a>: 2148.91 / 11250 = 19.1</p1><br>
+                <p1><span style="color: green;">Listing Duration:</span> Used to calculate profits for selling items.</p1><br>
+                <p1><span style="color: cyan;">Company Territory:</span> 30% discount to trading post and workstation fees within the territory.</p1><br>
+                <p1><span style="color: cyan;">First Light:</span> 10% bonus to refining yield.</p1><br>
+                <p1><span style="color: cyan;">Weaver's Fen:</span> 10% discount to trading post taxes.</p1><br>
+                <p1>The data you enter will be saved to your browser for future visits.</p1> 
+            </div>
+        </div>
     </div>
 
     <form hx-post="/newworld/taxes_and_fees_hx" hx-target="#taxes_hx">
-       <div id="taxes_hx">
+        <div id="taxes_hx">
             {% include "newworld/taxes_and_fees_hx.html" %}
-       </div>
-       <div>
-        <button id="saveTaxes" class="btn btn-outline-light saveTaxes" type="submit" name="save" _="on click call #saveTaxes.blur() add .btn-success remove .btn-outline-light then wait 0.75 seconds then add .btn-outline-light remove .btn-success">Save</button>
-    </div>
+        </div>
+        <div>
+            <button id="saveTaxes" class="btn btn-outline-light saveTaxes" type="submit" name="save" _="on click call #saveTaxes.blur() add .btn-success remove .btn-outline-light then wait 0.75 seconds then add .btn-outline-light remove .btn-success">Save</button>
+        </div>
     </form>
     <br>
     <br>

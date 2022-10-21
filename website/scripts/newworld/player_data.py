@@ -17,7 +17,8 @@ taxes_fees = {
     },
     "territory" : {
         "company_owned" : False,
-        "first_light" : False
+        "first_light" : False,
+        "weavers_fen" : False
     }
 }
 

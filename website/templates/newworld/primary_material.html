@@ -9,22 +9,30 @@
 <div>
     {% include "newworld/navbar_material.html"%}
 </div>
+<br><br>
+<br><br>
 
-<h1 align="center" id="topHeader">{{material}}</h1>
+<h1>{{material}}</h1>
 
-<br>
-
-<div class="container col col-lg-6 col-sm-10 text-center">
-    <p1>This table shows the ingredients to create {{material}}.</p1><br>
-    <p1>Rows are separate refining routes that each start at a different base tier. Market data is : <b>total</b> (<b>each</b>).</p1><br>
-    <p1 ><b style="color:aqua;">Craft:</b> The estimated number to craft in order to receive the specified quantity.
-        A (number) appears when the output is greater than the specified quantity after your <span style="color: green">xCraft Bonus</span>.</p1><br>
-    <p1 ><b style="color:orange;">Value:</b> The Trade Post value of the output quantity.</p1><br>
-    <p1 ><b style="color:red;">Cost:</b> The purchase price of ingredients required to receive the quantity from refinement.</p1><br>
-    <p1><b style="color:green;">Profit:</b> The Value minus the Cost of the output quantity.</p1><br>
+<br><br>
+<div class="container col-xl-4 col-lg-6 col-md-6">
+    <div class="card bg-secondary border-danger">
+        <div class="card-header button btn-sm btn-outline-danger" id="headingOne" type="button" data-toggle="collapse" data-target="#collapseOne">
+            <h3>I want...</h3>
+        </div>
+        <div id="collapseOne" class="collapse">
+            <div class="card-body bg-dark">
+                <p1>This table shows the ingredients to create {{material}}.</p1><br>
+                <p1>Rows are separate refining routes that each start at a different base tier. Market data is : <b>total</b> (<b>each</b>).</p1><br>
+                <p1><b style="color:aqua;">Craft:</b> The amount to craft in order to receive the input quantity.</p1><br>
+                <p1>A (number) appears when the output is estimated to be more than your input after the <span style="color: green">xCraft Bonus</span>.</p1><br>
+                <p1><b style="color:orange;">Value:</b> The Trade Post value of the output quantity after taxes. Click the Value box for more info.</p1><br>
+                <p1><b style="color:red;">Cost:</b> Includes the all purchase prices and refinement fees. Click a row for more info.</p1><br>
+                <p1><b style="color:green;">Profit:</b> The Value minus the Cost of the output quantity.</p1><br>
+            </div>
+        </div>
+    </div>
 </div>
-
-<br>
 
 <div class="container">
     <div class="active list-unstyled components">
@@ -40,10 +48,27 @@
             </div>
         </form>
 
-        <div id="material_container" _="init fetch /newworld/primary_material_hx/{{material.lower()|replace(" ","_")}} put the result into #material_container"><div>
+        <div id="material_container" _="init fetch /newworld/primary_material_hx/{{material.lower()|replace(" ","_")}} put the result into #material_container"></div>
 
     </div>
 </div>
-<br>
 
+<br><br>
+
+<div class="container col-xl-4 col-lg-6 col-md-6">
+    <div class="card bg-secondary border-danger">
+        <div class="card-header button btn-sm btn-outline-danger" id="headingTwo" type="button" data-toggle="collapse" data-target="#collapseTwo">
+            <h3>I have... (coming soon)</h3>
+        </div>
+        <div id="collapseTwo" class="collapse">
+            <div class="card-body bg-dark">
+                <p1>This table will show the profit potential of refining {{material}} up to its higher tiers.</p1><br>
+                <p1>There will be an input section where you will enter the quantity of {{material}} you have, and the values will update similar to the table above.</p1><br>
+                <p1>Each row will show a specific refining tier above {{material}}, and will give you the value breakdown of selling at that level.</p1><br>
+            </div>
+        </div>
+    </div>
+</div>
+
+<br>
 {% endblock %}

@@ -7,12 +7,19 @@
 
 {% block content %}
 <div class="skillBoxes container">
-    <br>
-    <h1 align="center" class="text-black">Trade Skills</h1>
-    <br>
-    <div class="container col col-lg-8 col-sm-10 text-center">
-        <p1>Enter your skill levels below to generate data for the <a href="/newworld/refining" target="#"><u>Refining Cost</u></a> and <a href="/newworld/material/orichalcum_ingot" target="#"><u>Refining Ingredients</u></a> tables.</p1><br>
-        <p1>The data you enter will be saved to your browser for future visits.</p1>
+    <br><br>
+    <br><br>
+    <div class="card bg-secondary border-info">
+        <div class="card-header button btn-outline-info" id="headingOne" type="button" data-toggle="collapse" data-target="#collapseOne">
+            <h1>Trade Skills</h1>
+        </div>
+
+        <div id="collapseOne" class="collapse">
+            <div class="card-body bg-dark">
+                <p1>Enter your skill levels below to generate data for the <a href="/newworld/refining" target="#"><u>Refining Cost</u></a> and <a href="/newworld/material/orichalcum_ingot" target="#"><u>Refining Ingredients</u></a> tables.</p1><br>
+                <p1>The data you enter will be saved to your browser for future visits.</p1>
+            </div>
+        </div>
     </div>
 
     <form hx-post="/newworld/skills_hx" hx-target="#skills_hx">

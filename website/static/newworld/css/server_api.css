@@ -48,8 +48,12 @@ span.navbar-toggler-icon{
 }
 
 h1 {
-  margin-top: 4rem;
+  text-align: center;
   color: white;
+}
+
+#collapseOne {
+  text-align: center;
 }
 
 p1 {

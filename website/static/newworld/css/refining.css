@@ -51,6 +51,10 @@ p1 {
   color: white;
 }
 
+#collapseOne {
+  text-align: center;
+}
+
 #listspace {
   margin-top: 1rem;
   width: 100%;
@@ -80,8 +84,8 @@ p1 {
 }
 
 h1 {
-  margin-top: 4rem;
   color: white;
+  text-align: center; 
 }
 
 th, td {

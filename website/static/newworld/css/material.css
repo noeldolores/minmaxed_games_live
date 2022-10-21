@@ -77,8 +77,17 @@ p1 {
 }
 
 h1 {
-  margin-top: 4rem;
   color: white;
+  text-align: center;
+}
+
+h3 {
+  color: white;
+  text-align: center;
+}
+
+#collapseOne, #collapseTwo{
+  text-align: center;
 }
 
 tr {
@@ -129,4 +138,12 @@ span {
 .nav-material {
   top: 56px;
   height: fit-content;
+}
+
+.disabled-Hover > td {
+    background-color: #8f9ca7;
+}
+
+.hover-enabled:hover {
+  box-shadow: 20px 20px 50px 10px rgb(159, 159, 159) inset;
 }

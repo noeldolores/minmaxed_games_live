@@ -7,15 +7,22 @@
 
 {% block content%}
 <div class="container">
-    <br>
-    <h1 align="center" class="text-black" id="topHeader">Trade Post</h1>
-    <br>
-    <div class="container col col-lg-8 col-sm-10 text-center">
-        <p1>Enter the price of each item below to generate data for the <a href="/newworld/refining" target="#"><u>Refining Cost</u></a> tables.</p1><br>
-        <p1>The data you enter will be saved to your browser for future visits.</p1>
+    <br><br>
+    <br><br>
+    <div class="card bg-secondary border-warning">
+        <div class="card-header button btn-outline-warning" id="headingOne" type="button" data-toggle="collapse" data-target="#collapseOne">
+            <h1>Trade Post</h1>
+        </div>
+
+        <div id="collapseOne" class="collapse">
+            <div class="card-body bg-dark">
+                <p1>Enter the price of each item below to generate data for the <a href="/newworld/refining" target="#"><u>Refining Cost</u></a> tables.</p1><br>
+                <p1>The data you enter will be saved to your browser for future visits.</p1>
+            </div>
+        </div>
     </div>
 
-    <br>
+    <br><br>
 
     <div>
         <button class="btn btn-outline-light custom_toggle" _="on click call me.blur() if my.innerText == 'Show All' remove .collapsed from #collapse set .collapse-main's @aria-expanded to 'true' add .show to .collapseall set my.innerText to 'Hide All' else add .collapsed to #collapse remove .show from .collapseall set .collapse-main's @aria-expanded to 'false' set my.innerText to 'Show All'">Show All</button>

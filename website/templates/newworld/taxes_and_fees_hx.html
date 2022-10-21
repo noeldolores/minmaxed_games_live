@@ -49,15 +49,20 @@
 <br>
 <h4 class="taxes"style="color: cyan;">Territory Bonuses</h4>
 <div class="form-row justify-content-center">
-    <div class="col-auto taxes mr-4">
-        <label for="company_owned" class="taxes gearsets-label">Company Owned Territory</label>
+    <div class="col-auto taxes">
+        <label for="company_owned" class="taxes gearsets-label">Company Territory</label>
         <br>
         <input class="gearsets-input" type="checkbox" id="company_owned" name="company_owned" {{ "checked" if taxes_fees['territory']['company_owned'] else "" }}>
     </div>
-    <div class="col-auto taxes ml-4">
-        <label for="first_light" class="taxes gearsets-label">First Light Faction Control</label>
+    <div class="col-auto taxes">
+        <label for="first_light" class="taxes gearsets-label">First Light</label>
         <br>
         <input class="gearsets-input" type="checkbox" id="first_light" name="first_light" {{ "checked" if taxes_fees['territory']['first_light'] else "" }}>
+    </div>
+    <div class="col-auto taxes">
+        <label for="weavers_fen" class="taxes gearsets-label">Weaver's Fen</label>
+        <br>
+        <input class="gearsets-input" type="checkbox" id="weavers_fen" name="weavers_fen" {{ "checked" if taxes_fees['territory']['weavers_fen'] else "" }}>
     </div>
 </div>
 

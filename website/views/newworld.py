@@ -161,6 +161,8 @@ def dictionary_key_replacements():
                 }
     if 'taxes_fees' not in session:
         session['taxes_fees'] = player_data.init_taxes_and_fees()
+    elif 'weavers_fen' not in session['taxes_fees']['territory']:
+            session['taxes_fees']['territory']['weavers_fen'] = False
         
                 
 @newworld.route('/', methods=['GET', 'POST'])
@@ -461,11 +463,11 @@ def material_table(material):
         
     taxes_fees = session['taxes_fees']
     
-    data, refine_costs, number_of_crafts, total_value, output, craft_bonus, specific_elemental_lodestone = calcs.ingredients_needed_to_refine(discipline, material_check, quantity, skill_level, gear_set, price_dict, taxes_fees)
-
+    _data, specific_elemental_lodestone = calcs.ingredients_needed_to_refine(discipline, material_check, quantity, skill_level, gear_set, price_dict, taxes_fees)
+    
     material_display = material.replace("_"," ").lower().title()
 
-    return render_template('newworld/primary_material_hx.html', data=data, quantity=quantity, material=material_display, refine_costs=refine_costs, number_of_crafts=number_of_crafts, total_value=total_value, output=output, craft_bonus=craft_bonus, ele_lodestone=specific_elemental_lodestone)
+    return render_template('newworld/primary_material_hx.html', quantity=quantity, material=material_display, ele_lodestone=specific_elemental_lodestone, _data=_data)
 
 
 @newworld.route('/datalist', methods=['GET', 'POST'])
@@ -650,7 +652,7 @@ def taxes_and_fees_hx():
                         elif j == 'tax':
                             session['taxes_fees'][i][j] = 2.5
                         else:
-                            session['taxes_fees'][i][j] = float(request.form[j])   
+                            session['taxes_fees'][i][j] = float(request.form[j])     
     
     taxes_fees = session['taxes_fees']              
                 

@@ -7,15 +7,22 @@
 
 {% block content%}
 <div class="container">
-    <br>
-    <h1 align="center" class="text-black" id="topHeader">Refining Cost</h1>
-    <br>
-    <div class="container col col-lg-8 col-sm-10 text-center">
-        <p1>This shows the <span style="color:orange;">cheapest</span> refining route to acquire each <span style="color:aqua;">material</span>.</p1><br>
-        <p1>The <span style="color:red;">Avg. Cost</span> takes into account all bonuses and applies them with no variance. Thus, this is only accurate on larger quantities. Select the specific material to view a more granular calculator.</p1><br>
-        <p1><span style="color:green;">TP Flip</span> and <span style="color:green;">Margin</span> show the potential profit for selling the refined material back on the Trade Post.</p1><br>
-    </div>
+    <br><br>
+    <br><br>
+    <div class="card bg-secondary border-success">
+        <div class="card-header button btn-outline-success" id="headingOne" type="button" data-toggle="collapse" data-target="#collapseOne">
+            <h1>Refining Cost</h1>
+        </div>
 
+        <div id="collapseOne" class="collapse">
+            <div class="card-body bg-dark">
+                <p1>This shows the <span style="color:orange;">cheapest</span> refining route to acquire each <span style="color:aqua;">material</span>.</p1><br>
+                <p1>The <span style="color:red;">Avg. Cost</span> takes into account all bonuses and applies them with no variance. Thus, this is only accurate on larger quantities (100+). Select the specific material to view a more granular calculator.</p1><br>
+                <p1><span style="color:green;">TP Flip</span> and <span style="color:green;">Margin</span> show the potential profit for selling the refined material back on the Trade Post. This does not account for taxes or fees.</p1><br>
+            </div>
+        </div>
+    </div>
+    <br>
     <br>
 
     <div id="refining_container" _="init fetch /newworld/refining_hx put the result into #refining_container"></div>
