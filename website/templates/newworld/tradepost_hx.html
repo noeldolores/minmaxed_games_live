@@ -5,7 +5,11 @@
         <div class="form-row justify-content-center">
             {% for material in template_order[i][1:] %}
             <div class="col-auto">
+                {% if '_lodestone' in material %}
+                <label for={{material}}>{{material.title() | replace("_"," ")}}</label>
+                {% else %}
                 <label for={{material}}><a href="/newworld/material/{{material}}" target="#">{{material.title() | replace("_"," ")}}</a></label>
+                {% endif %}
                 <input required type="number" step="0.01" id="{{material}}" name="{{material}}" class="form-control price" min="0" value="{{ '%.2f'|format(price_list[template_order[i][0]][material]) }}">
             </div>
             {% endfor %}
