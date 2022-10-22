@@ -791,15 +791,21 @@ def refining_up_profitability_table(discipline, material, quantity, skill_level,
             #check for additional ingredients
             for key in conversions[discipline][target_refine].keys():
                 if key != "tier" and key != "primary" and key != refine_ingredient:
-                    market_cost = market[discipline][key]
+                    if key != 'elemental_lodestone':
+                        market_cost = market[discipline][key]
+                    else:
+                        ele_lode = elemental_lodestone_calcs(market[discipline])
+                        market_cost = ele_lode[1]
+                        
                     quant_per_craft = conversions[discipline][target_refine][key]
                     quant_required = number_of_crafts * quant_per_craft
-                    
+
                     quant_cost = quant_required * market_cost
                     purchase_tax = apply_trade_post_tax_buy(quant_cost, taxes)
                     
                     base_cost += quant_cost
                     trade_post_tax += purchase_tax
+                
                     
             #refining components
             market_cost = market['refining_component'][conversions[discipline]['refining_component']]

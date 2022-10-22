@@ -177,6 +177,19 @@ def home():
     return render_template('newworld/base.html', rand_mat=rand_mat)
 
 
+@newworld.route('/trade_skills_refining', methods=['GET', 'POST'])
+def trade_skills_refining():
+    init_session()
+    dictionary_key_replacements()
+    
+    search = search_function()
+    if search:
+        return redirect(url_for("newworld.material", material=search))
+
+    rand_mat = random_material()
+
+    return render_template('newworld/trade_skills_refining.html', rand_mat=rand_mat)
+
 @newworld.route('/skills', methods=['GET', 'POST'])
 def skills():
     init_session()
