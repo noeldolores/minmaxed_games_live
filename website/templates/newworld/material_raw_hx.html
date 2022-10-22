@@ -14,20 +14,20 @@
         <tbody>
             {% for target,value in data.items() %}
             <tr id="values_have" data-toggle="collapse" data-target="#collapse_{{target}}" class="cursor-click">
-                <td scope="row" class="align-middle"><a href="/newworld/material/{{target}}" style="color:black">{{ target.title()|replace("_"," ") }}</a></td>
+                <td scope="row" class="align-middle" style="color:black; width:32%;"><a href="/newworld/material/{{target}}" style="color:black">{{ target.title()|replace("_"," ") }}</a></td>
 
                 {% if value['sell']['quantity'] == 0 %}
-                <td scope="row" class="align-middle">{{ value['craft']['quantity'] }}</td>
-                <td scope="row" class="align-middle">{{ value['sell']['quantity'] }}</td>
-                <td scope="row" class="align-middle">--</td>
-                <td scope="row" class="align-middle">--</td>
+                <td scope="row" class="align-middle" style="color:black; width:17%;">{{ value['craft']['quantity'] }}</td>
+                <td scope="row" class="align-middle" style="color:black; width:17%;">{{ value['sell']['quantity'] }}</td>
+                <td scope="row" class="align-middle" style="color:black; width:17%;">--</td>
+                <td scope="row" class="align-middle" style="color:black; width:17%;">--</td>
 
                 {% else %}
 
-                <td scope="row" class="align-middle">{{ value['craft']['quantity'] }}</td>
-                <td scope="row" class="align-middle">{{ value['sell']['quantity'] }}</td>
-                <td scope="row" class="align-middle">{{ '%.2f'|format(value['craft']['final_cost']) }}</td>
-                <td scope="row" class="align-middle">{{ '%.2f'|format(value['sell']['final_profit']) }}</td>
+                <td scope="row" class="align-middle" style="color:black; width:17%;">{{ value['craft']['quantity'] }}</td>
+                <td scope="row" class="align-middle" style="color:black; width:17%;">{{ value['sell']['quantity'] }}</td>
+                <td scope="row" class="align-middle" style="color:black; width:17%;">{{ '%.2f'|format(value['craft']['final_cost']) }}</td>
+                <td scope="row" class="align-middle" style="color:black; width:17%;">{{ '%.2f'|format(value['sell']['final_profit']) }}</td>
                 {% endif %}
                 
             </tr>
