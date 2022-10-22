@@ -518,14 +518,16 @@ def ingredients_needed_to_refine(discipline, material, quantity, skill_level, ge
                             if primary_ingredients[i] != refine_conversions[material]['primary']:
                                 num_required = ingredients[primary_ingredients[i]]
                                 num_per_craft = refine_conversions[primary_ingredients[i+1]][primary_ingredients[i]]
+                                station_tier = refine_conversions[primary_ingredients[i+1]]['tier']
                             else:
                                 num_required = ingredients[refine_conversions[material]['primary']]
                                 num_per_craft = refine_conversions[material][primary_ingredients[i]]
-
+                                station_tier = refine_conversions[material]['tier']
+                            
                             num_crafts = int(num_required/num_per_craft)                            
-                            station_fee = worbench_tax(tier, taxes_fees) * num_crafts
+                            station_fee = worbench_tax(station_tier, taxes_fees) * num_crafts
                             station_fee_total += station_fee
-
+                
                 # Add material cost
                 if ingredient in price_dict[discipline]:
                     tp_buy_tax = apply_trade_post_tax_buy(price_dict[discipline][ingredient] * ref_ings[ingredient], taxes_fees)
@@ -769,12 +771,11 @@ def refining_up_profitability_table(discipline, material, quantity, skill_level,
             
 
         # determine craft cost for each tier
+        base_cost = 0
+        trade_post_tax = 0
+        station_tax = 0 
+        final_cost = 0
         for i in range(len(refining_list)-1):
-            base_cost = 0
-            trade_post_tax = 0
-            station_tax = 0 
-            final_cost = 0
-            
             refine_ingredient = refining_list[i]
             target_refine = refining_list[i+1]
             
@@ -783,10 +784,9 @@ def refining_up_profitability_table(discipline, material, quantity, skill_level,
             
             number_of_crafts = math.floor(quant_available / quant_per_craft)
 
-            
             #station fees
             target_refine_tier = conversions[discipline][target_refine]['tier']
-            station_tax = worbench_tax(target_refine_tier, taxes) * number_of_crafts
+            station_tax += worbench_tax(target_refine_tier, taxes) * number_of_crafts
             
             #check for additional ingredients
             for key in conversions[discipline][target_refine].keys():
