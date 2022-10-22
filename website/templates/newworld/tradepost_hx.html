@@ -5,7 +5,7 @@
         <div class="form-row justify-content-center">
             {% for material in template_order[i][1:] %}
             <div class="col-auto">
-                {% if '_lodestone' in material %}
+                {% if '_lodestone' in material or 'pure_solvent' in material %}
                 <label for={{material}}>{{material.title() | replace("_"," ")}}</label>
                 {% else %}
                 <label for={{material}}><a href="/newworld/material/{{material}}" target="#">{{material.title() | replace("_"," ")}}</a></label>
