@@ -1,0 +1,104 @@
+<div class="form-row justify-content-center mb-2">
+    <div class="col-auto"  data-toggle="collapse" data-target="#collapse_value">
+        <div class="form-row">
+        {% if quantity == _data['craft']['output'] %}
+            <span class="mr-2 cursor-click" style="color:aqua; cursor-click">Craft</span>
+            <input disabled type="text" class="material-box mr-2 hover-enabled cursor-click" value="{{_data['craft']['input']|string}}">
+            <p class="craft_bonus cursor-click" title="Craft Bonus">x{{_data['craft']['bonus']|string}}</p>
+        {% else %}
+            <span class="mr-2 cursor-click"style="color:aqua;">Craft</span>
+            <input disabled type="text" class="material-box mr-2 hover-enabled cursor-click" value="{{_data['craft']['input']|string}} ({{_data['craft']['output']|string}})">
+            <p class="craft_bonus cursor-click" title="Craft Bonus">x{{_data['craft']['bonus']|string}}</p>
+        {% endif %}
+        </div>
+    </div>
+    <div class="col-auto" data-toggle="collapse" data-target="#collapse_value">
+        <div class="form-row">
+            <input disabled type="text" class="material-box ml-2 hover-enabled cursor-click" value={{'%.2f'|format(_data['craft']['final_value'])}}>
+            <span class="ml-2 cursor-click" style="color:orange;" >Value</span>
+        </div>
+    </div>
+</div>
+
+<div id="collapse_value" class="collapse">
+    <table class="table table-striped table-secondary">
+        <thead>
+            <tr id="collapse_{{i}}" class="col-auto cursor-click" style="background: #547d5d;" data-toggle="collapse" data-target="#collapse_value">
+                <td scope="row" class="align-middle" style="color:black; width:33%;"><b>Base Value</b></td>
+                <td scope="row" class="align-middle" style="color:black; width:33%;"><b>Listing Fee</b></td>
+                <td scope="row" class="align-middle" style="color:black; width:33%;"><b>Transaction Charge</b></td>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr id="collapse_{{i}}" class="col-auto">
+                <td scope="row" class="align-middle">{{ '%.2f'|format(_data['financial'][0]['sell']['base_value']) }}</td>
+                <td scope="row" class="align-middle">{{ '%.2f'|format(_data['financial'][0]['sell']['listing_fee']) }}</td>
+                <td scope="row" class="align-middle">{{ '%.2f'|format(_data['financial'][0]['sell']['transaction_charge']) }}</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="accordion" id="accordion">
+
+    <table class="table table-secondary table-hover" id="ingredients"  _="on htmx:load call #quant_field.blur()">
+        <thead>
+            <tr style="background: #343a40;">
+            {% for key in _data['ingredients'][0].keys() %}
+                {% if key == "elemental_lodestone" %}
+                <th scope="col" style="width: {{(100 / (_data['ingredients'][0]|length + 2))|round|int}}%; color:white;">{{ ele_lodestone[0].title()|replace("_"," ") }}</th>
+                {% else%}
+                <th  style="width: {{(100 / (_data['ingredients'][0]|length + 2))|round|int}}%"><a href="/newworld/material/{{key}}">{{ key.title()|replace("_"," ") }}</a></th>
+                {% endif %}
+            {% endfor %}
+                <th  style="width: {{(100 / (_data['ingredients'][0]|length + 2))|round|int}}%; color:red;">Cost</th>
+                <th style="width: {{(100 / (_data['ingredients'][0]|length + 2))|round|int}}%; color:green;">Profit</th>
+                {% if _data['ingredients'][0]|length == 1 %}
+                <th></th>
+                {% endif %}
+            </tr>
+        </thead>
+
+        <tbody>
+            {% for i in range(0, _data['ingredients']|length) %}
+            <tr id="values" class="_color cursor-click" data-toggle="collapse" data-target="#collapse_{{i}}">
+                {% for value in _data['ingredients'][i].values() %}
+                <td scope="row" class="align-middle _color">{{ value }}</td>
+                {% endfor %}
+                <td scope="row" class="align-middle _color">{{ '%.2f'|format(_data['financial'][i]['craft']['final_cost']) }} ({{ '%.2f'|format(_data['financial'][i]['craft']['final_cost_each']) }})</td>
+                <td scope="row" class="align-middle _color">{{ '%.2f'|format(_data['financial'][i]['sell']['final_profit']) }} ({{ '%.2f'|format(_data['financial'][i]['sell']['final_profit_each']) }})</td>
+                {% if _data['ingredients'][0]|length == 1 %}
+                <td></td>
+                {% endif %}
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% for i in range(0, _data['ingredients']|length) %}
+    <div id="collapse_{{i}}" class="collapse" data-parent="#accordion">
+        <table class="table table-striped table-secondary">
+    
+            <thead>
+                <tr class="col-auto cursor-click" style="background: #a17277;" data-toggle="collapse" data-target="#collapse_{{i}}">
+                    <td scope="row" class="align-middle"><b>Base Cost</b></td>
+                    <td scope="row" class="align-middle"><b>TP Taxes</b></td>
+                    <td scope="row" class="align-middle"><b>Station Fees</b></td>
+                    <td scope="row" class="align-middle"><b>Total Cost</b></td>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr class="col-auto disabled-Hover">
+                    <td scope="row" class="align-middle disabled-Hover">{{ '%.2f'|format(_data['financial'][i]['craft']['base_cost']) }}</td>
+                    <td scope="row" class="align-middle disabled-Hover">{{ '%.2f'|format(_data['financial'][i]['craft']['trade_post_tax']) }}</td>
+                    <td scope="row" class="align-middle disabled-Hover">{{ '%.2f'|format(_data['financial'][i]['craft']['station_tax']) }}</td>
+                    <td scope="row" class="align-middle disabled-Hover">{{ '%.2f'|format(_data['financial'][i]['craft']['final_cost']) }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    {% endfor %}
+
+</div>

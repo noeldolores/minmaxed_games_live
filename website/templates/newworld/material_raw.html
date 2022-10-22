@@ -1,0 +1,62 @@
+<br>
+
+<div class="container ">
+    <div class="tab-list justify-content-left">
+        <ul class="nav nav-tabs">
+            {% if tier == 0 %}
+            <li class="nav-item">
+                <a class="nav-link active selected cursor-click" data-mdb-toggle="tab" hx-get="/newworld/material_raw/{{material.lower()|replace(" ","_")}}">Sell</a>
+            </li>
+            {% elif tier == 5 %}
+            <li class="nav-item">
+                <a class="nav-link active selected cursor-click" data-mdb-toggle="tab" hx-get="/newworld/material_primary/{{material.lower()|replace(" ","_")}}">Craft</a>
+            </li>
+            {% else %}
+            <li class="nav-item">
+                <a class="nav-link cursor-click" data-mdb-toggle="tab" hx-get="/newworld/material_primary/{{material.lower()|replace(" ","_")}}">Craft</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link active selected cursor-click" data-mdb-toggle="tab" hx-get="/newworld/material_raw/{{material.lower()|replace(" ","_")}}">Sell</a>
+            </li>
+            {% endif %}
+        </ul>
+    </div>
+</div>
+
+<br>
+
+<div class="container col-xl-5 col-lg-6 col-md-6">
+    <div class="card bg-secondary border-danger">
+        <div class="card-header button btn-sm btn-outline-danger" id="headingTwo" type="button" data-toggle="collapse" data-target="#collapseTwo">
+            <h3>Info</h3>
+        </div>
+        <div id="collapseTwo" class="collapse">
+            <div class="card-body bg-dark">
+                <p1>This table shows the potential profit from refining a quantity of {{material}} into higher materials.</p1><br>
+                <p1><b style="color:aqua;">Craft:</b> The number to target on the workbench.</p1><br>
+                <p1><b style="color:orange;">Receive:</b> The estimated output of the craft based on your skills, gear, and bonuses.</p1><br>
+                <p1><b style="color:red;">Cost:</b> The total to purchase all extra ingredients required to craft the target material.</p1><br>
+                <p1><b style="color:green;">Profit:</b> The total gold received after all taxes and fees from selling on the trading post.</p1><br>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="active list-unstyled components">
+
+        <form class="form-row justify-content-center">
+            <div class="col-sm-auto col-md-5 col-lg-5 p-2 input-group">
+                <input type="number" onkeydown="if(event.key==='.'){event.preventDefault();}" id="quant_field" class="form-control" min="1" max="2147483646" placeholder="1" value="{{quantity}}" name="quantity_have"
+                    hx-get="/newworld/material_raw_hx/{{material}}" 
+                    hx-trigger="keyup[key=='Enter'] from:body, keyup[key!='Enter'] changed delay:650ms" 
+                    hx-target="#raw_container" 
+                    _="on keyup add .load to #values_have">
+                <input type="text" style="display: none;"/>
+            </div>
+        </form>
+
+        <div id="raw_container" _="init fetch /newworld/material_raw_hx/{{material.lower()|replace(" ","_")}} put the result into #raw_container"></div>
+
+    </div>
+</div>

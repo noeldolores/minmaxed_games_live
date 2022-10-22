@@ -1,9 +1,6 @@
-from termios import VLNEXT
 from flask import Blueprint, request, flash, render_template, redirect, url_for, escape, session
 import random
 from ..scripts.newworld import player_data, calculations as calcs, db_scripts
-from .. import db
-from ..models import Market, Item
 import os
 
 
@@ -159,12 +156,13 @@ def dictionary_key_replacements():
                     "orichalcum_ore" : 0,
                     "orichalcum_ingot_platinum" : 0
                 }
+                
     if 'taxes_fees' not in session:
         session['taxes_fees'] = player_data.init_taxes_and_fees()
     elif 'weavers_fen' not in session['taxes_fees']['territory']:
             session['taxes_fees']['territory']['weavers_fen'] = False
-        
-                
+
+
 @newworld.route('/', methods=['GET', 'POST'])
 def home():
     init_session()
@@ -183,7 +181,7 @@ def home():
 def skills():
     init_session()
     dictionary_key_replacements()
-
+    
     search = search_function()
     if search:
         return redirect(url_for('newworld.material', material=search))
@@ -193,7 +191,7 @@ def skills():
 
 @newworld.route('/skills_hx', methods=['GET', 'POST'])
 def skills_hx():
-
+    
     if request.method == 'POST':
         if "save" in request.form:
             session['skill_levels'] = {
@@ -221,7 +219,7 @@ def skills_hx():
                     "skinning" : strip_leading_zeros(False, request.form['skinning_level'])
                 }
             }
-
+            
     return render_template('newworld/skills_hx.html', skill_levels=session['skill_levels'])
 
 
@@ -229,7 +227,7 @@ def skills_hx():
 def gearsets():
     init_session()
     dictionary_key_replacements()
-
+    
     search = search_function()
     if search:
         return redirect(url_for('newworld.material', material=search))
@@ -256,21 +254,20 @@ def gearsets_hx():
 def tradepost():
     init_session()
     dictionary_key_replacements()
-
+    
     search = search_function()
     if search:
         return redirect(url_for('newworld.material', material=search))
 
     template_order = player_data.trade_post_order()
-
+        
     return render_template('newworld/tradepost.html', price_list=session['price_list'], template_order=template_order)
 
 
 @newworld.route('/tradepost_hx', methods=['GET', 'POST'])
 def tradepost_hx():
-    dictionary_key_replacements()
     template_order = player_data.trade_post_order()
-
+        
     if request.method == 'POST':
         if "save" in request.form:
             session['price_list'] = {
@@ -368,7 +365,7 @@ def tradepost_hx():
 def refining():
     init_session()
     dictionary_key_replacements()
-
+    
     search = search_function()
     if search:
         return redirect(url_for('newworld.material', material=search))
@@ -378,7 +375,6 @@ def refining():
 
 @newworld.route('/refining_hx', methods=['GET', 'POST'])
 def refining_hx():
-    init_session()
     dictionary_key_replacements()
     
     template_order = player_data.refining_order()
@@ -404,7 +400,7 @@ def refining_hx():
 def material(material):
     init_session()
     dictionary_key_replacements()
-    
+
     search = search_function()
     if search:
         return redirect(url_for('newworld.material', material=search))
@@ -413,30 +409,43 @@ def material(material):
     material_display = material.replace("_"," ").lower().title()
 
     discipline = calcs.determine_discipline(material)
-    material_list = player_data.refining_order()
+    material_list = player_data.material_navbar()
+    
+    material_nav_items = []
     for item in material_list:
         if item[0] == discipline:
             material_nav_items = item[1:]
-
+    
     if 'elemental_lodestone' in material_nav_items:
         material_nav_items.remove('elemental_lodestone')
     
+    tier = calcs.determine_tier(material)
+
     if category == "primary":
-        return render_template('newworld/primary_material.html', material=material_display, material_nav_items=material_nav_items)
-
-    if category == "secondary":
-        return render_template('newworld/secondary_material.html', material=material_display, material_nav_items=material_nav_items)
-
-    if category == "component":
-        return render_template('newworld/component_material.html', material=material_display)
-
-
-@newworld.route('/primary_material_hx/<material>', methods=['GET', 'POST'])
-def material_table(material):
-    dictionary_key_replacements()
+        return render_template('newworld/material.html', material=material_display, material_nav_items=material_nav_items, tier=tier)
     
-    session['material_ref'] = material.replace(" ","_").lower()
+    if category == "component" or category == "secondary":
+        return render_template('newworld/material_component.html', material=material_display)
 
+
+@newworld.route('/material_primary/<material>', methods=['GET', 'POST'])
+def material_primary(material):
+    material_display = material.replace("_"," ").lower().title()
+    tier = calcs.determine_tier(material)
+    
+    return render_template('newworld/material_primary.html', material=material_display, tier=tier)
+
+
+@newworld.route('/material_raw/<material>', methods=['GET', 'POST'])
+def material_raw(material):
+    material_display = material.replace("_"," ").lower().title()
+    tier = calcs.determine_tier(material)
+    
+    return render_template('newworld/material_raw.html', material=material_display, tier=tier)
+
+
+@newworld.route('/material_primary_hx/<material>', methods=['GET', 'POST'])
+def material_table(material):
     price_dict = session['price_list']
     if 'api_loaded' in session:
         if session['api_loaded']:
@@ -462,14 +471,51 @@ def material_table(material):
     else:
         skill_level = session['skill_levels']['refining'][discipline]
         gear_set = session['gear_sets'][discipline]
-        
+    
     taxes_fees = session['taxes_fees']
     
     _data, specific_elemental_lodestone = calcs.ingredients_needed_to_refine(discipline, material_check, quantity, skill_level, gear_set, price_dict, taxes_fees)
     
     material_display = material.replace("_"," ").lower().title()
+    
+    return render_template('newworld/material_primary_hx.html', quantity=quantity, material=material_display, ele_lodestone=specific_elemental_lodestone, _data=_data)
 
-    return render_template('newworld/primary_material_hx.html', quantity=quantity, material=material_display, ele_lodestone=specific_elemental_lodestone, _data=_data)
+
+@newworld.route('/material_raw_hx/<material>', methods=['GET', 'POST'])
+def material_raw_hx(material):
+    price_dict = session['price_list']
+    if 'api_loaded' in session:
+        if session['api_loaded']:
+            if 'server_data' in session:
+                if 'items' in session['server_data']:
+                    price_dict = session['server_data']['items']
+    else:
+        price_dict = session['price_list']
+
+    material_check = material.replace(" ","_").lower()
+    discipline = calcs.determine_discipline(material_check)
+    if "quantity_have" in request.args:
+        if request.args['quantity_have'] == "":
+            quantity = 1
+        else:
+            quantity = max(int(request.args['quantity_have']), 1)
+    else:
+        quantity = 1
+    
+    if discipline == "smelting_precious":
+        skill_level = session['skill_levels']['refining']['smelting']
+        gear_set = session['gear_sets']['smelting']
+    else:
+        skill_level = session['skill_levels']['refining'][discipline]
+        gear_set = session['gear_sets'][discipline]
+    
+    taxes_fees = session['taxes_fees']
+    
+    data = calcs.refining_up_profitability_table(discipline, material_check, quantity, skill_level, gear_set, price_dict, taxes_fees)
+    
+    material_display = material.replace("_"," ").lower().title()
+
+    return render_template('newworld/material_raw_hx.html', data=data, quantity=quantity, material=material_display)
 
 
 @newworld.route('/datalist', methods=['GET', 'POST'])
@@ -553,6 +599,9 @@ def server_api():
 
     template_order = player_data.trade_post_order()
 
+    # if "load_all" in request.form:        
+    #     full_server = db_scripts.request_nwmarketprices()
+
     price_list = session['price_list']
     if 'server_data' in session:
         if 'items' in session['server_data']:
@@ -572,7 +621,6 @@ def server_api():
 
 @newworld.route('/server_api_hx', methods=['GET', 'POST'])
 def server_api_hx():
-
     template_order = player_data.trade_post_order()
 
     price_list = session['price_list']
@@ -615,6 +663,7 @@ def navbar_api_hx(material):
     return render_template('newworld/navbar_api_hx.html', status=status, css_class=css_class, material=material_hx)
 
 
+
 @newworld.route('/taxes_and_fees', methods=['GET', 'POST'])
 def taxes_and_fees():
     init_session()
@@ -654,30 +703,8 @@ def taxes_and_fees_hx():
                         elif j == 'tax':
                             session['taxes_fees'][i][j] = 2.5
                         else:
-                            session['taxes_fees'][i][j] = float(request.form[j])     
+                            session['taxes_fees'][i][j] = float(request.form[j])   
     
     taxes_fees = session['taxes_fees']              
                 
     return render_template('newworld/taxes_and_fees_hx.html', taxes_fees=taxes_fees)
-
-
-@newworld.route('/refined_material_ingredients', methods=['GET', 'POST'])
-def refined_material_ingredients():
-    init_session()
-    search = search_function()
-    if search:
-        return redirect(url_for('newworld.material', material=search))
-
-    return render_template('newworld/refined_material_ingredients.html')
-
-
-@newworld.route('/dropdown_show', methods=['GET', 'POST'])
-def dropdown_show():
-
-    return render_template('newworld/dropdown_show.html')
-
-
-@newworld.route('/dropdown_hide', methods=['GET', 'POST'])
-def dropdown_hide():
-
-    return render_template('newworld/dropdown_hide.html')

@@ -1,23 +1,29 @@
 {% if session['api_loaded'] %}
     {% if material %}
-    <form name="api" _="on htmx:afterOnLoad if #refining_container fetch /newworld/refining_hx put the result into #refining_container
-                            else if #material_container fetch /newworld/primary_material_hx/{{material.lower()|replace(" ","_")}} put the result into #material_container">
+    <form name="api" _="on htmx:afterOnLoad 
+                            if #refining_container fetch /newworld/refining_hx put the result into #refining_container
+                            else if #material_container fetch /newworld/material_primary_hx/{{material.lower()|replace(" ","_")}} put the result into #material_container
+                            else if #raw_container fetch /newworld/material_raw_hx/{{material.lower()|replace(" ","_")}} put the result into #raw_container">
         <button name="api" hx-trigger="click" hx-post="/newworld/navbar_api_hx/{{material}}" hx-target='#api_toggle' type="button" class="btn btn-outline-success btn-sm" _="on click call me.blur()">{{session['server_data']['name']|title }} Active</button>
     {% else %}
     <form name="api" _="on htmx:afterOnLoad if #refining_container fetch /newworld/refining_hx put the result into #refining_container
-                            else if #material_container fetch /newworld/primary_material_hx put the result into #material_container">
+                            else if #material_container fetch /newworld/material_primary_hx put the result into #material_container
+                            else if #raw_container fetch /newworld/material_raw_hx put the result into #raw_container">
         <button name="api" hx-trigger="click" hx-post="/newworld/navbar_api_hx" hx-target='#api_toggle' type="button" class="btn btn-outline-success btn-sm" _="on click call me.blur()">{{session['server_data']['name']|title }} Active</button>
     {% endif %}
     <a href="/newworld/server_api"><p1 class="pl-2" style="color: rgb(175, 175, 175);">Updated: {{session['server_data']['last_update']}}</p1></a>
+
 {% else %}
 
     {% if material %}
     <form name="api" _="on htmx:afterOnLoad if #refining_container fetch /newworld/refining_hx put the result into #refining_container
-                            else if #material_container fetch /newworld/primary_material_hx/{{material.lower()|replace(" ","_")}} put the result into #material_container">
+                            else if #material_container fetch /newworld/material_primary_hx/{{material.lower()|replace(" ","_")}} put the result into #material_container
+                            else if #raw_container fetch /newworld/material_raw_hx/{{material.lower()|replace(" ","_")}} put the result into #raw_container">
         <button name="api" name="api" hx-trigger="click" hx-post="/newworld/navbar_api_hx/{{material}}" hx-target='#api_toggle' type="button" class="btn btn-outline-secondary btn-sm" _="on click call me.blur()">Load {{session['server_data']['name']|title }}</button>
     {% else %}
     <form name="api" _="on htmx:afterOnLoad if #refining_container fetch /newworld/refining_hx put the result into #refining_container
-                            else if #material_container fetch /newworld/primary_material_hx put the result into #material_container">
+                            else if #material_container fetch /newworld/material_primary_hx put the result into #material_container
+                            else if #raw_container fetch /newworld/material_raw_hx put the result into #raw_container">
         <button name="api" hx-trigger="click" hx-post="/newworld/navbar_api_hx" hx-target='#api_toggle' type="button" class="btn btn-outline-secondary btn-sm" _="on click call me.blur()">Load {{session['server_data']['name']|title }}</button>
     {% endif %}
     

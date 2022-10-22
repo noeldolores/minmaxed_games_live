@@ -308,6 +308,57 @@ refining_template = [
     ]
 ]
 
+navbar_template = [
+    [   "leatherworking",
+        "rawhide",
+        "coarse_leather",
+        "rugged_leather",
+        "layered_leather",
+        "infused_leather",
+        "runic_leather"
+    ],
+    [   "smelting",
+        "iron_ore",
+        "iron_ingot",
+        "steel_ingot",
+        "starmetal_ingot",
+        "orichalcum_ingot",
+        "asmodeum"
+    ],
+    [   "smelting_precious",
+        "silver_ore",
+        "silver_ingot",
+        "gold_ingot",
+        "platinum_ingot",
+        "orichalcum_ingot_platinum"
+    ],
+    [   "stone_cutting",
+        "stone",
+        "stone_block",
+        "stone_brick",
+        "lodestone_brick",
+        "obsidian_voidstone",
+        "runestone",
+        "elemental_lodestone"
+    ],
+    [   "weaving",
+        "fibers",
+        "linen",
+        "sateen",
+        "silk",
+        "infused_silk",
+        "phoenixweave"
+    ],
+    [   "woodworking",
+        "green_wood",
+        "timber",
+        "lumber",
+        "wyrdwood_planks",
+        "ironwood_planks",
+        "glittering_ebony"  
+    ]
+]
+
 def init_skill_levels():
     return skill_levels
 
@@ -325,3 +376,6 @@ def refining_order():
 
 def init_taxes_and_fees():
     return taxes_fees
+
+def material_navbar():
+    return navbar_template

@@ -1,0 +1,80 @@
+<div class="accordion" id="accordion">
+
+    <table class="table table-secondary table-hover" id="ingredients"  _="on htmx:load call #quant_field.blur()">
+        <thead>
+            <tr style="background:#343a40; color:white;">
+                <th>Target</th>
+                <th style="color:aqua;">Craft</th>
+                <th style="color:orange;">Receive</th>
+                <th style="color:red;">Cost</th>
+                <th style="color:green;">Profit</th>
+            </tr>
+        </thead>
+            
+        <tbody>
+            {% for target,value in data.items() %}
+            <tr id="values_have" data-toggle="collapse" data-target="#collapse_{{target}}" class="cursor-click">
+                <td scope="row" class="align-middle"><a href="/newworld/material/{{target}}" style="color:black">{{ target.title()|replace("_"," ") }}</a></td>
+
+                {% if value['sell']['quantity'] == 0 %}
+                <td scope="row" class="align-middle">{{ value['craft']['quantity'] }}</td>
+                <td scope="row" class="align-middle">{{ value['sell']['quantity'] }}</td>
+                <td scope="row" class="align-middle">--</td>
+                <td scope="row" class="align-middle">--</td>
+
+                {% else %}
+
+                <td scope="row" class="align-middle">{{ value['craft']['quantity'] }}</td>
+                <td scope="row" class="align-middle">{{ value['sell']['quantity'] }}</td>
+                <td scope="row" class="align-middle">{{ '%.2f'|format(value['craft']['final_cost']) }}</td>
+                <td scope="row" class="align-middle">{{ '%.2f'|format(value['sell']['final_profit']) }}</td>
+                {% endif %}
+                
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    {% for target,value in data.items() %}
+    <div id="collapse_{{target}}" class="collapse" data-parent="#accordion">
+        <table class="table table-striped table-secondary">
+            <thead>
+                <tr class="col-auto cursor-click" style="background: #a17277;" data-toggle="collapse" data-target="#collapse_{{target}}">
+                    <td scope="row" class="align-middle" style="color:black; width:25%;"><b>Base Cost</b></td>
+                    <td scope="row" class="align-middle" style="color:black; width:25%;"><b>TP Taxes</b></td>
+                    <td scope="row" class="align-middle" style="color:black; width:25%;"><b>Station Fees</b></td>
+                    <td scope="row" class="align-middle" style="color:black; width:25%;"><b>Final Cost</b></td>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr class="col-auto">
+                    <td scope="row" class="align-middle">{{ '%.2f'|format(value['craft']['base_cost']) }}</td>
+                    <td scope="row" class="align-middle">{{ '%.2f'|format(value['craft']['trade_post_tax']) }}</td>
+                    <td scope="row" class="align-middle">{{ '%.2f'|format(value['craft']['station_tax']) }}</td>
+                    <td scope="row" class="align-middle">{{ '%.2f'|format(value['craft']['final_cost']) }}</td>
+                </tr>
+            </tbody>
+
+            <thead>
+                <tr class="col-auto cursor-click" style="background: #547d5d;"  data-toggle="collapse" data-target="#collapse_{{target}}">
+                    <td scope="row" class="align-middle" style="color:black; width:25%;"><b>Base Value</b></td>
+                    <td scope="row" class="align-middle" style="color:black; width:25%;"><b>Listing Fee</b></td>
+                    <td scope="row" class="align-middle" style="color:black; width:25%;"><b>Transaction Charge</b></td>
+                    <td scope="row" class="align-middle" style="color:black; width:25%;"><b>Final Profit</b></td>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr class="col-auto">
+                    <td scope="row" class="align-middle">{{ '%.2f'|format(value['sell']['base_value']) }}</td>
+                    <td scope="row" class="align-middle">{{ '%.2f'|format(value['sell']['listing_fee']) }}</td>
+                    <td scope="row" class="align-middle">{{ '%.2f'|format(value['sell']['transaction_charge']) }}</td>
+                    <td scope="row" class="align-middle">{{ '%.2f'|format(value['sell']['final_profit']) }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    {% endfor %}
+
+</div>

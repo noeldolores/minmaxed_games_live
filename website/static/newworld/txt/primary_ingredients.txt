@@ -1,27 +1,33 @@
+Rawhide
 Coarse Leather
 Rugged Leather
 Layered Leather
 Infused Leather
 Runic Leather
+Iron Ore
 Iron Ingot
 Steel Ingot
 Starmetal Ingot
 Orichalcum Ingot
 Asmodeum
+Silver Ore
 Silver Ingot
 Gold Ingot
 Platinum Ingot
 Orichalcum Ingot Platinum
+Stone
 Stone Block
 Stone Brick
 Lodestone Brick
 Obsidian Voidstone
 Runestone
+Fibers
 Linen
 Sateen
 Silk
 Infused Silk
 Phoenixweave
+Green Wood
 Timber
 Lumber
 Wyrdwood Planks

@@ -705,3 +705,150 @@ def init_refining_cost_table():
                             ingred_5 = conversions[discipline][ingred_4]['primary']
                             _refining_dict[discipline][target_material][ingred_5] = 0
     return _refining_dict
+
+
+def refining_up_profitability_table(discipline, material, quantity, skill_level, gear_set, market, taxes):
+    first_light_bonus = taxes['territory']['first_light']
+    craft_bonus = total_craft_bonus(skill_level, gear_set, discipline, first_light_bonus)
+    
+    #determine material tier
+    tier = -1
+    
+    refining_list = (list(conversions[discipline].keys()))
+    refining_list.remove('refining_component')
+    
+    if material == conversions[discipline][refining_list[0]]['primary']:
+        tier = 0
+    else:
+        for item in refining_list:
+            if material == item:
+                tier = conversions[discipline][item]['tier']
+    
+    if tier != 5:
+        refining_list = [material] + refining_list[tier:]
+        
+        #init ref dict for items needed
+        refining_dict = {}
+        for item in refining_list:
+            refining_dict[item] = {
+                'craft' : {
+                    'quantity': 0,
+                    'base_cost': 0,
+                    'trade_post_tax' : 0,
+                    'station_tax' : 0,
+                    'final_cost': 0
+                    },
+                'sell': {
+                    'quantity': 0,
+                    'base_value': 0,
+                    'listing_fee' : 0,
+                    'transaction_charge' : 0,
+                    'final_profit': 0
+                    }
+            }
+        refining_dict[material]['sell']['quantity'] = quantity
+            
+        #determine how many can be made for each tier
+        for i in range(len(refining_list)-1):
+            refine_ingredient = refining_list[i]
+            target_refine = refining_list[i+1]
+            
+            quant_available = refining_dict[refine_ingredient]['sell']['quantity']
+            quant_per_craft = conversions[discipline][target_refine][refine_ingredient]
+            
+            if quant_available >= quant_per_craft:
+                bonus = craft_bonus[target_refine]
+                number_of_crafts = math.floor(quant_available / quant_per_craft)
+                output = math.floor(number_of_crafts * bonus)
+                
+                refining_dict[target_refine]['craft']['quantity'] = number_of_crafts
+                refining_dict[target_refine]['sell']['quantity'] = output
+            else:
+                refining_dict[target_refine]['craft']['quantity'] = 0
+                refining_dict[target_refine]['sell']['quantity'] = 0
+            
+
+        # determine craft cost for each tier
+        for i in range(len(refining_list)-1):
+            base_cost = 0
+            trade_post_tax = 0
+            station_tax = 0 
+            final_cost = 0
+            
+            refine_ingredient = refining_list[i]
+            target_refine = refining_list[i+1]
+            
+            quant_available = refining_dict[refine_ingredient]['sell']['quantity']
+            quant_per_craft = conversions[discipline][target_refine][refine_ingredient]
+            
+            number_of_crafts = math.floor(quant_available / quant_per_craft)
+
+            
+            #station fees
+            target_refine_tier = conversions[discipline][target_refine]['tier']
+            station_tax = worbench_tax(target_refine_tier, taxes) * number_of_crafts
+            
+            #check for additional ingredients
+            for key in conversions[discipline][target_refine].keys():
+                if key != "tier" and key != "primary" and key != refine_ingredient:
+                    market_cost = market[discipline][key]
+                    quant_per_craft = conversions[discipline][target_refine][key]
+                    quant_required = number_of_crafts * quant_per_craft
+                    
+                    quant_cost = quant_required * market_cost
+                    purchase_tax = apply_trade_post_tax_buy(quant_cost, taxes)
+                    
+                    base_cost += quant_cost
+                    trade_post_tax += purchase_tax
+                    
+            #refining components
+            market_cost = market['refining_component'][conversions[discipline]['refining_component']]
+            if target_refine_tier > 1:
+                quant_cost = market_cost * number_of_crafts
+                purchase_tax = apply_trade_post_tax_buy(quant_cost, taxes)
+                
+                base_cost += quant_cost
+                trade_post_tax += purchase_tax
+            
+            
+            final_cost = base_cost + trade_post_tax + station_tax
+            
+            refining_dict[target_refine]['craft']['quantity'] = number_of_crafts
+            refining_dict[target_refine]['craft']['base_cost'] = base_cost
+            refining_dict[target_refine]['craft']['trade_post_tax'] = trade_post_tax
+            refining_dict[target_refine]['craft']['station_tax'] = station_tax
+            refining_dict[target_refine]['craft']['final_cost'] = final_cost
+        
+        
+        #determine sell value for each tier
+        for _material, _material_data in refining_dict.items():
+            market_value_each = market[discipline][_material]
+            sell_quant = _material_data['sell']['quantity']
+            base_market_value = market_value_each * sell_quant
+            
+            listing_fee = determing_trade_post_sell_fee(base_market_value, taxes)
+            transaction_charge = base_market_value * (taxes['trade_post']['tax'] / 100)
+            
+            craft_cost = _material_data['craft']['final_cost']
+            final_profit = base_market_value - listing_fee - transaction_charge - craft_cost
+
+            refining_dict[_material]['sell']['base_value'] = base_market_value
+            refining_dict[_material]['sell']['listing_fee'] = listing_fee
+            refining_dict[_material]['sell']['transaction_charge'] = transaction_charge
+            refining_dict[_material]['sell']['final_profit'] = final_profit
+        
+        return refining_dict
+    return None
+
+
+def determine_tier(material):
+    discipline = determine_discipline(material)
+    if discipline:
+        if material in conversions[discipline]:
+            return conversions[discipline][material]['tier']
+        else:
+            for key, value in conversions[discipline].items():
+                if key != "refining_components":
+                    if material in value:
+                        return 0
+    return None

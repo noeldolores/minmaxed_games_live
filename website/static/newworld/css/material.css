@@ -147,3 +147,11 @@ span {
 .hover-enabled:hover {
   box-shadow: 20px 20px 50px 10px rgb(159, 159, 159) inset;
 }
+
+.nav-tabs > li > a {
+  color: #ffffff;
+}
+
+.cursor-click {
+  cursor: pointer;
+}
