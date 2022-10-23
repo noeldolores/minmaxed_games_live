@@ -328,13 +328,17 @@ def tp_cost_to_refine_all_routes_all_tiers(price_list, skill_level, gear_set, ta
             _data,_ = ingredients_needed_to_refine(discipline, material, quantity, skill, gear, price_list, taxes_fees)
 
             material_ingredient_list = list(material_data.keys())
-            for i in range(len(material_ingredient_list)-1):
-                _financial = _data['financial'][i-1]
+            material_ingredient_list.remove(material)
+            material_ingredient_list.reverse()
+
+            for i in range(len(material_ingredient_list)):
+                _financial = _data['financial'][i]
                 _craft_cost = _financial['craft']['final_cost_each']
                 _sell_profit = _financial['sell']['final_profit_each']
                 _profit_margin = _sell_profit / _craft_cost
-                _refining_dict[discipline][material][material_ingredient_list[i+1]] = _craft_cost
-                _financials[discipline][material][material_ingredient_list[i+1]] = {
+                
+                _refining_dict[discipline][material][material_ingredient_list[i]] = _craft_cost
+                _financials[discipline][material][material_ingredient_list[i]] = {
                     'sell_profit' : _sell_profit,
                     'profit_margin' : _profit_margin
                 }
