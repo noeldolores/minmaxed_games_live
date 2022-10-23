@@ -22,11 +22,11 @@
                 {% for material in template_order[i][1:] %}
                     <tr>
                     {% if material == "elemental_lodestone"%}
-                        <td scope="row"><!--<a href="/newworld/material/{{ cheapest_route[template_order[i][0]][material]['source'].lower() | replace(" ","_") }}">-->{{material.title()|replace("_"," ")}}</td>
-                            <td><!--<a href="/newworld/material/{{ cheapest_route[template_order[i][0]][material]['source'].lower() | replace(" ","_") }}">-->{{ cheapest_route[template_order[i][0]][material]['source'] }}</td>
+                        <td scope="row">{{material.title()|replace("_"," ")}}</td>
+                            <td>{{ cheapest_route[template_order[i][0]][material]['source'] }}</td>
                     {% else %}
-                        <td scope="row"><a href="/newworld/material/{{material | replace(" ","_")}}">{{material.title() | replace("_"," ")}}</a></td>
-                        <td><a href="/newworld/material/{{ cheapest_route[template_order[i][0]][material]['source'].lower() | replace(" ","_") }}">{{ cheapest_route[template_order[i][0]][material]['source'].title()|replace("_"," ") }}</td>
+                        <td scope="row"><a href="/newworld/material/{{material | replace(" ","_")}}"><u>{{material.title() | replace("_"," ")}}</u></a></td>
+                        <td><a href="/newworld/material/{{ cheapest_route[template_order[i][0]][material]['source'].lower() | replace(" ","_") }}"><u>{{ cheapest_route[template_order[i][0]][material]['source'].title()|replace("_"," ") }}</u></td>
                     {% endif %}
                         <td>{{ '%.2f'|format(cheapest_route[template_order[i][0]][material]['price'] | float) }}</td>
                         <td>{{ '%.2f'|format(cheapest_route[template_order[i][0]][material]['tp_flip'] | float) }}</td>

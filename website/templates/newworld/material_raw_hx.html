@@ -14,7 +14,7 @@
         <tbody>
             {% for target,value in data.items() %}
             <tr id="values_have" data-toggle="collapse" data-target="#collapse_{{target}}" class="cursor-click">
-                <td scope="row" class="align-middle" style="color:black; width:32%;"><a href="/newworld/material/{{target}}" style="color:black">{{ target.title()|replace("_"," ") }}</a></td>
+                <td scope="row" class="align-middle" style="color:black; width:32%;"><a href="/newworld/material/{{target}}" style="color:black"><u>{{ target.title()|replace("_"," ") }}</u></a></td>
 
                 {% if value['sell']['quantity'] == 0 %}
                 <td scope="row" class="align-middle" style="color:black; width:17%;">{{ value['craft']['quantity'] }}</td>

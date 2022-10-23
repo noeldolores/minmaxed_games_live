@@ -2,11 +2,11 @@
     <div class="col-auto"  data-toggle="collapse" data-target="#collapse_value">
         <div class="form-row">
         {% if quantity == _data['craft']['output'] %}
-            <span class="mr-2 cursor-click" style="color:aqua; cursor-click">Craft</span>
+            <span class="mr-2 cursor-click" style="color:aqua; cursor-click"><u>Craft</u></span>
             <input disabled type="text" class="material-box mr-2 hover-enabled cursor-click" value="{{_data['craft']['input']|string}}">
             <p class="craft_bonus cursor-click" title="Craft Bonus">x{{_data['craft']['bonus']|string}}</p>
         {% else %}
-            <span class="mr-2 cursor-click"style="color:aqua;">Craft</span>
+            <span class="mr-2 cursor-click"style="color:aqua;"><u>Craft</u></span>
             <input disabled type="text" class="material-box mr-2 hover-enabled cursor-click" value="{{_data['craft']['input']|string}} ({{_data['craft']['output']|string}})">
             <p class="craft_bonus cursor-click" title="Craft Bonus">x{{_data['craft']['bonus']|string}}</p>
         {% endif %}
@@ -15,7 +15,7 @@
     <div class="col-auto" data-toggle="collapse" data-target="#collapse_value">
         <div class="form-row">
             <input disabled type="text" class="material-box ml-2 hover-enabled cursor-click" value={{'%.2f'|format(_data['craft']['final_value'])}}>
-            <span class="ml-2 cursor-click" style="color:orange;" >Value</span>
+            <span class="ml-2 cursor-click" style="color:orange;"><u>Value</u></span>
         </div>
     </div>
 </div>
@@ -49,7 +49,7 @@
                 {% if key == "elemental_lodestone" %}
                 <th scope="col" style="width: {{(100 / (_data['ingredients'][0]|length + 2))|round|int}}%; color:white;">{{ ele_lodestone[0].title()|replace("_"," ") }}</th>
                 {% else%}
-                <th  style="width: {{(100 / (_data['ingredients'][0]|length + 2))|round|int}}%"><a href="/newworld/material/{{key}}">{{ key.title()|replace("_"," ") }}</a></th>
+                <th  style="width: {{(100 / (_data['ingredients'][0]|length + 2))|round|int}}%"><a href="/newworld/material/{{key}}"><u>{{ key.title()|replace("_"," ") }}</u></a></th>
                 {% endif %}
             {% endfor %}
                 <th  style="width: {{(100 / (_data['ingredients'][0]|length + 2))|round|int}}%; color:red;">Cost</th>
