@@ -10,10 +10,10 @@ import time
 
 def print_stderr(output=str):
   try:
-    print(output, file=sys.stderr)
+    print(output)
     return True
   except Exception as e:
-    print(f"print_stderr: {e}", file=sys.stderr)
+    print(f"print_stderr: {e}")
     return False
 
 
@@ -117,6 +117,7 @@ def main():
         except Exception as e:
             full_pull = False
             db.session.rollback()
+            print(e)
         stopwatch = timer(stopwatch, f'Task completed...{full_pull}')
         
 if __name__ == "__main__":
