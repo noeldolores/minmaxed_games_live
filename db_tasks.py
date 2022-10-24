@@ -76,7 +76,11 @@ def request_nwmarketprices(stopwatch):
         # Retrieve Data
         stopwatch = timer(stopwatch, f'Starting API request: {key}')
         url = f"https://nwmarketprices.com/api/latest-prices/{value}/"
-        response = requests.request(method='GET', url=url)
+        try:
+            response = requests.request(method='GET', url=url)
+        except Exception as e:
+            print(response.status_code, e)
+            continue
         if response.status_code == 200:
             stopwatch = timer(stopwatch, f'Response Success {response.status_code}: {key}')
             
@@ -106,7 +110,7 @@ def request_nwmarketprices(stopwatch):
             db.session.commit()
         else:
             stopwatch = timer(stopwatch, f'Unable to connect to {key}. Response from server: {response.status_code}')
-            return False
+            continue
     return True
 
 
