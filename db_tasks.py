@@ -106,6 +106,7 @@ def request_nwmarketprices(stopwatch):
             db.session.commit()
         else:
             stopwatch = timer(stopwatch, f'Unable to connect to {key}. Response from server: {response.status_code}')
+            return False
     return True
 
 
