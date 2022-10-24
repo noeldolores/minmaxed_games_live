@@ -4,7 +4,6 @@ import json
 from datetime import datetime
 import pytz
 from website import app, db, models
-import sys
 import time
 
 
@@ -60,21 +59,21 @@ def request_nwmarketprices(stopwatch):
     stopwatch = timer(stopwatch, f'Prepared {len(server_dict)} servers from API Server List.')
     # Iterate through each server and retrieve data
     for key, value in server_dict.items():
-        stopwatch = timer(stopwatch, f'Init: {key}')
+        stopwatch = timer(stopwatch, f'{key} : Init')
         
         server = models.Market.query.filter_by(name=key).first()
 
         if not server:
-            stopwatch = timer(stopwatch, f'Creating new table: {key}')
+            stopwatch = timer(stopwatch, f'{key} : Creating new table')
             # Create new market table
             server = models.Market(name=key, server_id=value)
             db.session.add(server)
             db.session.commit()
         else:
-            stopwatch = timer(stopwatch, f'Found existing table: {key}')
+            stopwatch = timer(stopwatch, f'{key} : Found existing table')
             
         # Retrieve Data
-        stopwatch = timer(stopwatch, f'Starting API request: {key}')
+        stopwatch = timer(stopwatch, f'{key} : Starting API request')
         url = f"https://nwmarketprices.com/api/latest-prices/{value}/"
         try:
             my_timeout = 300
@@ -83,7 +82,7 @@ def request_nwmarketprices(stopwatch):
             print(response.status_code, e)
             continue
         if response.status_code == 200:
-            stopwatch = timer(stopwatch, f'Response Success {response.status_code}: {key}')
+            stopwatch = timer(stopwatch, f'{key} : Response Success {response.status_code}')
             
             soup = BeautifulSoup(response.content, "html.parser")
             item_list = json.loads(str(soup))
@@ -104,13 +103,13 @@ def request_nwmarketprices(stopwatch):
             if len(dates_list) > 0:
                 latest_date = max(dates_list)
                 server.last_update = latest_date
-                stopwatch = timer(stopwatch, f'Updated {key} with {len(dates_list)} items to {latest_date}')
+                stopwatch = timer(stopwatch, f'{key} : Updated with {len(dates_list)} items to {latest_date}')
             else:
-                stopwatch = timer(stopwatch, f'Updated 0 items: {key}')
+                stopwatch = timer(stopwatch, f'{key} : Updated 0 items')
                   
             db.session.commit()
         else:
-            stopwatch = timer(stopwatch, f'Unable to connect to {key}. Response from server: {response.status_code}')
+            stopwatch = timer(stopwatch, f'{key} : Unable to connect. Response from server: {response.status_code}')
             continue
     return True
 
