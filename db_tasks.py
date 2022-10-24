@@ -77,7 +77,8 @@ def request_nwmarketprices(stopwatch):
         stopwatch = timer(stopwatch, f'Starting API request: {key}')
         url = f"https://nwmarketprices.com/api/latest-prices/{value}/"
         try:
-            response = requests.request(method='GET', url=url)
+            my_timeout = 600
+            response = requests.request(method='GET', url=url, timeout=my_timeout)
         except Exception as e:
             print(response.status_code, e)
             continue
