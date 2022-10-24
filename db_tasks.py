@@ -1,10 +1,38 @@
 import requests
 from bs4 import BeautifulSoup
 import json
-import os
 from datetime import datetime
 import pytz
 from website import app, db, models
+import sys
+import time
+
+
+def print_stderr(output=str):
+  try:
+    print(output, file=sys.stderr)
+    return True
+  except Exception as e:
+    print(f"print_stderr: {e}", file=sys.stderr)
+    return False
+
+
+def timer(time_history=None, function=None):
+  if not time_history:
+    base = time.time()
+    time_history = [('Beginning task...', base, 0)]
+    print_stderr(time_history[0])
+    return time_history
+
+  if function:
+    stamp = time.time()
+    lap_num = len(time_history) - 1
+    total_time = round(stamp - time_history[0][1], 4)
+    lap_time = round(total_time - time_history[lap_num][2], 4)
+    lap_data = ((str(function), lap_time, total_time))
+    time_history.append(lap_data)
+    print_stderr(lap_data)
+    return time_history
 
 
 def str_to_datetime(date_string):
@@ -18,8 +46,7 @@ def datetime_to_str(date_time):
     return _date
 
 
-def request_nwmarketprices():
-
+def request_nwmarketprices(stopwatch):
     # Retrieve server name/id dictionary
     server_dict = {}
 
@@ -30,31 +57,33 @@ def request_nwmarketprices():
             name, num = line.rstrip().lower().split(",")
             server_dict[name] = num
 
+    stopwatch = timer(stopwatch, f'Prepared {len(server_dict)} servers from API Server List.')
     # Iterate through each server and retrieve data
     for key, value in server_dict.items():
-        print(f"Starting Update for {key}", flush=True)
+        stopwatch = timer(stopwatch, f'Init: {key}')
         
         server = models.Market.query.filter_by(name=key).first()
 
         if not server:
-            print(f"Creating New: {key}", flush=True)
+            stopwatch = timer(stopwatch, f'Creating new table: {key}')
             # Create new market table
             server = models.Market(name=key, server_id=value)
             db.session.add(server)
             db.session.commit()
         else:
-            print(f"Found Existing Table for: {key}", flush=True)
+            stopwatch = timer(stopwatch, f'Found existing table: {key}')
             
         # Retrieve Data
-        dates_list=[]
+        stopwatch = timer(stopwatch, f'Starting API request: {key}')
         url = f"https://nwmarketprices.com/api/latest-prices/{value}/"
         response = requests.request(method='GET', url=url)
         if response.status_code == 200:
-            print(f"Successfully Connected", flush=True)
+            stopwatch = timer(stopwatch, f'Response Success {response.status_code}: {key}')
             
             soup = BeautifulSoup(response.content, "html.parser")
             item_list = json.loads(str(soup))
-
+            dates_list=[]
+            
             for item in item_list:
                 item_check = models.Item.query.filter_by(market_id=server.server_id).filter_by(item_id=item['ItemId']).first()
                 if item_check:
@@ -68,25 +97,27 @@ def request_nwmarketprices():
                 dates_list.append(str_to_datetime(item['LastUpdated']))
 
             if len(dates_list) > 0:
-                server.last_update=max(dates_list)
-            
-            print(f"Updated {len(dates_list)} items. Updated to {max(dates_list)}", flush=True)       
+                latest_date = max(dates_list)
+                server.last_update = latest_date
+                stopwatch = timer(stopwatch, f'Updated {key} with {len(dates_list)} items to {latest_date}')
+            else:
+                stopwatch = timer(stopwatch, f'Updated 0 items: {key}')
+                  
             db.session.commit()
         else:
-            print(f"Unable to connect to {key}. Response from server: {response.status_code}", flush=True)
-            return False
+            stopwatch = timer(stopwatch, f'Unable to connect to {key}. Response from server: {response.status_code}')
     return True
 
 
 def main():
     with app.app_context():
+        stopwatch = timer()
         try:
-            full_pull = request_nwmarketprices()
+            full_pull = request_nwmarketprices(stopwatch)
         except Exception as e:
             full_pull = False
             db.session.rollback()
-            print(f"create_id_query_list: {e}", flush=True)
-        print(full_pull)
-
+        stopwatch = timer(stopwatch, f'Task completed...{full_pull}')
+        
 if __name__ == "__main__":
   main()
