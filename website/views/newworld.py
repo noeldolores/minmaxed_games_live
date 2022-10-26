@@ -388,8 +388,6 @@ def refining():
 
 @newworld.route('/refining_hx', methods=['GET', 'POST'])
 def refining_hx():
-    dictionary_key_replacements()
-    
     template_order = player_data.refining_order()
 
     price_list = session['price_list']
@@ -443,22 +441,17 @@ def material(material):
 
 @newworld.route('/material_primary/<material>', methods=['GET', 'POST'])
 def material_primary(material):
+    init_session()
+    dictionary_key_replacements()
+    
     material_display = material.replace("_"," ").lower().title()
     tier = calcs.determine_tier(material)
     
     return render_template('newworld/material_primary.html', material=material_display, tier=tier)
 
 
-@newworld.route('/material_raw/<material>', methods=['GET', 'POST'])
-def material_raw(material):
-    material_display = material.replace("_"," ").lower().title()
-    tier = calcs.determine_tier(material)
-    
-    return render_template('newworld/material_raw.html', material=material_display, tier=tier)
-
-
 @newworld.route('/material_primary_hx/<material>', methods=['GET', 'POST'])
-def material_table(material):
+def material_table(material):    
     price_dict = session['price_list']
     if 'api_loaded' in session:
         if session['api_loaded']:
@@ -492,6 +485,17 @@ def material_table(material):
     material_display = material.replace("_"," ").lower().title()
     
     return render_template('newworld/material_primary_hx.html', quantity=quantity, material=material_display, ele_lodestone=specific_elemental_lodestone, _data=_data)
+
+
+@newworld.route('/material_raw/<material>', methods=['GET', 'POST'])
+def material_raw(material):
+    init_session()
+    dictionary_key_replacements()
+    
+    material_display = material.replace("_"," ").lower().title()
+    tier = calcs.determine_tier(material)
+    
+    return render_template('newworld/material_raw.html', material=material_display, tier=tier)
 
 
 @newworld.route('/material_raw_hx/<material>', methods=['GET', 'POST'])
@@ -529,42 +533,6 @@ def material_raw_hx(material):
     material_display = material.replace("_"," ").lower().title()
 
     return render_template('newworld/material_raw_hx.html', data=data, quantity=quantity, material=material_display)
-
-
-@newworld.route('/datalist', methods=['GET', 'POST'])
-def datalist():
-    basedir = os.path.abspath(os.path.dirname(__file__))
-    primary_file = os.path.join(basedir, '../static/newworld/txt/primary_ingredients.txt')
-    with open(primary_file) as file:
-        lines = file.readlines()
-        datalist = [line.rstrip().lower() for line in lines]
-
-    secondary_file = os.path.join(basedir, '../static/newworld/txt/secondary_ingredients.txt')
-    with open(secondary_file) as file_2:
-        lines = file_2.readlines()
-        datalist.extend([line.rstrip().lower() for line in lines])
-
-    components_file = os.path.join(basedir, '../static/newworld/txt/components.txt')
-    with open(components_file) as file_3:
-        lines = file_3.readlines()
-        datalist.extend([line.rstrip().lower() for line in lines])
-
-    parsed_list=[]
-    return_length = 0
-    if request.method == "GET":
-        if 'search' in request.args:
-            if len(request.args['search']) > 0:
-                datalist_search = request.args['search'].lower()
-
-                parsed_list = [line.title() for line in datalist if datalist_search == line[0:len(datalist_search)]]
-
-                if len(parsed_list) == 0:
-                    parsed_list = [line.title() for line in datalist if datalist_search in line]
-
-                parsed_list.sort()
-                return_length = min(5, len(parsed_list))
-
-    return render_template('newworld/datalist.html', datalist=parsed_list[0:return_length])
 
 
 @newworld.route('/server_api', methods=['GET', 'POST'])
@@ -721,3 +689,39 @@ def taxes_and_fees_hx():
     taxes_fees = session['taxes_fees']              
                 
     return render_template('newworld/taxes_and_fees_hx.html', taxes_fees=taxes_fees)
+
+
+@newworld.route('/datalist', methods=['GET', 'POST'])
+def datalist():
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    primary_file = os.path.join(basedir, '../static/newworld/txt/primary_ingredients.txt')
+    with open(primary_file) as file:
+        lines = file.readlines()
+        datalist = [line.rstrip().lower() for line in lines]
+
+    secondary_file = os.path.join(basedir, '../static/newworld/txt/secondary_ingredients.txt')
+    with open(secondary_file) as file_2:
+        lines = file_2.readlines()
+        datalist.extend([line.rstrip().lower() for line in lines])
+
+    components_file = os.path.join(basedir, '../static/newworld/txt/components.txt')
+    with open(components_file) as file_3:
+        lines = file_3.readlines()
+        datalist.extend([line.rstrip().lower() for line in lines])
+
+    parsed_list=[]
+    return_length = 0
+    if request.method == "GET":
+        if 'search' in request.args:
+            if len(request.args['search']) > 0:
+                datalist_search = request.args['search'].lower()
+
+                parsed_list = [line.title() for line in datalist if datalist_search == line[0:len(datalist_search)]]
+
+                if len(parsed_list) == 0:
+                    parsed_list = [line.title() for line in datalist if datalist_search in line]
+
+                parsed_list.sort()
+                return_length = min(5, len(parsed_list))
+
+    return render_template('newworld/datalist.html', datalist=parsed_list[0:return_length])
