@@ -59,7 +59,7 @@ def request_nwmarketprices(stopwatch):
                 }
     
     for server_name, server_data in server_dict.items():
-        stopwatch = timer(stopwatch, f'{server_name} : Starting API request')
+        #stopwatch = timer(stopwatch, f'{server_name} : Starting API request')
         
         api_id = server_data['api_id']
         url = f"https://nwmarketprices.com/api/latest-prices/{api_id}/"
@@ -106,9 +106,9 @@ def request_nwmarketprices(stopwatch):
             db.session.add(server)
             db.session.commit()
             server = models.Market.query.filter_by(name=server_name).first()
-            stopwatch = timer(stopwatch, f'{server_name} : Created new table')
-        else:
-            stopwatch = timer(stopwatch, f'{server_name} : Found existing table')
+            #stopwatch = timer(stopwatch, f'{server_name} : Created new table')
+        #else:
+            #stopwatch = timer(stopwatch, f'{server_name} : Found existing table')
             
         item_data = server_data['items']
         if len(item_data) > 0:
@@ -125,7 +125,7 @@ def request_nwmarketprices(stopwatch):
             latest_date = server_dict[server_name]['latest_date']
             if latest_date:
                 server.last_update = latest_date
-                stopwatch = timer(stopwatch, f'Updated {server_name} with {len(item_data)} items to {latest_date}')
+                stopwatch = timer(stopwatch, f'{server_name} updated with {len(item_data)} items to {latest_date}')
         else:
             stopwatch = timer(stopwatch, f'{server_name} : Empty item_data dictionary')
             
