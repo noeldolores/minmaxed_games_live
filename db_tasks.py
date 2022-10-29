@@ -78,7 +78,7 @@ def request_nwmarketprices(stopwatch):
             dates_list=[]
             
             for item in item_list:
-                server_dict[server_name]['items'][item] = {
+                server_dict[server_name]['items'][item['ItemName']] = {
                     'Name' :item['ItemName'],
                     'ID': item['ItemId'],
                     'Price' : item['Price'],
@@ -115,15 +115,17 @@ def request_nwmarketprices(stopwatch):
             for item, item_info in item_data.items():
                 item_check = models.Item.query.filter_by(market_id=server.server_id).filter_by(item_id=item_info['ID']).first()
                 if item_check:
-                    item_check.price = item['Price']
-                    item_check.availability = item['Availability']
-                    item_check.last_update = str_to_datetime(item['LastUpdated'])
+                    item_check.price = item_info['Price']
+                    item_check.availability = item_info['Availability']
+                    item_check.last_update = item_info['LastUpdated']
                 else:
-                    new_item = models.Item(last_update=str_to_datetime(item['LastUpdated']), item_id=item['ID'], name=item['Name'], price=item['Price'], availability=item['Availability'], market_id=server.id)
+                    new_item = models.Item(last_update=item_info['LastUpdated'], item_id=item_info['ID'], name=item_info['Name'], price=item_info['Price'], availability=item_info['Availability'], market_id=server.id)
                     db.session.add(new_item)
             
-            if server_dict[server_name]['latest_date']:
-                server.last_update = server_dict[server_name]['latest_date']
+            latest_date = server_dict[server_name]['latest_date']
+            if latest_date:
+                server.last_update = latest_date
+                stopwatch = timer(stopwatch, f'Updated {server_name} with {len(item_data)} items to {latest_date}')
         else:
             stopwatch = timer(stopwatch, f'{server_name} : Empty item_data dictionary')
             
@@ -148,12 +150,12 @@ def request_nwmarketprices(stopwatch):
 #     for key, value in server_dict.items():
 #         stopwatch = timer(stopwatch, f'{key} : Init')
         
-#         server = models.Market.query.filter_by(name=key).first()
+#         server = models.models.Market.query.filter_by(name=key).first()
 
 #         if not server:
 #             stopwatch = timer(stopwatch, f'{key} : Creating new table')
 #             # Create new market table
-#             server = models.Market(name=key, server_id=value)
+#             server = models.models.Market(name=key, server_id=value)
 #             db.session.add(server)
 #             db.session.commit()
 #         else:
