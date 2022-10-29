@@ -27,5 +27,6 @@ class ProductionConfig(Config):
     hostname="noeldolores.mysql.pythonanywhere-services.com",
     databasename="noeldolores$minmaxed_newworld"
   )
+  SQLALCHEMY_POOL_RECYCLE = 280
   load_dotenv()
   SECRET_KEY = os.getenv("SECRET_KEY")
