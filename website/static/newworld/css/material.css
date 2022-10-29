@@ -155,3 +155,7 @@ span {
 .cursor-click {
   cursor: pointer;
 }
+
+#material_price {
+  margin-bottom: -20px;
+}

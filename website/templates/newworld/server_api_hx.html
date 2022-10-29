@@ -1,4 +1,3 @@
-
 {% for i in range(0, template_order|length) %}
 <div id="collapse" href="#homeSubmenu{{i}}" data-toggle="collapse" aria-expanded="false" class="btn btn-outline-secondary dropdown-toggle collapse-main collapsed">{{template_order[i][0].title() | replace("_"," ")}}</div>
 <ul class="collapse list-unstyled collapseall" id="homeSubmenu{{i}}">

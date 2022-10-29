@@ -6,7 +6,8 @@
 {% endblock %}
 
 {% block content%}
-<div class="gearsets container">
+
+<div class="container gearsets col-xl-5 col-lg-6 col-md-6">
     <br><br>
     <br><br>
     <div class="card bg-secondary border-info">
@@ -21,7 +22,9 @@
             </div>
         </div>
     </div>
+</div>
 
+<div class="container gearsets">
     <form hx-post="/newworld/gearsets_hx" hx-target="#gearsets_hx">
         <div class="container" id="gearsets_hx">
             {% include "newworld/gearsets_hx.html" %}

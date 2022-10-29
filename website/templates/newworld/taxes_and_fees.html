@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block content %}
-<div class="taxBoxes container">
+<div class="container taxBoxes col-xl-5 col-lg-6 col-md-6">
     <br><br>
     <br><br>
     <div class="card bg-secondary border-info">
@@ -29,7 +29,9 @@
             </div>
         </div>
     </div>
+</div>
 
+<div class="taxBoxes container">
     <form hx-post="/newworld/taxes_and_fees_hx" hx-target="#taxes_hx">
         <div id="taxes_hx">
             {% include "newworld/taxes_and_fees_hx.html" %}

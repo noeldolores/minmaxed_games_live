@@ -10,19 +10,21 @@
     {% include "newworld/navbar_material.html"%}
 </div>
 
-<br><br>
-<br><br>
+<br><br><br>
 
 <h1>{{material}}</h1>
-
+    
 <div class="container">
+    <br>
+    <div id="material_price" class="row justify-content-center" _="init fetch /newworld/material_price_hx/{{material.lower()|replace(" ","_")}} put the result into me"></div>
+
     <div class="active list-unstyled components">
         {% if tier == 0 %}
-        <div id="tabs" hx-get="/newworld/material_raw/{{material.lower()|replace(" ","_")}}" hx-trigger="load delay:100ms" hx-target="#tabs" hx-swap="innerHTML"></div>
+        <div id="tabs" hx-get="/newworld/material_raw/{{material.lower()|replace(" ","_")}}" hx-trigger="load" hx-target="#tabs" hx-swap="innerHTML"></div>
         {% elif tier == 5 %}
-        <div id="tabs" hx-get="/newworld/material_primary/{{material.lower()|replace(" ","_")}}" hx-trigger="load delay:100ms" hx-target="#tabs" hx-swap="innerHTML"></div>
+        <div id="tabs" hx-get="/newworld/material_primary/{{material.lower()|replace(" ","_")}}" hx-trigger="load" hx-target="#tabs" hx-swap="innerHTML"></div>
         {% else %}
-        <div id="tabs" hx-get="/newworld/material_primary/{{material.lower()|replace(" ","_")}}" hx-trigger="load delay:100ms" hx-target="#tabs" hx-swap="innerHTML"></div>
+        <div id="tabs" hx-get="/newworld/material_primary/{{material.lower()|replace(" ","_")}}" hx-trigger="load" hx-target="#tabs" hx-swap="innerHTML"></div>
         {% endif %}
     </div>
 </div>

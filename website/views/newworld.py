@@ -535,6 +535,28 @@ def material_raw_hx(material):
     return render_template('newworld/material_raw_hx.html', data=data, quantity=quantity, material=material_display)
 
 
+@newworld.route('/material_price_hx/<material>', methods=['GET', 'POST'])
+def material_price_hx(material):
+    init_session()
+    dictionary_key_replacements()
+    
+    price_dict = session['price_list']
+    if 'api_loaded' in session:
+        if session['api_loaded']:
+            if 'server_data' in session:
+                if 'items' in session['server_data']:
+                    price_dict = session['server_data']['items']
+    else:
+        price_dict = session['price_list']
+    
+    material_check = material.replace(" ","_").lower()
+    discipline = calcs.determine_discipline(material_check)
+    
+    material_price = price_dict[discipline][material_check]
+    
+    return render_template('newworld/material_price_hx.html', material_price=material_price)
+    
+
 @newworld.route('/server_api', methods=['GET', 'POST'])
 def server_api():
     init_session()
@@ -599,7 +621,6 @@ def server_api():
     return render_template('newworld/server_api.html', server_dict=server_dict, price_list=price_list, template_order=template_order)
 
 
-
 @newworld.route('/server_api_hx', methods=['GET', 'POST'])
 def server_api_hx():
     template_order = player_data.trade_post_order()
@@ -624,7 +645,6 @@ def server_api_hx():
 @newworld.route('/navbar_api_hx', defaults={'material':None}, methods=['GET', 'POST'])
 @newworld.route('/navbar_api_hx/<material>', methods=['GET', 'POST'])
 def navbar_api_hx(material):
-    
     material_hx = None
     if material:
         material_hx = material.lower().replace(" ","_") 

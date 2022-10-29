@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block content%}
-<div class="container">
+<div class="container col-xl-5 col-lg-6 col-md-6">
     <br><br>
     <br><br>
     <div class="card bg-secondary border-warning">
@@ -23,7 +23,9 @@
     </div>
 
     <br><br>
+</div>
 
+<div class="container">
     <div>
         <button class="btn btn-outline-light custom_toggle" _="on click call me.blur() if my.innerText == 'Show All' remove .collapsed from #collapse set .collapse-main's @aria-expanded to 'true' add .show to .collapseall set my.innerText to 'Hide All' else add .collapsed to #collapse remove .show from .collapseall set .collapse-main's @aria-expanded to 'false' set my.innerText to 'Show All'">Show All</button>
     </div>
