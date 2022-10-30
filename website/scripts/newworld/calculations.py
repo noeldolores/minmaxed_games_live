@@ -351,8 +351,18 @@ def cheapest_tp_cost_route_to_refine_each_tier(price_list, refining_dict_full, t
     for discipline, discipline_data in refining_dict_full.items():
         refining_dict_cheapest[discipline] = {}
         for material, material_data in discipline_data.items():
-            
-            _price_data = cost_comparison(list(material_data.items()))
+            material_list = list(material_data.items())
+
+            material_from_tp = material_list[0]
+            craft_cost = [material_from_tp]
+            for i in material_list:
+                mat = i[0]
+                cost = i[1]
+                profit = financials[discipline][material][mat]['sell_profit']
+                if profit >= 0.01:
+                    craft_cost.append((mat, cost))
+
+            _price_data = cost_comparison(craft_cost)
             tp_flip = financials[discipline][material][_price_data[0]]['sell_profit']
             tp_margin= financials[discipline][material][_price_data[0]]['profit_margin']
                 
