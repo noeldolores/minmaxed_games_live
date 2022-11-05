@@ -745,3 +745,118 @@ def datalist():
                 return_length = min(5, len(parsed_list))
 
     return render_template('newworld/datalist.html', datalist=parsed_list[0:return_length])
+
+
+@newworld.route('/profit_calculator', methods=['GET', 'POST'])
+def profit_calculator():
+    init_session()
+    dictionary_key_replacements()
+
+    search = search_function()
+    if search:
+        return redirect(url_for('newworld.material', material=search))
+
+    return render_template('newworld/profit_calculator.html')
+    
+    
+@newworld.route('/profit_calculator_hx', methods=['GET', 'POST'])
+def profit_calculator_hx():
+    taxes_fees = session['taxes_fees']
+    
+    purchase_price, purchase_quant, sell_price, sell_quant = 1,1,1,1
+    p_price, p_quant, s_price, s_quant = False, False, False, False
+    only_purchase = False
+    blank_form = False
+    if 'purchase_price' in request.form:
+        try:
+            purchase_price = float(request.form['purchase_price'])
+            p_price = True
+        except:
+            p_price = False
+    if 'purchase_quant' in request.form:
+        try:
+            purchase_quant = int(request.form['purchase_quant'])
+            p_quant = True
+        except:
+            p_quant = False
+    if 'sell_price' in request.form:
+        try:
+            sell_price = float(request.form['sell_price'])
+            s_price = True
+        except:
+            s_price = False
+    if 'sell_quant' in request.form:
+        try:
+            sell_quant = int(request.form['sell_quant'])
+            s_quant = True
+        except:
+            s_quant = False
+            
+    if s_price == False or s_quant == False and p_price == True and p_quant == True:
+        only_purchase = True
+    else:
+        only_purchase = False
+    if s_price == False and s_quant == False and p_price == False and p_quant == False: 
+        blank_form = True
+        only_purchase = False
+    
+    if blank_form == False:
+        base_purchase = round(purchase_price * purchase_quant, 2)
+        buy_tax = round(calcs.apply_trade_post_tax_buy(base_purchase, taxes_fees), 2)
+        final_price = round(base_purchase + buy_tax, 2)
+        
+        base_value = round(sell_price * sell_quant, 2)
+        sell_tax = round(calcs.determing_trade_post_sell_fee(base_value, taxes_fees), 2)
+        transaction_charge = round(base_value * (taxes_fees['trade_post']['tax'] / 100), 2)
+        final_value = round(base_value - transaction_charge - sell_tax, 2)
+        
+        total_profit = round(final_value - final_price, 2)
+        profit_per_item = round(total_profit / sell_quant, 2)
+        profit_margin = round((final_value - final_price) / final_price * 100, 2)
+        
+        break_even = calcs.determine_break_even(purchase_price, purchase_quant, taxes_fees)
+        break_one = round(break_even['break_even_one'], 2)
+        break_quant = round(break_even['break_even_quant'], 2)
+        
+    elif blank_form == True and only_purchase == True:
+        base_purchase = round(purchase_price * purchase_quant, 2)
+        buy_tax = round(calcs.apply_trade_post_tax_buy(base_purchase, taxes_fees), 2)
+        final_price = round(base_purchase + buy_tax, 2)
+        
+        base_value, sell_tax , transaction_charge, final_value = 0, 0, 0, 0
+        total_profit, profit_per_item, profit_margin = 0, 0, 0
+        
+        break_even = calcs.determine_break_even(purchase_price, purchase_quant, taxes_fees)
+        break_one = break_even['break_even_one']
+        break_quant = break_even['break_even_quant']
+        
+    else:
+        base_purchase, buy_tax, final_price = 0, 0, 0
+        base_value, sell_tax , transaction_charge, final_value = 0, 0, 0, 0
+        total_profit, profit_per_item, profit_margin = 0, 0, 0
+        break_one, break_quant = 0, 0
+    
+    data = {
+        'price': {
+            'base': base_purchase,
+            'listing_fee': buy_tax,
+            'final_price': final_price
+        },
+        'value': {
+            'base': base_value,
+            'transaction_charge': transaction_charge,
+            'listing_fee': sell_tax,
+            'final_value': final_value
+        },
+        'profit': {
+            'total': total_profit,
+            'profit_per_item': profit_per_item,
+            'profit_margin': profit_margin
+        },
+        'break_even': {
+            'one': break_one,
+            'quant': break_quant
+        }
+    }
+    
+    return render_template('newworld/profit_calculator_hx.html', data=data, only_purchase=only_purchase, purchase_quant=purchase_quant)

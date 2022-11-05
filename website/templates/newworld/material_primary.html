@@ -49,7 +49,7 @@
 
         <form class="form-row justify-content-center">
             <div class="col-sm-auto col-md-5 col-lg-5 p-2 input-group">
-                <input type="number" onkeydown="if(event.key==='.'){event.preventDefault();}" id="quant_field" class="form-control" min="1" max="2147483646" placeholder="1" value="{{quantity}}" name="update_quantity"
+                <input type="number" id="quant_field" class="form-control" name="update_quantity" placeholder="1" min="1" max="2147483646" value="{{quantity}}" onkeydown="if(event.key==='.'){event.preventDefault();}" 
                     hx-get="/newworld/material_primary_hx/{{material}}" 
                     hx-trigger="keyup[key=='Enter'] from:body, keyup[key!='Enter'] changed delay:650ms" 
                     hx-target="#material_container" 

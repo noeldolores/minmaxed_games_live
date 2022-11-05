@@ -1,0 +1,55 @@
+{% extends "newworld/base.html" %} 
+
+{% block head %}
+<title>profit_calculator - NW Calculators</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='newworld/css/profit_calculator.css') }}"/>
+{% endblock %}
+
+{% block content%}
+<div class="container col-xl-5 col-lg-6 col-md-6">
+    <br><br>
+    <br><br>
+    <div class="card bg-secondary border-warning">
+        <div class="card-header button btn-outline-warning" id="headingOne" type="button" data-toggle="collapse" data-target="#collapseOne">
+            <h1>Profit Calculator</h1>
+        </div>
+
+        <div id="collapseOne" class="collapse">
+            <div class="card-body bg-dark">
+                <p1>Simulate Buy and Sell orders to ensure your pricing will result in a profit!</p1><br>
+                <p1>Fill out only the <b style="color:red; font-weight:500;">Purchase</b> inputs to quickly view the minmum selling prices to break even on your investment. 
+                    This info can also be found under the <b style="color:orange;">Profit</b> header when all inputs are entered.</p1><br>
+                <p1>Click on <u class="cursor-click" data-toggle="collapse" data-target="#collapse_price">underlined</u> text on the table to view extra info.</p1><br>
+            </div>
+        </div>
+    </div>
+    <br>
+    <br>
+</div>
+
+<div class="container profit-input">
+    <form hx-post="/newworld/profit_calculator_hx" hx-target="#profit_container">
+        <div class="d-flex justify-content-center">
+            <div class="row">
+                <div class="col-auto">
+                    <input type="number" id="purchase_price" name="purchase_price" class="form-control border-danger mt-2" placeholder="Purchase Price" min="0.01" step="0.01" value="{{purchase_price}}" required>
+                    <input type="number" id="purchase_quant" name="purchase_quant" class="form-control border-danger mt-2" placeholder="Purchase Quantity" min="1" step="1" value="{{purchase_quant}}" required>
+                </div>
+                <div class="col-auto">
+                    <input type="number" id="sell_price" name="sell_price" class="form-control border-success mt-2" placeholder="Sell Price" min="0.01" step="0.01" value="{{sell_price}}">
+                    <input type="number" id="sell_quant" name="sell_quant" class="form-control border-success mt-2" placeholder="Sell Quantity" min="1" step="1" value="{{sell_quant}}">
+                </div>
+            </div>
+        </div>
+        <div>
+            <button id="calculate_profit" name="calculate_profit" class="btn btn-outline-light calculate_profit mt-2" role="button" type="submit"
+                    _="on click call #calculate_profit.blur() add .btn-warning remove .btn-outline-light then wait 0.5 seconds then add .btn-outline-light remove .btn-warning">Submit</button>
+        </div>
+    </form>
+
+    <div id="profit_container" _="init fetch /newworld/profit_calculator_hx put the result into #profit_container"></div>
+</div>
+
+<br>
+<br>
+{% endblock %}

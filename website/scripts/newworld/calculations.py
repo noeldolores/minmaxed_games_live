@@ -686,6 +686,69 @@ def apply_trade_post_tax_buy(cost, taxes):
     return final_tax
 
 
+def determine_break_even(purchase_price, purchase_quantity, taxes):
+    base_purchase = purchase_price * purchase_quantity
+    purchase_tax = apply_trade_post_tax_buy(base_purchase, taxes)
+    final_purchase = base_purchase + purchase_tax
+    
+    company_owned = taxes['territory']['company_owned']
+    company_discount = 1
+    if company_owned == True:
+        company_discount = 0.7
+        
+    weavers_fen = taxes['territory']['weavers_fen']
+    weavers_discount = 1
+    if weavers_fen == True:
+        weavers_discount = 0.9
+    
+    duration_fees = {
+        "1_Day": 0.4956,
+        "3_Days": 0.9912,
+        "7_Days": 1.9824,
+        "14_Days": 3.9648,
+    }
+    per_value = {
+        "1_Day": 1,
+        "3_Days": 1.25,
+        "7_Days": 1.5,
+        "14_Days": 1.75,
+    }
+    duration = taxes['trade_post']['duration']
+    sell_tax = taxes['trade_post']['tax'] / 100
+    
+    base_fee = duration_fees[duration]
+    tax_rate = taxes['trade_post']['tax'] / 100
+    discount_rate = taxes['trade_post']['discount'] / 100
+    
+    list_fee = abs(base_fee * (1 + tax_rate - discount_rate))
+    
+    per_value_multiplier = per_value[duration]
+    fee_per_value = (abs(tax_rate - discount_rate)/10) * per_value_multiplier
+    
+    sell_price = final_purchase + list_fee
+    break_even = -1
+    while break_even < 0:
+        if sell_price > final_purchase * 2:
+            break
+        sell_price += 0.01
+        base_sell = sell_price
+        
+        total_value_fee = base_sell * fee_per_value
+        total_listing_fee = (list_fee + total_value_fee) * company_discount * weavers_discount
+        transaction_charge = base_sell * sell_tax
+        
+        final_sell = base_sell - total_listing_fee - transaction_charge
+        
+        break_even = final_sell - final_purchase
+    
+    data = {
+        'break_even_one': sell_price,
+        'break_even_quant': sell_price/purchase_quantity
+    }
+    
+    return data
+
+
 def init_refining_cost_table():
     _refining_dict = {}
     for discipline, discipline_data in conversions.items():

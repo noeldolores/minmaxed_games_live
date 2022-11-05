@@ -1,0 +1,128 @@
+
+<div class="accordion" id="accordion">
+
+    <table class="table table-secondary table-hover">
+        <thead>
+            <tr style="background: #343a40;">
+                <th scope="col" style="width:33%;"><span data-toggle="collapse" data-target="#collapse_price" class="cursor-click" style="color:red; font-weight:500;"><u>Cost</u></span></th>
+                {% if only_purchase %}
+                <th style="width:33%;"><span style="color: orange;">Min Price (1)</span></th>
+                    {% if purchase_quant|string=='1' %}
+                    <th style="width:33%;"></th>
+                    {% else %}
+                    <th style="width:33%;"><span style="color:orange;">Min Price ({{purchase_quant}})</span></th>
+                    {% endif %}
+                {% else %}
+                <th style="width:33%;"><span data-toggle="collapse" data-target="#collapse_value" class="cursor-click" style="color: green;"><u>Value</u></span></th>
+                <th style="width:33%;"><span data-toggle="collapse" data-target="#collapse_profit" class="cursor-click"  style="color:orange;"><u>Profit</u></span></th>
+                {% endif %}
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+                <td><span data-toggle="collapse" data-target="#collapse_price" class="cursor-click">{{ '%.2f'|format(data['price']['final_price']) }}</span></td>
+                {% if only_purchase %}
+                    <td><span>{{ '%.2f'|format(data['break_even']['one']) }}</span></td>
+                    {% if purchase_quant|string=='1' %}
+                    <td></td>
+                    {% else %}
+                    <td><span>{{ '%.2f'|format(data['break_even']['quant']) }}</span></td>
+                    {% endif %}
+                {% else %}
+                <td><span data-toggle="collapse" data-target="#collapse_value" class="cursor-click">{{ '%.2f'|format(data['value']['final_value']) }}</span></td>
+                <td><span data-toggle="collapse" data-target="#collapse_profit" class="cursor-click">{{ '%.2f'|format(data['profit']['total']) }}</span></td>
+                {% endif %}
+            </tr>
+        </tbody>
+    </table>
+
+
+    <div id="collapse_price" class="collapse" data-parent="#accordion">
+        <table class="table table-secondary table-hover">
+            <thead>
+                <tr style="background: #a17277;" class="cursor-click" data-toggle="collapse" data-target="#collapse_price">
+                    <th scope="col" style="width:33%;">Base</th>
+                    <th style="width:33%;">Listing Fee</th>
+                    <th style="width:33%;">Final</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td>{{ '%.2f'|format(data['price']['base']) }}</td>
+                    <td>{{ '%.2f'|format(data['price']['listing_fee']) }}</td>
+                    <td>{{ '%.2f'|format(data['price']['final_price']) }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="collapse_value" class="collapse" data-parent="#accordion">
+        <table class="table table-secondary table-hover">
+            <thead>
+                <tr style="background: #547d5d;" class="cursor-click" data-toggle="collapse" data-target="#collapse_value">
+                    <th scope="col" style="width:25%;">Base</th>
+                    <th style="width:25%;">Transaction Charge</th>
+                    <th style="width:25%;">Listing Fee</th>
+                    <th style="width:25%;">Final</th>
+                </tr>
+            </thead>
+        
+            <tbody>
+                <tr>
+                    <td>{{ '%.2f'|format(data['value']['base']) }}</td>
+                    <td>{{ '%.2f'|format(data['value']['transaction_charge']) }}</td>
+                    <td>{{ '%.2f'|format(data['value']['listing_fee']) }}</td>
+                    <td>{{ '%.2f'|format(data['value']['final_value']) }}</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="collapse_profit" class="collapse" data-parent="#accordion">
+        <table class="table table-secondary table-hover">
+            <thead>
+                <tr style="background: #ffbe4f;" class="cursor-click" data-toggle="collapse" data-target="#collapse_profit">
+                    <th scope="col" style="width:33%;">Total Profit</th>
+                    <th style="width:33%;">Profit per Item</th>
+                    <th style="width:33%;">Profit Margin</th>
+                </tr>
+            </thead>
+        
+            <tbody>
+                <tr>
+                    <td>{{ '%.2f'|format(data['profit']['total']) }}</td>
+                    <td>{{ '%.2f'|format(data['profit']['profit_per_item']) }}</td>
+                    <td>{{ '%.2f'|format(data['profit']['profit_margin']) }}%</td>
+                </tr>
+            </tbody>
+
+            <thead>
+                <tr style="background: #ffbe4f;" class="cursor-click" data-toggle="collapse" data-target="#collapse_profit">
+                    <th scope="col" style="width:33%;">Break-Even Price: 1</th>
+                    {% if purchase_quant|string=='1' %}
+                    <th style="width:33%;"></th>
+                    <th style="width:33%;"></th>
+                    {% else %}
+                    <th style="width:33%;">Break-Even Price: {{purchase_quant}}</th>
+                    <th style="width:33%;"></th>
+                    {% endif %}
+                </tr>
+            </thead>
+        
+            <tbody>
+                <tr>
+                    <td>{{ '%.2f'|format(data['break_even']['one']) }}</td>
+                    {% if purchase_quant|string=='1' %}
+                    <td></td>
+                    <td></td>
+                    {% else %}
+                    <td>{{ '%.2f'|format(data['break_even']['quant']) }}</td>
+                    <td></td>
+                    {% endif %}
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

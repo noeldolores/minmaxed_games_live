@@ -1,0 +1,171 @@
+html, body {
+  background-color: rgb(30, 30, 32);
+}
+
+html {
+  overflow-y: scroll;
+}
+
+.nav-link {
+  text-align: left;
+}
+
+a:link {
+  color: white;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+a:visited {
+  color: white;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+.navbar-custom {
+  background-color: rgb(17, 20, 20);
+}
+
+.navbar-toggler {
+  background-color:white !important;
+}
+
+span.navbar-toggler-icon{
+  background-image: url("data:image/svg+xml;charset=utf8,%3Csvg viewBox='0 0 32 32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath stroke='black' stroke-width='2' stroke-linecap='round' stroke-miterlimit='10' d='M4 8h24M4 16h24M4 24h24'/%3E%3C/svg%3E");
+  color: rgb(0, 0, 0);
+}
+
+.datafield::-webkit-calendar-picker-indicator {
+  display:none !important;
+}
+
+.text-dark:hover {
+  background-color: rgb(206, 206, 206);
+}
+
+.alert {
+  margin-top: 4rem;
+}
+
+p1 {
+  color: white;
+}
+
+#listspace {
+  margin-top: 1.25rem;
+  width: 100%;
+  text-align: center;
+}
+  
+.collapse-main {
+  margin-top: 0.25rem;
+  width: 100%;
+  color: white;
+}
+
+.skillLevel {
+  margin-top: 2px;
+}
+
+.header {
+  font-weight: bold;
+  color: white;
+}
+
+.noHover{
+  pointer-events: none;
+}
+
+h1 {
+  color: white;
+  text-align: center;
+}
+
+h3 {
+  color: white;
+  text-align: center;
+}
+
+#collapseOne, #collapseTwo{
+  text-align: center;
+}
+
+tr {
+  text-align: center;
+}
+
+.profit-input {
+  text-align: center;
+}
+
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+.htmx-settling tr.load td {
+  background: rgb(145, 173, 187);
+}
+tr td {
+  transition: all 0.75s;
+}
+
+#purchase_price, #purchase_quant, #sell_price, #sell_quant {
+  text-align: center;
+}
+
+.craft_bonus{
+  position: absolute;
+  color:green;
+  left: 195px;
+  top: 20%;
+  font-weight: 650;
+  font-size: small;
+}
+
+span {
+  display: inline-flex;
+  align-items: center;
+}
+
+.nav-material {
+  top: 56px;
+  height: fit-content;
+}
+
+.disabled-Hover > td {
+    background-color: #8f9ca7;
+}
+
+.hover-enabled:hover {
+  box-shadow: 20px 20px 50px 10px rgb(159, 159, 159) inset;
+}
+
+.nav-tabs > li > a {
+  color: #ffffff;
+}
+
+.cursor-click {
+  cursor: pointer;
+}
+
+#material_price {
+  margin-bottom: -20px;
+}
+
+.calculate_profit {
+  margin-bottom: 2rem;
+  min-width: 150px;
+  transition: all 0.35s;
+}
+
+.border-success, .border-danger {
+  border-width:2px !important;
+}
