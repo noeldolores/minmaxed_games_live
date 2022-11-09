@@ -113,7 +113,7 @@ def request_nwmarketprices(stopwatch):
                     'LastUpdated' : data['LastUpdated'],
                 }
                     
-                dates_list.append(str_to_datetime(item['LastUpdated']))
+                dates_list.append(data['LastUpdated'])
 
             if len(dates_list) > 0:
                 latest_date = max(dates_list)
