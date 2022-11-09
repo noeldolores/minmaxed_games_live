@@ -158,6 +158,7 @@ def request_nwmarketprices(stopwatch):
 
 
 def main():
+    time.sleep(28800)
     with app.app_context():
         stopwatch = timer()
         try:
@@ -167,6 +168,7 @@ def main():
             db.session.rollback()
             print(e)
         stopwatch = timer(stopwatch, f'Task completed...{full_pull}')
+        
         
 if __name__ == "__main__":
   main()
