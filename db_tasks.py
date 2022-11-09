@@ -114,11 +114,7 @@ def request_nwmarketprices(stopwatch):
         else:
             stopwatch = timer(stopwatch, f'{server_name} : Unable to connect. Response from server: {response.status_code}')
             continue
-    
-    # One time delete
-    models.Item.query.delete()
-    db.session.commit()
-    
+        
     # Push data to db
     for server_name, server_data in server_dict.items():
         server = models.Market.query.filter_by(name=server_name).first()
