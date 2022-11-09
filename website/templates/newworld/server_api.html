@@ -20,7 +20,7 @@
             <div class="card-body bg-dark">
                 <p1>Pricing data is sourced by <a href="https://nwmarketprices.com/" target="#"><u>NWMarketPrices</u></a> community members.</p1><br>
                 <p1>Use the Load Server button to import their latest data.</p1><br>
-                <p1>You can toggle this price list by using the Server button on the navigation bar to view alternate data on the <a href="/newworld/refining" target="#"><u>Refining Cost</u></a> tables.</p1><br>
+                <p1>You can toggle this price list by using the Server button on the navigation bar to view alternate data on the tables under the Tools pages.</p1><br>
                 <p1>Once loaded, you can view the server Trade Post prices below.</p1><br>
             </div>
         </div>
@@ -53,10 +53,6 @@
     <br><br>
     
     {% if session['server_data'] %}
-    <div>
-        <button class="btn btn-outline-light custom_toggle" _="on click call me.blur() if my.innerText == 'Show All' remove .collapsed from #collapse set .collapse-main's @aria-expanded to 'true' add .show to .collapseall set my.innerText to 'Hide All' else add .collapsed to #collapse remove .show from .collapseall set .collapse-main's @aria-expanded to 'false' set my.innerText to 'Show All'">Show All</button>
-    </div>
-
     <form hx-post="/newworld/server_api_hx" hx-target="#server_api_hx">
         <div class="container" id="server_api_hx">  
             {% include "newworld/server_api_hx.html" %}

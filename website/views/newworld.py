@@ -34,23 +34,37 @@ def validate_search(search):
     primary_ingredients = os.path.join(basedir, '../static/newworld/txt/primary_ingredients.txt')
     secondary_ingredients = os.path.join(basedir, '../static/newworld/txt/secondary_ingredients.txt')
     components = os.path.join(basedir, '../static/newworld/txt/components.txt')
+    arcana = os.path.join(basedir, '../static/newworld/txt/arcana.txt')
+    trophies = os.path.join(basedir, '../static/newworld/txt/trophies.txt')
     primary_list = []
     secondary_list = []
     components_list = []
+    arcana_list = []
+    trophies_list = []
+    
+    search_list = []
 
     with open(primary_ingredients) as file:
         lines = file.readlines()
-        primary_list = [line.rstrip().lower() for line in lines]
+        search_list += [line.rstrip().lower() for line in lines]
 
     with open(secondary_ingredients) as file_2:
         lines = file_2.readlines()
-        secondary_list = [line.rstrip().lower() for line in lines]
+        search_list += [line.rstrip().lower() for line in lines]
 
     with open(components) as file_3:
         lines = file_3.readlines()
-        components_list = [line.rstrip().lower() for line in lines]
-
-    if search in primary_list or search in secondary_list or search in components_list:
+        search_list += [line.rstrip().lower() for line in lines]
+        
+    with open(arcana) as file_4:
+        lines = file_4.readlines()
+        search_list += [line.rstrip().lower() for line in lines]
+    
+    with open(trophies) as file_5:
+        lines = file_5.readlines()
+        search_list += [line.rstrip().lower() for line in lines]
+        
+    if search in search_list:
         return search
     return None
 
@@ -71,7 +85,9 @@ def determine_material_category(material):
     primary_ingredients = os.path.join(basedir, '../static/newworld/txt/primary_ingredients.txt')
     secondary_ingredients = os.path.join(basedir, '../static/newworld/txt/secondary_ingredients.txt')
     components = os.path.join(basedir, '../static/newworld/txt/components.txt')
-
+    arcana = os.path.join(basedir, '../static/newworld/txt/arcana.txt')
+    trophies = os.path.join(basedir, '../static/newworld/txt/trophies.txt')
+    
     primary_list = []
     with open(primary_ingredients) as file:
         lines = file.readlines()
@@ -86,12 +102,22 @@ def determine_material_category(material):
     with open(components) as file_3:
         lines = file_3.readlines()
         components_list = [line.rstrip().lower() for line in lines]
+        
+    arcana_list = []
+    with open(arcana) as file_4:
+        lines = file_4.readlines()
+        arcana_list = [line.rstrip().lower() for line in lines]
+        
+    trophies_list = []
+    with open(trophies) as file_5:
+        lines = file_5.readlines()
+        trophies_list = [line.rstrip().lower() for line in lines]
 
     if material in primary_list:
         return "primary"
     elif material in secondary_list:
         return "secondary"
-    elif material in components_list:
+    elif material in components_list or material in arcana_list or material in trophies_list:
         return "component"
     return None
 
@@ -121,23 +147,38 @@ def random_material():
 
 
 def dictionary_key_replacements():
-    if 'refining_components' in session['price_list']:
-        session['price_list']['refining_component'] = session['price_list']['refining_components']
-        print("Rename: " + str(session['price_list'].pop('refining_components', None)))
+    if 'price_list' in session:
+        if 'refining_components' in session['price_list']:
+            session['price_list']['refining_component'] = session['price_list']['refining_components']
+            print("Rename: " + str(session['price_list'].pop('refining_components', None)))
+            
+        if 'smelting_precious' not in session['price_list']:
+            session['price_list']['smelting_precious'] = {
+                "silver_ore" : 0,
+                "silver_ingot" : 0,
+                "gold_ore" : 0,
+                "gold_ingot" : 0,
+                "platinum_ore" : 0,
+                "platinum_ingot" : 0,
+                "charcoal" : 0,
+                "orichalcum_ore" : 0,
+                "orichalcum_ingot_platinum" : 0
+            }
         
-    if 'smelting_precious' not in session['price_list']:
-        session['price_list']['smelting_precious'] = {
-            "silver_ore" : 0,
-            "silver_ingot" : 0,
-            "gold_ore" : 0,
-            "gold_ingot" : 0,
-            "platinum_ore" : 0,
-            "platinum_ingot" : 0,
-            "charcoal" : 0,
-            "orichalcum_ore" : 0,
-            "orichalcum_ingot_platinum" : 0
-        }
-    
+        if 'loot_luck' not in session['price_list']:
+            trophy_order = player_data.trade_post_trophy_order()
+            for items in trophy_order:
+                category = items[0]
+                category_list = items[1:]
+                if category not in session['price_list']:
+                    session['price_list'][category] = {}
+                    for item in category_list:
+                        if item in ['minor','basic','major']:
+                            trophy = f'{item}_{category}_trophy'
+                            session['price_list'][category][trophy] = 0
+                        else:
+                            session['price_list'][category][item] = 0
+        
     if 'server_data' in session:
         if 'items' in session['server_data']:
             if 'refining_components' in session['server_data']['items']:
@@ -161,6 +202,10 @@ def dictionary_key_replacements():
         session['taxes_fees'] = player_data.init_taxes_and_fees()
     elif 'weavers_fen' not in session['taxes_fees']['territory']:
             session['taxes_fees']['territory']['weavers_fen'] = False
+    if 'crafting' not in session['taxes_fees']:
+        session['taxes_fees']['crafting'] = {
+            'station': 0
+        }
 
 
 @newworld.route('/', methods=['GET', 'POST'])
@@ -169,6 +214,7 @@ def home():
     dictionary_key_replacements()
     
     search = search_function()
+    
     if search:
         return redirect(url_for("newworld.material", material=search))
 
@@ -189,6 +235,7 @@ def trade_skills_refining():
     rand_mat = random_material()
 
     return render_template('newworld/trade_skills_refining.html', rand_mat=rand_mat)
+
 
 @newworld.route('/skills', methods=['GET', 'POST'])
 def skills():
@@ -273,105 +320,27 @@ def tradepost():
         return redirect(url_for('newworld.material', material=search))
 
     template_order = player_data.trade_post_order()
-        
-    return render_template('newworld/tradepost.html', price_list=session['price_list'], template_order=template_order)
+    trophy_order = player_data.trade_post_trophy_order()
+    
+    return render_template('newworld/tradepost.html', price_list=session['price_list'], template_order=template_order, trophy_order=trophy_order)
 
 
 @newworld.route('/tradepost_hx', methods=['GET', 'POST'])
 def tradepost_hx():
     template_order = player_data.trade_post_order()
-        
+    trophy_order = player_data.trade_post_trophy_order()
+                    
     if request.method == 'POST':
         if "save" in request.form:
-            session['price_list'] = {
-                "refining_component" : {
-                    "aged_tannin": strip_leading_zeros(True, request.form['aged_tannin']),
-                    "obsidian_flux": strip_leading_zeros(True, request.form['obsidian_flux']),
-                    "obsidian_sandpaper": strip_leading_zeros(True, request.form['obsidian_sandpaper']),
-                    "wireweave": strip_leading_zeros(True, request.form['wireweave']),
-                    "pure_solvent" : strip_leading_zeros(True, request.form['pure_solvent'])
-                },
-                "leatherworking" : {
-                    "rawhide": strip_leading_zeros(True, request.form['rawhide']),
-                    "coarse_leather": strip_leading_zeros(True, request.form['coarse_leather']),
-                    "rugged_leather": strip_leading_zeros(True, request.form['rugged_leather']),
-                    "layered_leather": strip_leading_zeros(True, request.form['layered_leather']),
-                    "infused_leather": strip_leading_zeros(True, request.form['infused_leather']),
-                    "runic_leather": strip_leading_zeros(True, request.form['runic_leather']),
-                    "thick_hide": strip_leading_zeros(True, request.form['thick_hide']),
-                    "iron_hide": strip_leading_zeros(True, request.form['iron_hide']),
-                    "smolderhide": strip_leading_zeros(True, request.form['smolderhide']),
-                    "scarhide": strip_leading_zeros(True, request.form['scarhide'])
-                },
-                "smelting" : {
-                    "iron_ore" : strip_leading_zeros(True, request.form['iron_ore']),
-                    "iron_ingot" : strip_leading_zeros(True, request.form['iron_ingot']),
-                    "steel_ingot" : strip_leading_zeros(True, request.form['steel_ingot']),
-                    "starmetal_ingot" : strip_leading_zeros(True, request.form['starmetal_ingot']),
-                    "orichalcum_ingot" : strip_leading_zeros(True, request.form['orichalcum_ingot']),
-                    "starmetal_ore" : strip_leading_zeros(True, request.form['starmetal_ore']),
-                    "orichalcum_ore" : strip_leading_zeros(True, request.form['orichalcum_ore']),
-                    "asmodeum" : strip_leading_zeros(True, request.form['asmodeum']),
-                    "charcoal" : strip_leading_zeros(True, request.form['charcoal']),
-                    "tolvium" : strip_leading_zeros(True, request.form['tolvium']),
-                    "cinnabar" : strip_leading_zeros(True, request.form['cinnabar']),
-                    
-                },
-                "smelting_precious" : {
-                    "silver_ore" : strip_leading_zeros(True, request.form['silver_ore']),
-                    "silver_ingot" : strip_leading_zeros(True, request.form['silver_ingot']),
-                    "gold_ingot" : strip_leading_zeros(True, request.form['gold_ingot']),
-                    "platinum_ingot" : strip_leading_zeros(True, request.form['platinum_ingot']),
-                    "gold_ore" : strip_leading_zeros(True, request.form['gold_ore']),
-                    "platinum_ore" : strip_leading_zeros(True, request.form['platinum_ore']),
-                    "charcoal" : strip_leading_zeros(True, request.form['charcoal']),
-                    "orichalcum_ore" : strip_leading_zeros(True, request.form['orichalcum_ore']),
-                    "orichalcum_ingot_platinum" : strip_leading_zeros(True, request.form['orichalcum_ingot'])
-                },
-                "stone_cutting" : {
-                    "stone": strip_leading_zeros(True, request.form['stone']),
-                    "stone_block": strip_leading_zeros(True, request.form['stone_block']),
-                    "stone_brick": strip_leading_zeros(True, request.form['stone_brick']),
-                    "lodestone_brick": strip_leading_zeros(True, request.form['lodestone_brick']),
-                    "obsidian_voidstone" : strip_leading_zeros(True, request.form['obsidian_voidstone']),
-                    "runestone": strip_leading_zeros(True, request.form['runestone']),
-                    "lodestone": strip_leading_zeros(True, request.form['lodestone']),
-                    "molten_lodestone": strip_leading_zeros(True, request.form['molten_lodestone']),
-                    "loamy_lodestone": strip_leading_zeros(True, request.form['loamy_lodestone']),
-                    "shocking_lodestone": strip_leading_zeros(True, request.form['shocking_lodestone']),
-                    "crystalline_lodestone" : strip_leading_zeros(True, request.form['crystalline_lodestone']),
-                    "freezing_lodestone": strip_leading_zeros(True, request.form['freezing_lodestone']),
-                    "putrid_lodestone": strip_leading_zeros(True, request.form['putrid_lodestone']),
-                    "gleaming_lodestone": strip_leading_zeros(True, request.form['gleaming_lodestone'])
-                },
-                "weaving" : {
-                    "fibers": strip_leading_zeros(True, request.form['fibers']),
-                    "linen": strip_leading_zeros(True, request.form['linen']),
-                    "sateen": strip_leading_zeros(True, request.form['sateen']),
-                    "silk": strip_leading_zeros(True, request.form['silk']),
-                    "infused_silk": strip_leading_zeros(True, request.form['infused_silk']),
-                    "phoenixweave": strip_leading_zeros(True, request.form['phoenixweave']),
-                    "silk_threads": strip_leading_zeros(True, request.form['silk_threads']),
-                    "wirefiber": strip_leading_zeros(True, request.form['wirefiber']),
-                    "scalecloth": strip_leading_zeros(True, request.form['scalecloth']),
-                    "blisterweave": strip_leading_zeros(True, request.form['blisterweave'])
-                },
-                "woodworking" : {
-                    "green_wood" : strip_leading_zeros(True, request.form['green_wood']),
-                    "timber" : strip_leading_zeros(True, request.form['timber']),
-                    "lumber" : strip_leading_zeros(True, request.form['lumber']),
-                    "wyrdwood_planks" : strip_leading_zeros(True, request.form['wyrdwood_planks']),
-                    "ironwood_planks" : strip_leading_zeros(True, request.form['ironwood_planks']),
-                    "glittering_ebony" : strip_leading_zeros(True, request.form['glittering_ebony']),
-                    "aged_wood" : strip_leading_zeros(True, request.form['aged_wood']),
-                    "wyrdwood" : strip_leading_zeros(True, request.form['wyrdwood']),
-                    "ironwood" : strip_leading_zeros(True, request.form['ironwood']),
-                    "wildwood" : strip_leading_zeros(True, request.form['wildwood']),
-                    "barbvine" : strip_leading_zeros(True, request.form['barbvine'])
-                }
-            }
-
-    return render_template('newworld/tradepost_hx.html', price_list=session['price_list'], template_order=template_order)
+            for category, items in session['price_list'].items():
+                for item in items.keys():
+                    if item in request.form:
+                        session['price_list'][category][item] = strip_leading_zeros(True, request.form[item])
+                    else:
+                        if item == "orichalcum_ingot_platinum":
+                            session['price_list'][category][item] = strip_leading_zeros(True, request.form["orichalcum_ingot"])     
+            
+    return render_template('newworld/tradepost_hx.html', price_list=session['price_list'], template_order=template_order, trophy_order=trophy_order)
 
 
 @newworld.route('/refining', methods=['GET', 'POST'])
@@ -584,6 +553,7 @@ def server_api():
             if market_dict:
                 item_dict = market_dict['items']
                 item_ref = player_data.trade_post_order()
+                trophy_ref = player_data.trade_post_trophy_order()
 
                 server_prices = {}
                 for item_list in item_ref:
@@ -591,6 +561,17 @@ def server_api():
                     server_prices[header] = {}
                     for item in item_list:
                         if item in item_dict:
+                            server_prices[header][item] = item_dict[item]
+                
+                for trophy_list in trophy_ref:
+                    header = trophy_list[0]
+                    server_prices[header] = {}
+                    for item in trophy_list:
+                        if item in ['minor', 'basic', 'major']:
+                            trophy = f'{item}_{header}_trophy'
+                            if trophy in item_dict:
+                                server_prices[header][trophy] = item_dict[trophy]
+                        elif item in item_dict:
                             server_prices[header][item] = item_dict[item]
 
                 session['server_data'] = {
@@ -601,9 +582,11 @@ def server_api():
                 session['api_loaded'] = True
 
     template_order = player_data.trade_post_order()
+    trophy_order = player_data.trade_post_trophy_order()
 
-    # if "load_all" in request.form:        
-    #     full_server = db_scripts.request_nwmarketprices()
+    # if "load_all" in request.form:
+    #     stopwatch = db_scripts.timer()
+    #     full_server = db_scripts.request_nwmarketprices(stopwatch)
 
     price_list = session['price_list']
     if 'server_data' in session:
@@ -618,7 +601,7 @@ def server_api():
                         price_list_server[key][mat] = price_list[key][mat]
             price_list = price_list_server.copy()
 
-    return render_template('newworld/server_api.html', server_dict=server_dict, price_list=price_list, template_order=template_order)
+    return render_template('newworld/server_api.html', server_dict=server_dict, price_list=price_list, template_order=template_order, trophy_order=trophy_order)
 
 
 @newworld.route('/server_api_hx', methods=['GET', 'POST'])
@@ -637,7 +620,6 @@ def server_api_hx():
                     if mat not in price_list_server[key]:
                         price_list_server[key][mat] = price_list[key][mat]
             price_list = price_list_server.copy()
-            #price_list = session['server_data']['items']
 
     return render_template('newworld/server_api_hx.html', price_list=price_list, template_order=template_order)
 
@@ -664,9 +646,8 @@ def navbar_api_hx(material):
     return render_template('newworld/navbar_api_hx.html', status=status, css_class=css_class, material=material_hx)
 
 
-
-@newworld.route('/taxes_and_fees', methods=['GET', 'POST'])
-def taxes_and_fees():
+@newworld.route('/taxes_and_bonuses', methods=['GET', 'POST'])
+def taxes_and_bonuses():
     init_session()
     dictionary_key_replacements()
 
@@ -676,11 +657,11 @@ def taxes_and_fees():
     
     taxes_fees = session['taxes_fees']              
                         
-    return render_template('newworld/taxes_and_fees.html', taxes_fees=taxes_fees)
+    return render_template('newworld/taxes_and_bonuses.html', taxes_fees=taxes_fees)
     
 
-@newworld.route('/taxes_and_fees_hx', methods=['GET', 'POST'])
-def taxes_and_fees_hx():
+@newworld.route('/taxes_and_bonuses_hx', methods=['GET', 'POST'])
+def taxes_and_bonuses_hx():
     init_session()
     dictionary_key_replacements()
 
@@ -708,7 +689,7 @@ def taxes_and_fees_hx():
     
     taxes_fees = session['taxes_fees']              
                 
-    return render_template('newworld/taxes_and_fees_hx.html', taxes_fees=taxes_fees)
+    return render_template('newworld/taxes_and_bonuses_hx.html', taxes_fees=taxes_fees)
 
 
 @newworld.route('/datalist', methods=['GET', 'POST'])
@@ -728,6 +709,16 @@ def datalist():
     with open(components_file) as file_3:
         lines = file_3.readlines()
         datalist.extend([line.rstrip().lower() for line in lines])
+        
+    arcana_file = os.path.join(basedir, '../static/newworld/txt/arcana.txt')
+    with open(arcana_file) as file_4:
+        lines = file_4.readlines()
+        datalist.extend([line.rstrip().lower() for line in lines])
+    
+    trophies_file = os.path.join(basedir, '../static/newworld/txt/trophies.txt')
+    with open(trophies_file) as file_5:
+        lines = file_5.readlines()
+        datalist.extend([line.rstrip().lower() for line in lines])
 
     parsed_list=[]
     return_length = 0
@@ -743,12 +734,14 @@ def datalist():
 
                 parsed_list.sort()
                 return_length = min(5, len(parsed_list))
+                
+                if len(parsed_list) > 0:
+                    return render_template('newworld/datalist.html', datalist=parsed_list[0:return_length])
+    return render_template('newworld/datalist.html', datalist=parsed_list)
 
-    return render_template('newworld/datalist.html', datalist=parsed_list[0:return_length])
 
-
-@newworld.route('/profit_calculator', methods=['GET', 'POST'])
-def profit_calculator():
+@newworld.route('/market_calculator', methods=['GET', 'POST'])
+def market_calculator():
     init_session()
     dictionary_key_replacements()
 
@@ -756,11 +749,11 @@ def profit_calculator():
     if search:
         return redirect(url_for('newworld.material', material=search))
 
-    return render_template('newworld/profit_calculator.html')
+    return render_template('newworld/market_calculator.html')
     
     
-@newworld.route('/profit_calculator_hx', methods=['GET', 'POST'])
-def profit_calculator_hx():
+@newworld.route('/market_calculator_hx', methods=['GET', 'POST'])
+def market_calculator_hx():
     taxes_fees = session['taxes_fees']
     
     purchase_price, purchase_quant, sell_price, sell_quant = 1,1,1,1
@@ -859,4 +852,40 @@ def profit_calculator_hx():
         }
     }
     
-    return render_template('newworld/profit_calculator_hx.html', data=data, only_purchase=only_purchase, purchase_quant=purchase_quant)
+    return render_template('newworld/market_calculator_hx.html', data=data, only_purchase=only_purchase, purchase_quant=purchase_quant)
+
+
+@newworld.route('/crafting/trophy', methods=['GET', 'POST'])
+def trophy_calculator():
+    init_session()
+    dictionary_key_replacements()
+    
+    search = search_function()
+    if search:
+        return redirect(url_for('newworld.material', material=search))
+
+    return render_template('newworld/trophy_calculator.html')
+
+
+@newworld.route('/crafting/trophy_hx', methods=['GET', 'POST'])
+def trophy_calculator_hx():
+    template_order = player_data.trade_post_trophy_order()
+
+    price_list = session['price_list']
+    if 'api_loaded' in session:
+        if session['api_loaded']:
+            if 'server_data' in session:
+                if 'items' in session['server_data']:
+                    price_list = session['server_data']['items']
+    
+    taxes_fees = session['taxes_fees']
+    skill_level = session['skill_levels']['refining']
+    gear_set = session['gear_sets']
+    taxes_fees = session['taxes_fees']
+    
+    all_tiers_all_routes, financial_data = calcs.tp_cost_to_refine_all_routes_all_tiers(price_list, session['skill_levels']['refining'], session['gear_sets'], taxes_fees)
+    cheapest_route = calcs.cheapest_tp_cost_route_to_refine_each_tier(price_list, all_tiers_all_routes, taxes_fees, financial_data)
+    
+    data = calcs.calculate_trophy_profitability(cheapest_route, price_list, taxes_fees, skill_level, gear_set)
+    
+    return render_template('newworld/trophy_calculator_hx.html', data=data, template_order=template_order)

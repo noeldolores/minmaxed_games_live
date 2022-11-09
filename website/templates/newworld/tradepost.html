@@ -25,14 +25,14 @@
     <br><br>
 </div>
 
-<div class="container">
-    <div>
-        <button class="btn btn-outline-light custom_toggle" _="on click call me.blur() if my.innerText == 'Show All' remove .collapsed from #collapse set .collapse-main's @aria-expanded to 'true' add .show to .collapseall set my.innerText to 'Hide All' else add .collapsed to #collapse remove .show from .collapseall set .collapse-main's @aria-expanded to 'false' set my.innerText to 'Show All'">Show All</button>
-    </div>
-
+<div class="container tradePrices">
     <form hx-post="/newworld/tradepost_hx" hx-target="#tradepost_hx">
-        <div class="container" id="tradepost_hx">  
+        <div id="tradepost_hx">  
             {% include "newworld/tradepost_hx.html" %}
+        </div>
+
+        <div>
+            <button class="btn btn-outline-light savePrices" id='savePrices' type="submit" name="save" _="on click call #savePrices.blur() set .custom_toggle.innerText to 'Show All' add .btn-warning remove .btn-outline-light then wait 0.3 seconds then add .btn-outline-light remove .btn-warning">Save</button>
         </div>
     </form>
 <div>

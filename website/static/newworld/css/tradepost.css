@@ -70,11 +70,6 @@ label {
   color: white;
 }
 
-.savePrices {
-  margin-top: 2rem;
-  min-width: 150px;
-}  
-
 #listspace {
   margin-top: 10px;
   margin-bottom: -10px;
@@ -113,3 +108,13 @@ label {
 .custom_toggle {
   width: 100%;
 }
+
+.tradePrices{
+  text-align: center;
+}
+
+.savePrices {
+  margin-top: 2rem;
+  min-width: 150px;
+  transition: all 0.35s;
+}  

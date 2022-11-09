@@ -11,13 +11,13 @@ html {
 }
 
 a:link {
-  color: black;
+  color: white;
   background-color: transparent;
   text-decoration: none;
 }
 
 a:visited {
-  color: black;
+  color: white;
   background-color: transparent;
   text-decoration: none;
 }
@@ -89,7 +89,7 @@ h1 {
 }
 
 th, td {
-  color: black;
+  color: rgb(255, 255, 255);
 }
 
 .nav-link {

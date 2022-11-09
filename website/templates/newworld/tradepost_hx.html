@@ -1,23 +1,195 @@
-{% for i in range(0, template_order|length) %}
-<div id="collapse" href="#homeSubmenu{{i}}" data-toggle="collapse" aria-expanded="false" class="btn btn-outline-secondary dropdown-toggle collapse-main collapsed">{{template_order[i][0].title() | replace("_"," ")}}</div>
-<ul class="collapse list-unstyled collapseall" id="homeSubmenu{{i}}">
-    <li id="listspace">
-        <div class="form-row justify-content-center">
-            {% for material in template_order[i][1:] %}
-            <div class="col-auto">
-                {% if '_lodestone' in material or 'pure_solvent' in material %}
-                <label for={{material}}>{{material.title() | replace("_"," ")}}</label>
-                {% else %}
-                <label for={{material}}><a href="/newworld/material/{{material}}" target="#"><u>{{material.title() | replace("_"," ")}}</u></a></label>
-                {% endif %}
-                <input required type="number" step="0.01" id="{{material}}" name="{{material}}" class="form-control price" min="0" value="{{ '%.2f'|format(price_list[template_order[i][0]][material]) }}">
-            </div>
-            {% endfor %}
-        </div>
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item mr-1" role="presentation">
+        <button class="nav-link btn-outline-success active" id="materials-tab" data-toggle="tab" data-target="#materials" type="button" role="tab" aria-controls="materials" aria-selected="true"  _="on click call #materials-tab.blur()">Refining</button>
+    </li>
+    <li class="nav-item mr-1" role="presentation">
+        <button class="nav-link btn-outline-danger" id="trophy-tab" data-toggle="tab" data-target="#trophy" type="button" role="tab" aria-controls="trophy" aria-selected="false" _="on click call #trophy-tab.blur()">Trophy</button>
     </li>
 </ul>
-{% endfor %}
 
-<div>
-    <button class="btn btn-outline-light savePrices" type="submit" name="save" _="on click set .custom_toggle.innerText to 'Show All'">Save</button>
+<div class="tab-content">
+    <div class="tab-pane mt-2 active" id="materials" role="tabpanel" aria-labelledby="materials-tab">
+        <div>
+            <a class="btn btn-outline-success custom_toggle" _="on click call me.blur() if my.innerText == 'Show All' remove .collapsed from #collapse set .collapse-main's @aria-expanded to 'true' add .show to .collapseall set my.innerText to 'Hide All' else add .collapsed to #collapse remove .show from .collapseall set .collapse-main's @aria-expanded to 'false' set my.innerText to 'Show All'">Show All</a>
+        </div>
+        <div class='container'>
+            {% for i in range(0, template_order|length) %}
+            <div id="collapse" href="#homeSubmenu{{i}}" data-toggle="collapse" aria-expanded="false" class="btn btn-outline-secondary dropdown-toggle collapse-main collapsed">
+                {{template_order[i][0].title() | replace("_"," ")}}
+            </div>
+            <ul class="collapse list-unstyled collapseall" id="homeSubmenu{{i}}">
+                <li id="listspace">
+                    <div class="form-row justify-content-center">
+                        {% for material in template_order[i][1:] %}
+                        <div class="col-auto">
+                            {% if '_lodestone' in material or 'pure_solvent' in material %}
+                            <label for={{material}}>{{material.title() | replace("_"," ")}}</label>
+                            {% else %}
+                            <label for={{material}}><a href="/newworld/material/{{material}}" target="#"><u>{{material.title() | replace("_"," ")}}</u></a></label>
+                            {% endif %}
+                            <input required type="number" step="0.01" id="{{material}}" name="{{material}}" class="form-control price" min="0" value="{{ '%.2f'|format(price_list[template_order[i][0]][material]) }}">
+                        </div>
+                        {% endfor %}
+                    </div>
+                </li>
+            </ul>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="tab-pane mt-2" id="trophy" role="tabpanel" aria-labelledby="trophy-tab">
+
+        <ul class="nav nav-tabs" id="myTab2" role="tablist">
+            <li class="nav-item mr-1" role="presentation">
+                <button class="nav-link btn-outline-primary active" id="components-tab" data-toggle="tab" data-target="#components" type="button" role="tab" aria-controls="components" aria-selected="true"  _="on click call me.blur()">Components</button>
+            </li>
+            <li class="nav-item mr-1" role="presentation">
+                <button class="nav-link btn-outline-secondary" id="combat-tab" data-toggle="tab" data-target="#combat" type="button" role="tab" aria-controls="combat" aria-selected="true"  _="on click call me.blur()">Combat</button>
+            </li>
+            <li class="nav-item mr-1" role="presentation">
+                <button class="nav-link btn-outline-info" id="crafting-tab" data-toggle="tab" data-target="#crafting" type="button" role="tab" aria-controls="crafting" aria-selected="false" _="on click call me.blur()">Crafting</button>
+            </li>
+            <li class="nav-item mr-1" role="presentation">
+                <button class="nav-link btn-outline-success" id="gathering-tab" data-toggle="tab" data-target="#gathering" type="button" role="tab" aria-controls="gathering" aria-selected="false" _="on click call me.blur()">Gathering</button>
+            </li>
+        </ul>
+        
+        
+        <div class="tab-content">
+            <div class="tab-pane mt-2 active" id="components" role="tabpanel" aria-labelledby="components-tab">
+
+                <div>
+                    <a id="component_toggle" class="btn btn-outline-primary custom_toggle" _="on click call me.blur() if my.innerText == 'Show All' remove .collapsed from .collapse-components-trophy set .collapse-components-trophy's @aria-expanded to 'true' add .show to .collapseallcomponentsTrophy set my.innerText to 'Hide All' else add .collapsed to .collapse-components-trophy remove .show from .collapseallcomponentsTrophy set .collapse-components-trophy's @aria-expanded to 'false' set my.innerText to 'Show All'">Show All</a>
+                </div>
+                <div class='container'>
+                    {% for i in range(0, trophy_order|length) %}
+                    {% if 'components' in trophy_order[i][0] %}
+                    <div id="collapse_components_trophy" href="#homeSubmenu_components_trophy_{{i}}" data-toggle="collapse" aria-expanded="false" class="btn btn-outline-secondary dropdown-toggle collapse-main collapsed collapse-components-trophy"
+                        _="on click if #component_toggle's innerText == 'Show All' and .collapse-components-trophy's @aria-expanded is 'false' set #component_toggle's innerText to 'Hide All' else set #component_toggle's innerText to 'Show All'">
+                    {{trophy_order[i][0].title() | replace("_"," ")}}</div>
+                    <ul class="collapse list-unstyled collapseallcomponentsTrophy" id="homeSubmenu_components_trophy_{{i}}">
+                        <li id="listspace">
+                            <div class="form-row justify-content-center">
+                                {% for material in trophy_order[i][1:] %}
+                                <div class="col-auto">
+                                    {% if material in ['minor', 'basic', 'major'] %}
+                                    {% set trophy = material ~ '_' ~ trophy_order[i][0] ~ '_trophy' %}
+                                    <label for={{material}}><a href="/newworld/material/{{trophy}}" target="#"><u>{{material.title() | replace("_"," ")}}</u></a></label>
+                                    <input required type="number" step="0.01" id="{{trophy}}" name="{{trophy}}" class="form-control price" min="0" value="{{ '%.2f'|format(price_list[trophy_order[i][0]][trophy]) }}">
+                                    {% else %}
+                                    <label for={{material}}><a href="/newworld/material/{{material}}" target="#"><u>{{material.title() | replace("_"," ")}}</u></a></label>
+                                    <input required type="number" step="0.01" id="{{material}}" name="{{material}}" class="form-control price" min="0" value="{{ '%.2f'|format(price_list[trophy_order[i][0]][material]) }}">
+                                    {% endif %}
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </li>
+                    </ul>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+
+            </div>
+            
+            <div class="tab-pane mt-2" id="combat" role="tabpanel" aria-labelledby="combat-tab">
+
+                <div>
+                    <a class="btn btn-outline-secondary custom_toggle" _="on click call me.blur() if my.innerText == 'Show All' remove .collapsed from .collapse-combat-trophy set .collapse-combat-trophy's @aria-expanded to 'true' add .show to .collapseallcombatTrophy set my.innerText to 'Hide All' else add .collapsed to .collapse-combat-trophy remove .show from .collapseallcombatTrophy set .collapse-combat-trophy's @aria-expanded to 'false' set my.innerText to 'Show All'">Show All</a>
+                </div>
+                <div class='container'>
+                    {% for i in range(0, trophy_order|length) %}
+                    {% if 'combat' in trophy_order[i][0] %}
+                    <div id="collapse_combat_trophy" href="#homeSubmenu_combat_trophy_{{i}}" data-toggle="collapse" aria-expanded="false" class="btn btn-outline-secondary dropdown-toggle collapse-main collapsed collapse-combat-trophy">{{trophy_order[i][0].title() | replace("_"," ")}}</div>
+                    <ul class="collapse list-unstyled collapseallcombatTrophy" id="homeSubmenu_combat_trophy_{{i}}">
+                        <li id="listspace">
+                            <div class="form-row justify-content-center">
+                                {% for material in trophy_order[i][1:] %}
+                                <div class="col-auto">
+                                    {% if material in ['minor', 'basic', 'major'] %}
+                                    {% set trophy = material ~ '_' ~ trophy_order[i][0] ~ '_trophy' %}
+                                    <label for={{material}}><a href="/newworld/material/{{trophy}}" target="#"><u>{{material.title() | replace("_"," ")}}</u></a></label>
+                                    <input required type="number" step="0.01" id="{{trophy}}" name="{{trophy}}" class="form-control price" min="0" value="{{ '%.2f'|format(price_list[trophy_order[i][0]][trophy]) }}">
+                                    {% else %}
+                                    <label for={{material}}><a href="/newworld/material/{{material}}" target="#"><u>{{material.title() | replace("_"," ")}}</u></a></label>
+                                    <input required type="number" step="0.01" id="{{material}}" name="{{material}}" class="form-control price" min="0" value="{{ '%.2f'|format(price_list[trophy_order[i][0]][material]) }}">
+                                    {% endif %}
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </li>
+                    </ul>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+
+            </div>
+        
+            <div class="tab-pane mt-2" id="crafting" role="tabpanel" aria-labelledby="crafting-tab">
+                <div>
+                    <a class="btn btn-outline-info custom_toggle" _="on click call me.blur() if my.innerText == 'Show All' remove .collapsed from .collapse-crafting-trophy set .collapse-crafting-trophy's @aria-expanded to 'true' add .show to .collapseallcraftingTrophy set my.innerText to 'Hide All' else add .collapsed to .collapse-crafting-trophy remove .show from .collapseallcraftingTrophy set .collapse-crafting-trophy's @aria-expanded to 'false' set my.innerText to 'Show All'">Show All</a>
+                </div>
+                <div class='container'>
+                    {% for i in range(0, trophy_order|length) %}
+                    {% if 'crafting' in trophy_order[i][0] %}
+                    <div id="collapse_crafting_trophy" href="#homeSubmenu_crafting_trophy_{{i}}" data-toggle="collapse" aria-expanded="false" class="btn btn-outline-secondary dropdown-toggle collapse-main collapsed collapse-combat-trophy">{{trophy_order[i][0].title() | replace("_"," ")}}</div>
+                    <ul class="collapse list-unstyled collapseallcraftingTrophy" id="homeSubmenu_crafting_trophy_{{i}}">
+                        <li id="listspace">
+                            <div class="form-row justify-content-center">
+                                {% for material in trophy_order[i][1:] %}
+                                <div class="col-auto">
+                                    {% if material in ['minor', 'basic', 'major'] %}
+                                    {% set trophy = material ~ '_' ~ trophy_order[i][0] ~ '_trophy' %}
+                                    <label for={{material}}><a href="/newworld/material/{{trophy}}" target="#"><u>{{material.title() | replace("_"," ")}}</u></a></label>
+                                    <input required type="number" step="0.01" id="{{trophy}}" name="{{trophy}}" class="form-control price" min="0" value="{{ '%.2f'|format(price_list[trophy_order[i][0]][trophy]) }}">
+                                    {% else %}
+                                    <label for={{material}}><a href="/newworld/material/{{material}}" target="#"><u>{{material.title() | replace("_"," ")}}</u></a></label>
+                                    <input required type="number" step="0.01" id="{{material}}" name="{{material}}" class="form-control price" min="0" value="{{ '%.2f'|format(price_list[trophy_order[i][0]][material]) }}">
+                                    {% endif %}
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </li>
+                    </ul>
+                    {% endif %}
+                    {% endfor %}
+                </div>
+            </div>
+        
+            <div class="tab-pane mt-2" id="gathering" role="tabpanel" aria-labelledby="gathering-tab">
+                <div class="tab-pane mt-2" id="gathering" role="tabpanel" aria-labelledby="gathering-tab">
+                    <div>
+                        <a class="btn btn-outline-success custom_toggle" _="on click call me.blur() if my.innerText == 'Show All' remove .collapsed from .collapse-gathering-trophy set .collapse-gathering-trophy's @aria-expanded to 'true' add .show to .collapseallgatheringTrophy set my.innerText to 'Hide All' else add .collapsed to .collapse-gathering-trophy remove .show from .collapseallgatheringTrophy set .collapse-gathering-trophy's @aria-expanded to 'false' set my.innerText to 'Show All'">Show All</a>
+                    </div>
+                    <div class='container'>
+                        {% for i in range(0, trophy_order|length) %}
+                        {% if 'gathering' in trophy_order[i][0] %}
+                        <div id="collapse_gathering_trophy" href="#homeSubmenu_gathering_trophy_{{i}}" data-toggle="collapse" aria-expanded="false" class="btn btn-outline-secondary dropdown-toggle collapse-main collapsed collapse-combat-trophy">{{trophy_order[i][0].title() | replace("_"," ")}}</div>
+                        <ul class="collapse list-unstyled collapseallgatheringTrophy" id="homeSubmenu_gathering_trophy_{{i}}">
+                            <li id="listspace">
+                                <div class="form-row justify-content-center">
+                                    {% for material in trophy_order[i][1:] %}
+                                    <div class="col-auto">
+                                        {% if material in ['minor', 'basic', 'major'] %}
+                                        {% set trophy = material ~ '_' ~ trophy_order[i][0] ~ '_trophy' %}
+                                        <label for={{material}}><a href="/newworld/material/{{trophy}}" target="#"><u>{{material.title() | replace("_"," ")}}</u></a></label>
+                                        <input required type="number" step="0.01" id="{{trophy}}" name="{{trophy}}" class="form-control price" min="0" value="{{ '%.2f'|format(price_list[trophy_order[i][0]][trophy]) }}">
+                                        {% else %}
+                                        <label for={{material}}><a href="/newworld/material/{{material}}" target="#"><u>{{material.title() | replace("_"," ")}}</u></a></label>
+                                        <input required type="number" step="0.01" id="{{material}}" name="{{material}}" class="form-control price" min="0" value="{{ '%.2f'|format(price_list[trophy_order[i][0]][material]) }}">
+                                        {% endif %}
+                                    </div>
+                                    {% endfor %}
+                                </div>
+                            </li>
+                        </ul>
+                        {% endif %}
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        
+    </div>
+
 </div>

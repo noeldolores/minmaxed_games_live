@@ -1,8 +1,8 @@
 {% extends "newworld/base.html" %} 
 
 {% block head %}
-<title>Taxes & Fees - NW Calculators</title>
-<link id="style" rel="stylesheet" href="{{ url_for('static', filename='newworld/css/taxes_and_fees.css') }}"/>
+<title>Taxes & Bonuses - NW Calculators</title>
+<link id="style" rel="stylesheet" href="{{ url_for('static', filename='newworld/css/taxes_and_bonuses.css') }}"/>
 {% endblock %}
 
 {% block content %}
@@ -11,7 +11,7 @@
     <br><br>
     <div class="card bg-secondary border-info">
         <div class="card-header button btn-outline-info" id="headingOne" type="button" data-toggle="collapse" data-target="#collapseOne">
-            <h1>Taxes & Fees</h1>
+            <h1>Taxes & Bonuses</h1>
         </div>
 
         <div id="collapseOne" class="collapse">
@@ -32,9 +32,9 @@
 </div>
 
 <div class="taxBoxes container">
-    <form hx-post="/newworld/taxes_and_fees_hx" hx-target="#taxes_hx">
+    <form hx-post="/newworld/taxes_and_bonuses_hx" hx-target="#taxes_hx">
         <div id="taxes_hx">
-            {% include "newworld/taxes_and_fees_hx.html" %}
+            {% include "newworld/taxes_and_bonuses_hx.html" %}
         </div>
         <div>
             <button id="saveTaxes" class="btn btn-outline-light saveTaxes" type="submit" name="save" _="on click call #saveTaxes.blur() add .btn-success remove .btn-outline-light then wait 0.75 seconds then add .btn-outline-light remove .btn-success">Save</button>

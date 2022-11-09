@@ -1,23 +1,23 @@
 {% extends "newworld/base.html" %} 
 
 {% block head %}
-<title>profit_calculator - NW Calculators</title>
-<link rel="stylesheet" href="{{ url_for('static', filename='newworld/css/profit_calculator.css') }}"/>
+<title>Market Calculator - NW Calculators</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='newworld/css/market_calculator.css') }}"/>
 {% endblock %}
 
 {% block content%}
 <div class="container col-xl-5 col-lg-6 col-md-6">
     <br><br>
     <br><br>
-    <div class="card bg-secondary border-warning">
-        <div class="card-header button btn-outline-warning" id="headingOne" type="button" data-toggle="collapse" data-target="#collapseOne">
-            <h1>Profit Calculator</h1>
+    <div class="card bg-secondary border-success">
+        <div class="card-header button btn-outline-success" id="headingOne" type="button" data-toggle="collapse" data-target="#collapseOne">
+            <h1>Market Calculator</h1>
         </div>
 
         <div id="collapseOne" class="collapse">
             <div class="card-body bg-dark">
                 <p1>Simulate Buy and Sell orders to ensure your pricing will result in a profit!</p1><br>
-                <p1>Fill out only the <b style="color:red; font-weight:500;">Purchase</b> inputs to quickly view the minmum selling prices to break even on your investment. 
+                <p1>Fill out only the <b style="color:red; font-weight:400;">Purchase</b> inputs to quickly view the minmum selling prices to break even on your investment. 
                     This info can also be found under the <b style="color:orange;">Profit</b> header when all inputs are entered.</p1><br>
                 <p1>Click on <u class="cursor-click" data-toggle="collapse" data-target="#collapse_price">underlined</u> text on the table to view extra info.</p1><br>
             </div>
@@ -28,7 +28,7 @@
 </div>
 
 <div class="container profit-input">
-    <form hx-post="/newworld/profit_calculator_hx" hx-target="#profit_container">
+    <form hx-post="/newworld/market_calculator_hx" hx-target="#profit_container">
         <div class="d-flex justify-content-center">
             <div class="row">
                 <div class="col-auto">
@@ -47,7 +47,7 @@
         </div>
     </form>
 
-    <div id="profit_container" _="init fetch /newworld/profit_calculator_hx put the result into #profit_container"></div>
+    <div id="profit_container" _="init fetch /newworld/market_calculator_hx put the result into #profit_container"></div>
 </div>
 
 <br>

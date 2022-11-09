@@ -1,0 +1,7 @@
+Air Mote
+Death Mote
+Earth Mote
+Fire Mote
+Life Mote
+Soul Mote
+Water Mote

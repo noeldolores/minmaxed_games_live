@@ -13,7 +13,7 @@
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                     <a class="nav-link text-dark" href="/newworld/skills"><span class="nav_a">Trade Skills</span></a>
                     <a class="nav-link text-dark" href="/newworld/gearsets"><span class="nav_a">Gear Sets</span></a>
-                    <a class="nav-link text-dark" href="/newworld/taxes_and_fees"><span class="nav_a">Taxes & Fees</span></a>
+                    <a class="nav-link text-dark" href="/newworld/taxes_and_bonuses"><span class="nav_a">Taxes & Bonuses</span></a>
                 </div>
             </li>
             <li class="nav-item dropdown">
@@ -22,7 +22,7 @@
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                     <a class="nav-link text-dark" href="/newworld/tradepost">Trade Post</a>
-                    <a class="nav-link text-dark" href="/newworld/server_api">API Select</a>
+                    <a class="nav-link text-dark" href="/newworld/server_api">Server Select</a>
                 </div>
             </li>
             <li class="nav-item dropdown mr-2">
@@ -30,11 +30,11 @@
                     Tools
                 </a>
                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                    <a class="nav-link text-dark pr-3" href="/newworld/refining">Refining Routes</a>
                     <a class="nav-link text-dark pr-3" href="/newworld/trade_skills_refining">Refining Skills</a>
-                    <a class="nav-link text-dark pr-3" href="/newworld/profit_calculator">Profit Calculator</a>
+                    <a class="nav-link text-dark pr-3" href="/newworld/refining">Refining Table</a>
+                    <a class="nav-link text-dark pr-3" href="/newworld/crafting/trophy">Trophy Table</a>
+                    <a class="nav-link text-dark pr-3" href="/newworld/market_calculator">Market Calculator</a>
                 </div>
-                
             </li>
             
             {% if 'server_data' in session %}
@@ -50,12 +50,10 @@
         </div>
         
         <form class="form-inline my-2 my-lg-0" method="GET" id="search">
-           
-
             <input required class="form-control mr-sm-2 datafield" type="text" name="search" aria-label="Search" list="materialList" autocomplete="off" onkeydown="return /[a-z]/i.test(event.key)" placeholder="Material Search..."
                 hx-get="/newworld/datalist" 
                 hx-trigger="keyup changed delay:500ms, search" 
-                hx-target="#materialList" >
+                hx-target="#materialList">
             
             <datalist id="materialList"></datalist>
             <button class="btn btn-outline-light my-2 my-sm-0" type="submit">Search</button>

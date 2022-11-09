@@ -51,8 +51,28 @@ p1 {
   color: white;
 }
 
+h1 {
+  text-align: center;
+  color: white;
+}
+
+#collapseOne {
+  text-align: center; 
+}
+
+.price{
+  text-align: center; 
+}
+
+label {
+  margin-top: 4px;
+  margin-bottom: 0px;
+  color: white;
+}
+
 #listspace {
-  margin-top: 1.25rem;
+  margin-top: 10px;
+  margin-bottom: -10px;
   width: 100%;
   text-align: center;
 }
@@ -61,97 +81,44 @@ p1 {
   margin-top: 0.25rem;
   width: 100%;
   color: white;
+  border-bottom-left-radius: 0 !important;
+  border-bottom-right-radius: 0 !important;
 }
 
-.skillLevel {
-  margin-top: 2px;
-}
-
-.header {
-  font-weight: bold;
-  color: white;
-}
-
-.noHover{
-  pointer-events: none;
-}
-
-h1 {
-  color: white;
+#tradepost_hx {
   text-align: center;
 }
 
-h3 {
-  color: white;
+.btn[aria-expanded="true"]{
+  background-color: rgb(10, 10, 10);
+}
+
+.btn[aria-expanded="false"]{
+  background-color: rgb(50, 50, 50);
+}
+
+.btn-outline-secondary:hover {
+  background-color: rgb(20, 20, 20);
+}
+
+.btn-outline-secondary:not(:disabled):not(:disabled):active {
+  background-color: rgb(10, 10, 10);
+} 
+
+.custom_toggle {
+  width: 100%;
+}
+
+.tradePrices{
   text-align: center;
 }
 
-#collapseOne, #collapseTwo{
-  text-align: center;
-}
-
-tr {
-  text-align: center;
-}
-
-.material-box{
-  text-align: center;
-}
-
-/* Chrome, Safari, Edge, Opera */
-input::-webkit-outer-spin-button,
-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-/* Firefox */
-input[type=number] {
-  -moz-appearance: textfield;
-}
-
-.htmx-settling tr.load td {
-  background: rgb(145, 173, 187);
-}
-tr td {
-  transition: all 0.75s;
-}
-
-#quant_field {
-  text-align: center;
-}
-
-.craft_bonus{
-  position: absolute;
-  color:green;
-  left: 195px;
-  top: 20%;
-  font-weight: 650;
-  font-size: small;
-}
-
-span {
-  display: inline-flex;
-  align-items: center;
-}
-
-.nav-material {
-  top: 56px;
-  height: fit-content;
-}
-
-.hover-enabled:hover {
-  box-shadow: 20px 20px 50px 10px rgb(159, 159, 159) inset;
-}
-
-.nav-tabs > li > a {
-  color: #ffffff;
-}
+.savePrices {
+  margin-top: 2rem;
+  min-width: 150px;
+  transition: all 0.35s;
+}  
 
 .cursor-click {
   cursor: pointer;
-}
-
-#material_price {
-  margin-bottom: -20px;
 }

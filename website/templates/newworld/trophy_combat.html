@@ -1,0 +1,190 @@
+<div>
+    <button id="combat_toggle" class="btn btn-outline-danger custom_toggle" 
+        _="on click call me.blur() 
+            if my.innerText == 'Show All' 
+                remove .collapsed from .collapse-combat add .show to .collapseallCombat set .collapse-combat's @aria-expanded to 'true' set my.innerText to 'Hide All' 
+            else add .collapsed to .collapse-combat remove .show from .collapseallCombat set .collapse-combat's @aria-expanded to 'false' set my.innerText to 'Show All'">
+    Show All
+    </button>
+</div>
+
+<div class="container active list-unstyled components">
+    {% for i in range(0, template_order|length) %}
+    {% if template_order[i][0] != "components" %}
+    {% if 'combat' in template_order[i][0] %}
+    {% set trophy = data[template_order[i][0]] %}
+    <div id="collapse_combat" href="#homeSubmenu_combat_{{i}}" data-toggle="collapse" aria-expanded="false" class="btn btn-outline-secondary dropdown-toggle collapse-main collapse-combat">{{template_order[i][0].title()|replace("_"," ")}}</div>
+    <div class="collapse list-unstyled collapseallCombat collapsed" id="homeSubmenu_combat_{{i}}">
+        <table class="table table-striped table-dark table-hover">
+            <thead>
+            <tr>
+                <th scope="col" class="table-dark" style="width: 20%;">Trophy</th>
+                <th scope="col" class="table-dark" style="width: 20%; color:orange;">Cheapest</th>
+                <th scope="col" class="table-dark" style="width: 20%; color:red; font-weight:500;">Market Price</th>
+                <th scope="col" class="table-dark" style="width: 20%; color:red; font-weight:500;">Craft Cost</th>
+                <th scope="col" class="table-dark" style="width: 20%; color:green;">TP Flip</th>
+            </tr>
+            </thead>
+            <tbody>
+                <tr data-toggle="collapse" data-target="#collapse_combat_minor_{{i}}">
+                    <td scope="row"><a href="/newworld/material/minor_{{template_order[i][0]}}_trophy" target="#" style="color: #07c02f;"><u>Minor</u></a></td>
+                    <td class="cursor-click">{{trophy['minor']['trophy']['method'].title()|replace("_"," ")}}</td>
+                    <td class="cursor-click">{{trophy['minor']['market_price']}}</td>
+                    <td class="cursor-click">{{trophy['minor']['craft_cost']}}</td>
+                    <td class="cursor-click">{{trophy['minor']['profit']}}</td>
+                </tr>
+                <tr data-toggle="collapse" data-target="#collapse_combat_basic_{{i}}">
+                    <td scope="row"><a href="/newworld/material/basic_{{template_order[i][0]}}_trophy" target="#" style="color: #00cbe9;"><u>Basic</u></a></td>
+                    <td class="cursor-click">{{trophy['minor']['trophy']['method'].title()|replace("_"," ")}}</td>
+                    <td class="cursor-click">{{trophy['basic']['market_price']}}</td>
+                    <td class="cursor-click">{{trophy['basic']['craft_cost']}}</td>
+                    <td class="cursor-click">{{trophy['basic']['profit']}}</td>
+                </tr>
+                <tr data-toggle="collapse" data-target="#collapse_combat_major_{{i}}">
+                    <td scope="row"><a href="/newworld/material/major_{{template_order[i][0]}}_trophy" target="#" style="color: #ff16f7;"><u>Major</u></a></td>
+                    <td class="cursor-click">{{trophy['minor']['trophy']['method'].title()|replace("_"," ")}}</td>
+                    <td class="cursor-click">{{trophy['major']['market_price']}}</td>
+                    <td class="cursor-click">{{trophy['major']['craft_cost']}}</td>
+                    <td class="cursor-click">{{trophy['major']['profit']}}</td>
+                </tr>
+            </tbody>
+        </table>
+        
+        <div id="collapse_combat_minor_{{i}}" class="collapse">
+            <table class="table table-dark table-hover">
+                <thead>
+                    <tr style="background: #07c02f;" data-toggle="collapse" data-target="#collapse_combat_minor_{{i}}" class="cursor-click">
+                        <th scope="col" style="width:18%;"><span style="color:black">Recipe</span></th>
+                        <th style="width:10%;"><span style="color:black">Cost</span></th>
+                        <th><span style="color:black">Ingredients</span></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+    
+                <tbody>
+                    <tr>
+                        <td>Lumber x{{trophy['minor']['detail']['lumber']['quantity']}}</td>
+                        <td>{{trophy['minor']['detail']['lumber']['cost']}}</td>
+                        {% for key, value in trophy['minor']['detail']['lumber']['ingredients'].items() %}
+                        <td>{{key.title()|replace("_"," ")}} x{{value}}</td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <td>Steel Ingot x{{trophy['minor']['detail']['steel_ingot']['quantity']}}</td>
+                        <td>{{trophy['minor']['detail']['steel_ingot']['cost']}}</td>
+                        {% for key, value in trophy['minor']['detail']['steel_ingot']['ingredients'].items() %}
+                        <td>{{key.title()|replace("_"," ")}} x{{value}}</td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        {% if template_order[i][0] != 'loot_luck'%}
+                        <td>{{trophy['minor']['detail']['component']['item'].title()|replace("_"," ")}} Mote x{{trophy['minor']['detail']['component']['quantity']}}</td>
+                        {% else %}
+                        <td>{{trophy['minor']['detail']['component']['item'].title()|replace("_"," ")}}</td>
+                        {% endif %}
+                        <td>{{trophy['minor']['detail']['component']['cost']}}</td>
+                    </tr>
+                    <tr>
+                        <td>{{trophy['minor']['detail']['stain']['item'].title()|replace("_"," ")}}</td>
+                        <td>{{trophy['minor']['detail']['stain']['cost']}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="collapse_combat_basic_{{i}}" class="collapse">
+            <table class="table table-dark table-hover">
+                <thead>
+                    <tr style="background: #00cbe9;" data-toggle="collapse" data-target="#collapse_combat_basic_{{i}}" class="cursor-click">
+                        <th scope="col" style="width:18%;"><span style="color:black">Recipe</span></th>
+                        <th style="width:10%;"><span style="color:black">Cost</span></th>
+                        <th><span style="color:black">Ingredients</span></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+    
+                <tbody>
+                    <tr>
+                        <td>Wyrdwood Planks x{{trophy['basic']['detail']['wyrdwood_planks']['quantity']}}</td>
+                        <td>{{trophy['basic']['detail']['wyrdwood_planks']['cost']}}</td>
+                        {% for key, value in trophy['basic']['detail']['wyrdwood_planks']['ingredients'].items() %}
+                        <td>{{key.title()|replace("_"," ")}} x{{value}}</td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <td>Starmetal Ingot x{{trophy['basic']['detail']['starmetal_ingot']['quantity']}}</td>
+                        <td>{{trophy['basic']['detail']['starmetal_ingot']['cost']}}</td>
+                        {% for key, value in trophy['basic']['detail']['starmetal_ingot']['ingredients'].items() %}
+                        <td>{{key.title()|replace("_"," ")}} x{{value}}</td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <td>{{trophy['basic']['detail']['component']['item'].title()|replace("_"," ")}}</td>
+                        <td>{{trophy['basic']['detail']['component']['cost']}}</td>
+                    </tr>
+                    <tr>
+                        <td>{{trophy['basic']['detail']['stain']['item'].title()|replace("_"," ")}}</td>
+                        <td>{{trophy['basic']['detail']['stain']['cost']}}</td>
+                    </tr>
+                    <tr>
+                        <td>Minor Trophy</td>
+                        <td>{{trophy['basic']['sub_trophy']['cost']}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div id="collapse_combat_major_{{i}}" class="collapse">
+            <table class="table table-dark table-hover">
+                <thead>
+                    <tr style="background: #ff16f7;" data-toggle="collapse" data-target="#collapse_combat_major_{{i}}" class="cursor-click">
+                        <th scope="col" style="width:18%;"><span style="color:black">Recipe</span></th>
+                        <th style="width:10%;"><span style="color:black">Cost</span></th>
+                        <th><span style="color:black">Ingredients</span></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                </thead>
+    
+                <tbody>
+                    <tr>
+                        <td>Ironwood Planks x{{trophy['major']['detail']['ironwood_planks']['quantity']}}</td>
+                        <td>{{trophy['major']['detail']['ironwood_planks']['cost']}}</td>
+                        {% for key, value in trophy['major']['detail']['ironwood_planks']['ingredients'].items() %}
+                        <td>{{key.title()|replace("_"," ")}} x{{value}}</td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <td>Orichalcum Ingot x{{trophy['major']['detail']['orichalcum_ingot']['quantity']}}</td>
+                        <td>{{trophy['major']['detail']['orichalcum_ingot']['cost']}}</td>
+                        {% for key, value in trophy['major']['detail']['orichalcum_ingot']['ingredients'].items() %}
+                        <td>{{key.title()|replace("_"," ")}} x{{value}}</td>
+                        {% endfor %}
+                    </tr>
+                    <tr>
+                        <td>{{trophy['major']['detail']['component']['item'].title()|replace("_"," ")}}</td>
+                        <td>{{trophy['major']['detail']['component']['cost']}}</td>
+                    </tr>
+                    <tr>
+                        <td>{{trophy['major']['detail']['stain']['item'].title()|replace("_"," ")}}</td>
+                        <td>{{trophy['major']['detail']['stain']['cost']}}</td>
+                    </tr>
+                    <tr>
+                        <td>Basic Trophy</td>
+                        <td>{{trophy['major']['sub_trophy']['cost']}}</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </div> 
+    {% endif %}
+    {% endif %}
+    {% endfor %}
+</div>

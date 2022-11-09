@@ -24,7 +24,7 @@
 </div>
 
 <br>
-<h4 class="gearsets-h4" align="center" style="color: green;">Trade Post</h4>
+<h4 class="gearsets-h4" align="center" style="color: green;">Trade Post & Crafting</h4>
 <div class="form-row justify-content-center">
     <div class="col-auto">
         <label for="tax" class="taxes" title="This is now a fixed at 2.5% with Brimstone Sands">Trading Tax %</label>
@@ -33,6 +33,10 @@
     <div class="col-auto">
         <label for="discount" class="taxes">Standing Discount %</label>
         <input required type="number" id="discount" name="discount" class="form-control tax-rate" min="0" step="0.01" value={{taxes_fees['trade_post']['discount']}}>
+    </div>
+    <div class="col-auto">
+        <label for="discount" class="taxes">Station Discount %</label>
+        <input required type="number" id="station" name="station" class="form-control tax-rate" min="0" step="0.01" value={{taxes_fees['crafting']['station']}}>
     </div>
     <div class="col-auto">
         <label for="duration" class="taxes">Listing Duration</label>

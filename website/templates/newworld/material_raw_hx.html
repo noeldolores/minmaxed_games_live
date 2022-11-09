@@ -1,6 +1,6 @@
 <div class="accordion" id="accordion">
 
-    <table class="table table-secondary table-hover" id="ingredients"  _="on htmx:load call #quant_field.blur()">
+    <table class="table table-dark table-striped table-hover" id="ingredients"  _="on htmx:load call #quant_field.blur()">
         <thead>
             <tr style="background:#343a40; color:white;">
                 <th>Target</th>
@@ -14,20 +14,20 @@
         <tbody>
             {% for target,value in data.items() %}
             <tr id="values_have" data-toggle="collapse" data-target="#collapse_{{target}}" class="cursor-click">
-                <td scope="row" class="align-middle" style="color:black; width:32%;"><a href="/newworld/material/{{target}}" style="color:black"><u>{{ target.title()|replace("_"," ") }}</u></a></td>
+                <td scope="row" class="align-middle" style="width:32%;"><a href="/newworld/material/{{target}}"><u>{{ target.title()|replace("_"," ") }}</u></a></td>
 
                 {% if value['sell']['quantity'] == 0 %}
-                <td scope="row" class="align-middle" style="color:black; width:17%;">{{ value['craft']['quantity'] }}</td>
-                <td scope="row" class="align-middle" style="color:black; width:17%;">{{ value['sell']['quantity'] }}</td>
-                <td scope="row" class="align-middle" style="color:black; width:17%;">--</td>
-                <td scope="row" class="align-middle" style="color:black; width:17%;">--</td>
+                <td scope="row" class="align-middle" style="width:17%;">{{ value['craft']['quantity'] }}</td>
+                <td scope="row" class="align-middle" style="width:17%;">{{ value['sell']['quantity'] }}</td>
+                <td scope="row" class="align-middle" style="width:17%;">--</td>
+                <td scope="row" class="align-middle" style="width:17%;">--</td>
 
                 {% else %}
 
-                <td scope="row" class="align-middle" style="color:black; width:17%;">{{ value['craft']['quantity'] }}</td>
-                <td scope="row" class="align-middle" style="color:black; width:17%;">{{ value['sell']['quantity'] }}</td>
-                <td scope="row" class="align-middle" style="color:black; width:17%;">{{ '%.2f'|format(value['craft']['final_cost']) }}</td>
-                <td scope="row" class="align-middle" style="color:black; width:17%;">{{ '%.2f'|format(value['sell']['final_profit']) }}</td>
+                <td scope="row" class="align-middle" style="width:17%;">{{ value['craft']['quantity'] }}</td>
+                <td scope="row" class="align-middle" style="width:17%;">{{ value['sell']['quantity'] }}</td>
+                <td scope="row" class="align-middle" style="width:17%;">{{ '%.2f'|format(value['craft']['final_cost']) }}</td>
+                <td scope="row" class="align-middle" style="width:17%;">{{ '%.2f'|format(value['sell']['final_profit']) }}</td>
                 {% endif %}
                 
             </tr>
@@ -37,7 +37,7 @@
 
     {% for target,value in data.items() %}
     <div id="collapse_{{target}}" class="collapse" data-parent="#accordion">
-        <table class="table table-striped table-secondary">
+        <table class="table table-striped table-dark">
             <thead>
                 <tr class="col-auto cursor-click" style="background: #a17277;" data-toggle="collapse" data-target="#collapse_{{target}}">
                     <td scope="row" class="align-middle" style="color:black; width:25%;"><b>Base Cost</b></td>

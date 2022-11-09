@@ -1,5 +1,7 @@
 #!/usr/bin/python3
 import math
+from . import player_data
+import copy
 
 
 
@@ -286,7 +288,7 @@ def tp_margin(tp_cost, lowest_cost):
     if lowest_cost == 0:
         return 0
 
-    return round((tp_cost- lowest_cost) / lowest_cost * 100, 2)
+    return round((tp_cost - lowest_cost) / lowest_cost * 100, 2)
 
 
 def elemental_lodestone_calcs(prices):
@@ -365,7 +367,7 @@ def cheapest_tp_cost_route_to_refine_each_tier(price_list, refining_dict_full, t
             _price_data = cost_comparison(craft_cost)
             tp_flip = financials[discipline][material][_price_data[0]]['sell_profit']
             tp_margin= financials[discipline][material][_price_data[0]]['profit_margin']
-                
+
             refining_dict_cheapest[discipline][material] = {
                 "source": _price_data[0],
                 "price" : round(_price_data[1], 2),
@@ -686,6 +688,13 @@ def apply_trade_post_tax_buy(cost, taxes):
     return final_tax
 
 
+def final_market_buy_cost(cost, taxes):
+    if cost == 0:
+        return 0
+    tax = apply_trade_post_tax_buy(cost, taxes)
+    return cost + tax
+
+
 def determine_break_even(purchase_price, purchase_quantity, taxes):
     base_purchase = purchase_price * purchase_quantity
     purchase_tax = apply_trade_post_tax_buy(base_purchase, taxes)
@@ -747,7 +756,7 @@ def determine_break_even(purchase_price, purchase_quantity, taxes):
     }
     
     return data
-
+    
 
 def init_refining_cost_table():
     _refining_dict = {}
@@ -935,3 +944,385 @@ def determine_tier(material):
                     if material in value:
                         return 0
     return None
+
+
+def determine_refining_route_given_material(discipline, target, quantity, material, skill_level, gear_set, price_list, taxes_fees):
+    _data, _ = ingredients_needed_to_refine(discipline, target, quantity, skill_level, gear_set, price_list, taxes_fees)
+    
+    for i in range(len(_data['ingredients'])):
+        check = _data['ingredients'][i]
+        for ingredient in check.keys():
+            if ingredient == material:
+                if type(check[ingredient]) is int:
+                    refine_cost = _data['financial'][i]['craft']['final_cost']
+                    ingredients = {
+                        'cost': round(refine_cost,2),
+                        'ingredients': {}
+                    }
+                    for item, quant in check.items():
+                        if type(quant) is int:
+                            ingredients['ingredients'][item] = quant
+                    return ingredients
+    if target == material:
+        final_price = final_market_buy_cost(price_list[discipline][target] * quantity, taxes_fees)
+        ingredients = {
+            'cost': round(final_price,2),
+            'ingredients': {
+                target: quantity
+            }
+            
+        }
+        return ingredients
+    return None
+
+
+def calculate_trophy_profitability(cheapest_route, price_list, taxes_fees, skill_level, gear_set):
+    weavers_discount = taxes_fees['territory']['weavers_fen']
+    weavers = 1
+    if weavers_discount:
+        weavers = 0.9
+    total_discount = (taxes_fees['crafting']['station'] + taxes_fees['trade_post']['discount']) * weavers / 100
+    
+    station_fee = {
+        'minor': 0.5 * total_discount,
+        'basic': 7.48 * total_discount,
+        'major': 7.48 * total_discount
+    }
+
+    mote_quantity = 25
+    wood_quantity = 25
+    metals_quantity = 20
+    
+    lumber_data = cheapest_route['woodworking']['lumber']
+    lumber_source = determine_refining_route_given_material('woodworking', 'lumber', wood_quantity, lumber_data['source'], skill_level['woodworking'], gear_set['woodworking'], price_list, taxes_fees)
+    
+    steel_ingot_data = cheapest_route['smelting']['steel_ingot']
+    steel_ingot_source = determine_refining_route_given_material('smelting', 'steel_ingot', metals_quantity, steel_ingot_data['source'], skill_level['smelting'], gear_set['smelting'], price_list, taxes_fees)
+    
+    wyrdwood_planks_data = cheapest_route['woodworking']['wyrdwood_planks']
+    wyrdwood_planks_source = determine_refining_route_given_material('woodworking', 'wyrdwood_planks', wood_quantity, wyrdwood_planks_data['source'], skill_level['woodworking'], gear_set['woodworking'], price_list, taxes_fees)
+    
+    starmetal_ingot_data = cheapest_route['smelting']['starmetal_ingot']
+    starmetal_ingot_source = determine_refining_route_given_material('smelting', 'starmetal_ingot', metals_quantity, starmetal_ingot_data['source'], skill_level['smelting'], gear_set['smelting'], price_list, taxes_fees)
+    
+    ironwood_planks_data = cheapest_route['woodworking']['ironwood_planks']
+    ironwood_planks_source = determine_refining_route_given_material('woodworking', 'ironwood_planks', wood_quantity, ironwood_planks_data['source'], skill_level['woodworking'], gear_set['woodworking'], price_list, taxes_fees)
+    
+    orichalcum_ingot_data = cheapest_route['smelting']['orichalcum_ingot']
+    orichalcum_ingot_source = determine_refining_route_given_material('smelting', 'orichalcum_ingot', metals_quantity, orichalcum_ingot_data['source'], skill_level['smelting'], gear_set['smelting'], price_list, taxes_fees)
+    
+    motes = {
+        'arcana_crafting': {
+            'item' : 'earth',
+            'quantity': mote_quantity,
+            'cost' : round(final_market_buy_cost(price_list['components']['earth_mote'] * mote_quantity, taxes_fees),2)
+        },
+        'weaponsmithing_crafting': {
+            'item' : 'fire',
+            'quantity': mote_quantity,
+            'cost' : round(final_market_buy_cost(price_list['components']['fire_mote'] * mote_quantity, taxes_fees),2)
+        },
+        'cooking_crafting': {
+            'item' : 'water',
+            'quantity': mote_quantity,
+            'cost' : round(final_market_buy_cost(price_list['components']['water_mote'] * mote_quantity, taxes_fees),2)
+        },
+        'engineering_crafting': {
+            'item' : 'air',
+            'quantity': mote_quantity,
+            'cost' : round(final_market_buy_cost(price_list['components']['air_mote'] * mote_quantity, taxes_fees),2)
+        },
+        'armoring_crafting': {
+            'item' : 'fire',
+            'quantity': mote_quantity,
+            'cost' : round(final_market_buy_cost(price_list['components']['fire_mote'] * mote_quantity, taxes_fees),2)
+        },
+        'ancients_combat': {
+            'item' : 'soul',
+            'quantity': mote_quantity,
+            'cost' : round(final_market_buy_cost(price_list['components']['soul_mote'] * mote_quantity, taxes_fees),2)
+        },
+        'angry_earth_combat': {
+            'item' : 'earth',
+            'quantity': mote_quantity,
+            'cost' : round(final_market_buy_cost(price_list['components']['earth_mote'] * mote_quantity, taxes_fees),2)
+        },
+        'wildlife_combat': {
+            'item' : 'fire',
+            'quantity': mote_quantity,
+            'cost' : round(final_market_buy_cost(price_list['components']['fire_mote'] * mote_quantity, taxes_fees),2)
+        },
+        'corrupted_combat': {
+            'item' : 'life',
+            'quantity': mote_quantity,
+            'cost' : round(final_market_buy_cost(price_list['components']['life_mote'] * mote_quantity, taxes_fees),2)
+        },
+        'lost_combat':  {
+            'item' : 'death',
+            'quantity': mote_quantity,
+            'cost' : round(final_market_buy_cost(price_list['components']['death_mote'] * mote_quantity, taxes_fees),2)
+        },
+        'harvesting_gathering': {
+            'item' : 'water',
+            'quantity': mote_quantity,
+            'cost' : round(final_market_buy_cost(price_list['components']['water_mote'] * mote_quantity, taxes_fees),2)
+        },
+        'logging_gathering': {
+            'item' : 'air',
+            'quantity': mote_quantity,
+            'cost' : round(final_market_buy_cost(price_list['components']['air_mote'] * mote_quantity, taxes_fees),2)
+        },
+        'mining_gathering': {
+            'item' : 'earth',
+            'quantity': mote_quantity,
+            'cost' : round(final_market_buy_cost(price_list['components']['earth_mote'] * mote_quantity, taxes_fees),2)
+        },
+        'skinning_gathering': {
+            'item' : 'air',
+            'quantity': mote_quantity,
+            'cost' : round(final_market_buy_cost(price_list['components']['air_mote'] * mote_quantity, taxes_fees),2)
+        },
+        'fishing_gathering': {
+            'item' : 'water',
+            'quantity': mote_quantity,
+            'cost' : round(final_market_buy_cost(price_list['components']['water_mote'] * mote_quantity, taxes_fees),2)
+        }
+    }
+    
+    base_ingredients = {
+        'minor': {
+            'lumber': {
+                'quantity': wood_quantity,
+                'method': lumber_data['source'],
+                'ingredients': lumber_source['ingredients'],
+                'cost': lumber_source['cost']
+            },
+            'steel_ingot': {
+                'quantity': metals_quantity,
+                'method': steel_ingot_data['source'],
+                'ingredients': steel_ingot_source['ingredients'],
+                'cost': steel_ingot_source['cost']
+            },
+            'stain': {
+                'item': 'maple_stain',
+                'quantity': 1,
+                'cost': round(final_market_buy_cost(price_list['components']['maple_stain'], taxes_fees),2)
+            },
+            'component': {},
+            'station_fee': {
+                'cost': station_fee['minor']
+            }
+        },
+        'basic': {
+            'wyrdwood_planks': {
+                'quantity': wood_quantity,
+                'method': wyrdwood_planks_data['source'],
+                'ingredients': wyrdwood_planks_source['ingredients'],
+                'cost': wyrdwood_planks_source['cost']
+            },
+            'starmetal_ingot': {
+                'quantity': metals_quantity,
+                'method': starmetal_ingot_data['source'],
+                'ingredients': starmetal_ingot_source['ingredients'],
+                'cost': starmetal_ingot_source['cost']
+            },
+            'stain': {
+                'item': 'oak_stain',
+                'quantity': 1,
+                'cost': round(final_market_buy_cost(price_list['components']['oak_stain'], taxes_fees),2)
+            },
+            'component': {
+                'item': '',
+                'quantity': 1,
+                'cost': 0
+            },
+            'station_fee': {
+                'cost': station_fee['basic']
+            }
+        },
+        'major': {
+            'ironwood_planks': {
+                'quantity': wood_quantity,
+                'method': ironwood_planks_data['source'],
+                'ingredients': ironwood_planks_source['ingredients'],
+                'cost': ironwood_planks_source['cost']
+            },
+            'orichalcum_ingot': {
+                'quantity': metals_quantity,
+                'method': orichalcum_ingot_data['source'],
+                'ingredients': orichalcum_ingot_source['ingredients'],
+                'cost': orichalcum_ingot_source['cost']
+            },
+            'stain': {
+                'item': 'mahogany_stain',
+                'quantity': 1,
+                'cost': round(final_market_buy_cost(price_list['components']['mahogany_stain'], taxes_fees),2)
+            },
+            'component': {
+                'item': '',
+                'quantity': 1,
+                'cost': 0
+            },
+            'station_fee': {
+                'cost': station_fee['major']
+            }
+        }
+    }
+    
+    trophy_dict = {}
+    trophy_order = player_data.trade_post_trophy_order()
+    for items in trophy_order:
+        category = items[0]
+        if category != "components":
+            category_list = items[1:]
+            trophy_dict[category] = {}
+            for item in category_list:
+                if item in ['minor', 'basic', 'major']:
+                    trophy_dict[category][item] = {}
+    
+    
+    for trophy in trophy_dict.keys():
+        minor_price, basic_price, major_price = 0, 0, 0
+
+        minor_ingr = base_ingredients['minor']
+        # if trophy != "loot_luck":
+        #     minor_price = motes[trophy]['cost']
+        # else:
+        if trophy == "loot_luck":
+            for _t in trophy_order:
+                if _t[0] == trophy:
+                    component_ingr = _t[-3]
+
+        if trophy != "loot_luck":
+            minor_ingr['component'] = motes[trophy]
+        else:
+            minor_ingr['component']['item'] = component_ingr
+            minor_ingr['component']['quantity'] = 1
+            minor_ingr['component']['cost'] = round(final_market_buy_cost(price_list[trophy][component_ingr], taxes_fees),2)
+        
+        for _, tier_details in minor_ingr.items():
+            minor_price += tier_details['cost']
+        
+        market_price = final_market_buy_cost(price_list[trophy][f'minor_{trophy}_trophy'], taxes_fees)
+        final_minor_price = market_price + apply_trade_post_tax_buy(market_price, taxes_fees)
+        sell_tax = determing_trade_post_sell_fee(market_price, taxes_fees)
+        transaction_charge = sell_tax * (taxes_fees['trade_post']['tax'] / 100)
+        sell_value = market_price - sell_tax - transaction_charge
+        profit = sell_value - minor_price
+        
+        trophy_acquire_method = {
+            'method': 'craft',
+            'cost': round(minor_price,2)
+        }
+        if final_minor_price <= minor_price:
+            trophy_acquire_method = {
+            'method': 'buy',
+            'cost': round(final_minor_price,2)
+        }
+            
+        trophy_dict[trophy]['minor'] = {
+            'craft_cost': round(minor_price,2),
+            'sell_value': round(sell_value,2),
+            'market_price': round(final_minor_price,2),
+            'profit': round(profit,2),
+            'detail': copy.deepcopy(minor_ingr),
+            'trophy': trophy_acquire_method
+        }
+
+        basic_ingr = base_ingredients['basic']
+        basic_price += minor_price
+        for _t in trophy_order:
+            if _t[0] == trophy:
+                component_ingr = _t[-2]
+        
+        basic_ingr['component']['item'] = component_ingr
+        basic_ingr['component']['cost'] = round(final_market_buy_cost(price_list[trophy][component_ingr], taxes_fees),2)
+                
+        for _, tier_details in basic_ingr.items():
+            basic_price += tier_details['cost']
+        
+        market_price = final_market_buy_cost(price_list[trophy][f'basic_{trophy}_trophy'], taxes_fees)
+        final_basic_price = market_price + apply_trade_post_tax_buy(market_price, taxes_fees)
+        sell_tax = determing_trade_post_sell_fee(market_price, taxes_fees)
+        transaction_charge = sell_tax * (taxes_fees['trade_post']['tax'] / 100)
+        sell_value = market_price - sell_tax - transaction_charge
+        profit = sell_value - basic_price
+        
+        sub_trophy_acquire = {
+            'method': 'craft',
+            'cost': round(minor_price,2)
+        }
+        if final_minor_price <= minor_price:
+            sub_trophy_acquire = {
+            'method': 'buy',
+            'cost': round(final_minor_price,2)
+        }
+        trophy_acquire = {
+            'method': 'craft',
+            'cost': round(basic_price,2)
+        }
+        if final_basic_price <= basic_price:
+            trophy_acquire = {
+            'method': 'buy',
+            'cost': round(final_basic_price,2)
+        }
+            
+        trophy_dict[trophy]['basic'] = {
+            'craft_cost' : round(basic_price,2),
+            'sell_value': round(sell_value,2),
+            'market_price': round(final_basic_price,2),
+            'profit': round(profit,2),
+            'detail': copy.deepcopy(basic_ingr),
+            'sub_trophy': sub_trophy_acquire,
+            'trophy': trophy_acquire
+        }
+        
+        major_ingr = base_ingredients['major']
+        major_price += basic_price
+        for _t in trophy_order:
+            if _t[0] == trophy:
+                component_ingr = _t[-1]
+                
+        major_ingr['component']['item'] = component_ingr
+        major_ingr['component']['cost'] = round(final_market_buy_cost(price_list[trophy][component_ingr], taxes_fees),2)
+        
+        for _, tier_details in major_ingr.items():
+            major_price += tier_details['cost']
+        
+        market_price = final_market_buy_cost(price_list[trophy][f'major_{trophy}_trophy'], taxes_fees)
+        final_major_price = market_price + apply_trade_post_tax_buy(market_price, taxes_fees)
+        sell_tax = determing_trade_post_sell_fee(market_price, taxes_fees)
+        transaction_charge = sell_tax * (taxes_fees['trade_post']['tax'] / 100)
+        sell_value = market_price - sell_tax - transaction_charge
+        profit = sell_value - major_price
+        
+        sub_trophy_acquire = {
+            'method': 'craft',
+            'cost': round(basic_price,2)
+        }
+        if final_basic_price <= basic_price:
+            sub_trophy_acquire = {
+            'method': 'buy',
+            'cost': round(final_basic_price,2)
+        }
+        trophy_acquire = {
+            'method': 'craft',
+            'cost': round(major_price,2)
+        }
+        if final_major_price <= major_price:
+            trophy_acquire = {
+            'method': 'buy',
+            'cost': round(final_major_price,2)
+        }
+            
+        trophy_dict[trophy]['major'] = {
+            'craft_cost' : round(major_price,2),
+            'sell_value': round(sell_value,2),
+            'market_price': round(final_major_price,2),
+            'profit': round(profit,2),
+            'detail': copy.deepcopy(major_ingr),
+            'sub_trophy': sub_trophy_acquire,
+            'trophy': trophy_acquire
+        }
+
+    return trophy_dict

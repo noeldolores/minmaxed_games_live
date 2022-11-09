@@ -1,0 +1,26 @@
+<ul class="nav nav-tabs" id="myTab" role="tablist">
+    <li class="nav-item mr-1" role="presentation">
+        <button class="nav-link btn-outline-danger active" id="combat-tab" data-toggle="tab" data-target="#combat" type="button" role="tab" aria-controls="combat" aria-selected="true"  _="on click call me.blur()">Combat</button>
+    </li>
+    <li class="nav-item mr-1" role="presentation">
+        <button class="nav-link btn-outline-info" id="crafting-tab" data-toggle="tab" data-target="#crafting" type="button" role="tab" aria-controls="crafting" aria-selected="false" _="on click call me.blur()">Crafting</button>
+    </li>
+    <li class="nav-item mr-1" role="presentation">
+        <button class="nav-link btn-outline-success" id="gathering-tab" data-toggle="tab" data-target="#gathering" type="button" role="tab" aria-controls="gathering" aria-selected="false" _="on click call me.blur()">Gathering</button>
+    </li>
+</ul>
+
+
+<div class="tab-content">
+    <div class="tab-pane mt-2 active" id="combat" role="tabpanel" aria-labelledby="combat-tab">
+        {% include 'newworld/trophy_combat.html' %}
+    </div>
+
+    <div class="tab-pane mt-2" id="crafting" role="tabpanel" aria-labelledby="crafting-tab">
+        {% include 'newworld/trophy_crafting.html' %}
+    </div>
+
+    <div class="tab-pane mt-2" id="gathering" role="tabpanel" aria-labelledby="gathering-tab">
+        {% include 'newworld/trophy_gathering.html' %}
+    </div>
+</div>

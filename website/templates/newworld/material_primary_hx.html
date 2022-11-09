@@ -21,7 +21,7 @@
 </div>
 
 <div id="collapse_value" class="collapse">
-    <table class="table table-striped table-secondary">
+    <table class="table table-striped table-dark">
         <thead>
             <tr id="collapse_{{i}}" class="col-auto cursor-click" style="background: #547d5d;" data-toggle="collapse" data-target="#collapse_value">
                 <td scope="row" class="align-middle" style="color:black; width:33%;"><b>Base Value</b></td>
@@ -42,7 +42,7 @@
 
 <div class="accordion" id="accordion">
 
-    <table class="table table-secondary table-hover" id="ingredients"  _="on htmx:load call #quant_field.blur()">
+    <table class="table table-dark table-striped table-hover" id="ingredients"  _="on htmx:load call #quant_field.blur()">
         <thead>
             <tr style="background: #343a40;">
             {% for key in _data['ingredients'][0].keys() %}
@@ -78,7 +78,7 @@
 
     {% for i in range(0, _data['ingredients']|length) %}
     <div id="collapse_{{i}}" class="collapse" data-parent="#accordion">
-        <table class="table table-striped table-secondary">
+        <table class="table table-striped table-dark">
     
             <thead>
                 <tr class="col-auto cursor-click" style="background: #a17277;" data-toggle="collapse" data-target="#collapse_{{i}}">
