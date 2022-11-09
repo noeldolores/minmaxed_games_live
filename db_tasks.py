@@ -158,7 +158,7 @@ def request_nwmarketprices(stopwatch):
 
 
 def main():
-    time.sleep(28800)
+    time.sleep(21600)
     with app.app_context():
         stopwatch = timer()
         try:
