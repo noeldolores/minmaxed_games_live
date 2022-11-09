@@ -92,20 +92,19 @@ def request_nwmarketprices(stopwatch):
             soup = BeautifulSoup(response.content, "html.parser")
             item_list = json.loads(str(soup))
             item_check_ref = {}
-            for i in range(len(item_list)):
-                name = item_list[i]['ItemName'].replace("'","").replace(" ","_").lower()
-                #item_list[i]['ItemName'] = name
+            #for i in range(len(item_list)):
+            for item in item_list:
+                name = item['ItemName'].replace("'","").replace(" ","_").lower()
                 if name in full_item_check_list:
                     item_check_ref[name] = {
-                        'ID': item_list[i]['ItemId'],
-                        'Price' : item_list[i]['Price'],
-                        'Availability' : item_list[i]['Availability'],
-                        'LastUpdated' : str_to_datetime(item_list[i]['LastUpdated']),
+                        'ID': item['ItemId'],
+                        'Price' : item['Price'],
+                        'Availability' : item['Availability'],
+                        'LastUpdated' : str_to_datetime(item['LastUpdated']),
                     }
+                    
             dates_list=[]
-            
             for item, data in item_check_ref.items():
-                #if item in item_check_ref.keys():
                 server_dict[server_name]['items'][item] = {
                     'Name': item,
                     'ID': data['ID'],
