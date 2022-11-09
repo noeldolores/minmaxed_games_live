@@ -91,7 +91,7 @@ def request_nwmarketprices(stopwatch):
             
             soup = BeautifulSoup(response.content, "html.parser")
             item_list = json.loads(str(soup))
-            for i in range(item_list):
+            for i in range(len(item_list)):
                 name = item[i].replace("'","").replace(" ","_").lower()
                 item_list[i] = name
             dates_list=[]
