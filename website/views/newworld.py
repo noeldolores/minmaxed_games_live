@@ -606,6 +606,9 @@ def server_api():
 
 @newworld.route('/server_api_hx', methods=['GET', 'POST'])
 def server_api_hx():
+    init_session()
+    dictionary_key_replacements()
+    
     template_order = player_data.trade_post_order()
 
     price_list = session['price_list']

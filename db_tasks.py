@@ -5,6 +5,7 @@ from datetime import datetime
 import pytz
 from website import app, db, models
 import time
+from website.scripts.newworld import player_data
 
 
 def print_stderr(output=str):
@@ -58,6 +59,23 @@ def request_nwmarketprices(stopwatch):
                 'items' : {}
                 }
     
+    # Filter by used items
+    material_source = player_data.trade_post_order()
+    trophy_source = player_data.trade_post_trophy_order()
+    full_item_check_list = []
+    for material_list in material_source:
+        full_item_check_list.extend(material_list[1:])
+    for trophy_list in trophy_source:
+        category = trophy_list[0]
+        if category != "components":
+            for item in trophy_list[1:]:
+                if item in ['minor', 'basic', 'major']:
+                    full_item_check_list.append(f'{item}_{category}_trophy')
+                else:
+                    full_item_check_list.append(item)
+        else:
+            full_item_check_list.extend(trophy_list[1:])
+            
     for server_name, server_data in server_dict.items():
         api_id = server_data['api_id']
         url = f"https://nwmarketprices.com/api/latest-prices/{api_id}/"
@@ -76,14 +94,15 @@ def request_nwmarketprices(stopwatch):
             dates_list=[]
             
             for item in item_list:
-                name = item['ItemName'].replace("'","")
-                server_dict[server_name]['items'][name] = {
-                    'Name' :name,
-                    'ID': item['ItemId'],
-                    'Price' : item['Price'],
-                    'Availability' : item['Availability'],
-                    'LastUpdated' : str_to_datetime(item['LastUpdated']),
-                }
+                name = item['ItemName'].replace("'","").replace(" ","_").lower()
+                if name in full_item_check_list:
+                    server_dict[server_name]['items'][name] = {
+                        'Name' :name,
+                        'ID': item['ItemId'],
+                        'Price' : item['Price'],
+                        'Availability' : item['Availability'],
+                        'LastUpdated' : str_to_datetime(item['LastUpdated']),
+                    }
                     
                 dates_list.append(str_to_datetime(item['LastUpdated']))
 
@@ -95,6 +114,10 @@ def request_nwmarketprices(stopwatch):
         else:
             stopwatch = timer(stopwatch, f'{server_name} : Unable to connect. Response from server: {response.status_code}')
             continue
+    
+    # One time delete
+    models.Item.query.delete()
+    db.session.commit()
     
     # Push data to db
     for server_name, server_data in server_dict.items():
