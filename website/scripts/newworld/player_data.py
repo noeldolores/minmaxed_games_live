@@ -19,6 +19,9 @@ taxes_fees = {
         "company_owned" : False,
         "first_light" : False,
         "weavers_fen" : False
+    },
+    "crafting": {
+        "station": 0
     }
 }
 
@@ -263,6 +266,134 @@ trade_post_template = [
 ]
 
 
+trade_post_trophy_template = [
+    [   "components",
+        "air_mote",
+        "death_mote",
+        "earth_mote",
+        "fire_mote",
+        "life_mote",
+        "soul_mote",
+        "water_mote",
+        "maple_stain",
+        "oak_stain",
+        "mahogany_stain"
+    ],
+    [   "loot_luck",
+        "minor",
+        "basic",
+        "major",
+        "rabbits_foot",
+        "stacked_deck",
+        "loaded_dice"
+    ],
+    [   "ancients_combat",
+        "minor",
+        "basic",
+        "major",
+        "ancient_femur",
+        "ancient_mandible"
+    ],
+    [   "angry_earth_combat",
+        "minor",
+        "basic",
+        "major",
+        "barkflesh",
+        "glowing_sap"
+    ],
+    [   "corrupted_combat",
+        "minor",
+        "basic",
+        "major",
+        "corrupted_crest",
+        "corrupted_totem"
+    ],
+    [   "lost_combat",
+        "minor",
+        "basic",
+        "major",
+        "ectoplasmic_essence",
+        "ephermeral_seal"
+    ],
+    [   "wildlife_combat",
+        "minor",
+        "basic",
+        "major",
+        "pristine_wolf_claw",
+        "pristine_bear_claw"
+    ],
+    [   "arcana_crafting",
+        "minor",
+        "basic",
+        "major",
+        "ancient_texts",
+        "philosophers_stone"
+    ],
+    [   "armoring_crafting",
+        "minor",
+        "basic",
+        "major",
+        "armorers_journal",
+        "precision_armoring_tools"
+    ],
+    [   "cooking_crafting",
+        "minor",
+        "basic",
+        "major",
+        "chefs_secret_techniques",
+        "chefs_secret_cookbook"
+    ],
+    [   "engineering_crafting",
+        "minor",
+        "basic",
+        "major",
+        "engineers_technique_manuals",
+        "precision_engineering_tools"
+    ],
+    [   "weaponsmithing_crafting",
+        "minor",
+        "basic",
+        "major",
+        "quartermasters_notes",
+        "forgemasters_notes"
+    ],
+    [   "fishing_gathering",
+        "minor",
+        "basic",
+        "major",
+        "blue-blooded_barb",
+        "daemonaja"
+    ],
+    [   "harvesting_gathering",
+        "minor",
+        "basic",
+        "major",
+        "journal_of_aeternum_flora",
+        "mercurial_token"
+    ],
+    [   "logging_gathering",
+        "minor",
+        "basic",
+        "major",
+        "lumberjacks_token",
+        "pure_resin"
+    ],
+    [   "mining_gathering",
+        "minor",
+        "basic",
+        "major",
+        "surveyors_tools",
+        "adamantine_dust"
+    ],
+    [   "skinning_gathering",
+        "minor",
+        "basic",
+        "major",
+        "notes_on_aeternum_fauna",
+        "trackers_seal"
+    ]
+]
+
 refining_template = [
     [   "leatherworking",
         "coarse_leather",
@@ -370,6 +501,9 @@ def init_price_list():
 
 def trade_post_order():
     return trade_post_template
+
+def trade_post_trophy_order():
+    return trade_post_trophy_template
 
 def refining_order():
     return refining_template
