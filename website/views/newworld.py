@@ -541,6 +541,7 @@ def server_api():
     server_list_file = os.path.join(basedir, '../static/newworld/txt/api_server_list.txt')
     with open(server_list_file) as file:
         lines = file.readlines()
+        lines.sort()
         for line in lines:
             name, num = line.rstrip().lower().split(",")
             server_dict[name] = num
