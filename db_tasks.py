@@ -91,29 +91,37 @@ def request_nwmarketprices(stopwatch):
             
             soup = BeautifulSoup(response.content, "html.parser")
             item_list = json.loads(str(soup))
-            item_check_ref = {}
-            #for i in range(len(item_list)):
+            item_check_ref = {
+                server_name: {
+                    'items':{}
+                }
+            }
+            dates_list=[]
             for item in item_list:
                 name = item['ItemName'].replace("'","").replace(" ","_").lower()
                 if name in full_item_check_list:
-                    item_check_ref[name] = {
+                    update = str_to_datetime(item['LastUpdated'])
+                    item_check_ref[server_name]['items'][name] = {
+                        'Name': name,
                         'ID': item['ItemId'],
                         'Price' : item['Price'],
                         'Availability' : item['Availability'],
-                        'LastUpdated' : str_to_datetime(item['LastUpdated']),
+                        'LastUpdated' : update
                     }
+                    dates_list.append(update)
                     
-            dates_list=[]
-            for item, data in item_check_ref.items():
-                server_dict[server_name]['items'][item] = {
-                    'Name': item,
-                    'ID': data['ID'],
-                    'Price' : data['Price'],
-                    'Availability' : data['Availability'],
-                    'LastUpdated' : data['LastUpdated'],
-                }
                     
-                dates_list.append(data['LastUpdated'])
+            # dates_list=[]
+            # for item, data in item_check_ref.items():
+            #     server_dict[server_name]['items'][item] = {
+            #         'Name': item,
+            #         'ID': data['ID'],
+            #         'Price' : data['Price'],
+            #         'Availability' : data['Availability'],
+            #         'LastUpdated' : data['LastUpdated'],
+            #     }
+                    
+            #     dates_list.append(data['LastUpdated'])
 
             if len(dates_list) > 0:
                 latest_date = max(dates_list)
@@ -134,7 +142,8 @@ def request_nwmarketprices(stopwatch):
             db.session.commit()
             server = models.Market.query.filter_by(name=server_name).first()
             
-        item_data = server_data['items']
+        #item_data = server_data['items']
+        item_data = item_check_ref[server_name]['items']
         if len(item_data) > 0:
             for item, item_info in item_data.items():
                 item_check = models.Item.query.filter_by(market_id=server.server_id).filter_by(item_id=item_info['ID']).first()
