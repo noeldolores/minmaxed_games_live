@@ -15,15 +15,15 @@ def datetime_to_str(date_time):
 def load_market_server(server_id):
     try:
         server = Market.query.filter_by(server_id=server_id).first()
-
-        if not server:
+        if server is None:
             server = Market.query.filter_by(server_id=server_id).first()
-
+            if server is None:
+                server = Market.query.filter_by(server_id=server_id).first()
     except Exception as e:
-        server = None
         print(e)
         db.session.rollback()
         db.session.remove()
+        
     market_dict = {}
     item_dict = {}
     if server:
