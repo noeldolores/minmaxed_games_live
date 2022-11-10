@@ -20,6 +20,7 @@ def load_market_server(server_id):
             if server is None:
                 server = Market.query.filter_by(server_id=server_id).first()
     except Exception as e:
+        server = None
         print(e)
         db.session.rollback()
         db.session.remove()
