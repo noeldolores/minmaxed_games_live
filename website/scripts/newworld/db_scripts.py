@@ -24,6 +24,8 @@ def load_market_server(server_id):
     market_dict = {}
     item_dict = {}
     if server:
+        if server.name == 'delos':
+            print(server.items)
         for item in server.items:
             item_name = item.name
             item_dict[item_name] = float(item.price)
