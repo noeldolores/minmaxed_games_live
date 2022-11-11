@@ -96,6 +96,7 @@ def request_nwmarketprices(stopwatch):
                     'items':{}
                 }
             }
+            
             dates_list=[]
             for item in item_list:
                 name = item['ItemName'].replace("'","").replace(" ","_").lower()
@@ -109,19 +110,6 @@ def request_nwmarketprices(stopwatch):
                         'LastUpdated' : update
                     }
                     dates_list.append(update)
-                    
-                    
-            # dates_list=[]
-            # for item, data in item_check_ref.items():
-            #     server_dict[server_name]['items'][item] = {
-            #         'Name': item,
-            #         'ID': data['ID'],
-            #         'Price' : data['Price'],
-            #         'Availability' : data['Availability'],
-            #         'LastUpdated' : data['LastUpdated'],
-            #     }
-                    
-            #     dates_list.append(data['LastUpdated'])
 
             if len(dates_list) > 0:
                 latest_date = max(dates_list)
@@ -146,7 +134,7 @@ def request_nwmarketprices(stopwatch):
         item_data = item_check_ref[server_name]['items']
         if len(item_data) > 0:
             for item, item_info in item_data.items():
-                item_check = models.Item.query.filter_by(market_id=server.server_id).filter_by(item_id=item_info['ID']).first()
+                item_check = models.Item.query.filter_by(market_id=server.id).filter_by(name=item_info['Name']).first()
                 if item_check:
                     item_check.price = item_info['Price']
                     item_check.availability = item_info['Availability']
