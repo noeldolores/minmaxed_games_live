@@ -161,7 +161,7 @@ def request_server_data(stopwatch, server_name_num):
 
 
 def main():
-    #time.sleep(14400)
+    time.sleep(10800)
     with app.app_context():
         stopwatch = timer()
         try:
