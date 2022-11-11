@@ -134,13 +134,13 @@ def request_nwmarketprices(stopwatch):
         item_data = item_check_ref[server_name]['items']
         if len(item_data) > 0:
             for item, item_info in item_data.items():
-                item_check = models.Item.query.filter_by(market_id=server.id).filter_by(name=item_info['Name']).first()
+                item_check = models.Item.query.filter_by(market_id=server.id).filter_by(name=item).first()
                 if item_check:
                     item_check.price = item_info['Price']
                     item_check.availability = item_info['Availability']
                     item_check.last_update = item_info['LastUpdated']
                 else:
-                    new_item = models.Item(last_update=item_info['LastUpdated'], item_id=item_info['ID'], name=item_info['Name'], price=item_info['Price'], availability=item_info['Availability'], market_id=server.id)
+                    new_item = models.Item(last_update=item_info['LastUpdated'], item_id=item_info['ID'], name=item, price=item_info['Price'], availability=item_info['Availability'], market_id=server.id)
                     db.session.add(new_item)
             
             latest_date = server_dict[server_name]['latest_date']
