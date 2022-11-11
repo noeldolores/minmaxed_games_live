@@ -133,7 +133,7 @@ def request_server_data(stopwatch, server_name_num):
         item_data = server_data['items']
         if len(item_data) > 0:
             for item, item_info in item_data.items():
-                item_check = models.Item.query.filter_by(market_id=server.server.id).filter_by(item_id=item_info['ID']).first()
+                item_check = models.Item.query.filter_by(market_id=server.id).filter_by(item_id=item_info['ID']).first()
                 if item_check:
                     item_check.price = item_info['Price']
                     item_check.availability = item_info['Availability']
