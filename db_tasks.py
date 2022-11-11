@@ -164,7 +164,6 @@ def main():
             db.session.rollback()
             print(e)
         stopwatch = timer(stopwatch, f'Task completed...{full_pull}')
-    time.sleep(21600)
     
 if __name__ == "__main__":
   main()
