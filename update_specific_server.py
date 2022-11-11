@@ -79,45 +79,52 @@ def request_server_data(stopwatch, server_name_num):
             my_timeout = 300
             response = requests.request(method='GET', url=url, timeout=my_timeout)
         except Exception as e:
-            print(response.status_code, e)
+            if response:
+                print(response.status_code, e)
+            else:
+                print(e)
             continue
         
-        if response.status_code == 200:
-            stopwatch = timer(stopwatch, f'{server_name} : Response Success {response.status_code}')
-            
-            soup = BeautifulSoup(response.content, "html.parser")
-            item_list = json.loads(str(soup))
-            item_check_ref = {}
-            #for i in range(len(item_list)):
-            for item in item_list:
-                name = item['ItemName'].replace("'","").replace(" ","_").lower()
-                if name in full_item_check_list:
-                    item_check_ref[name] = {
-                        'ID': item['ItemId'],
-                        'Price' : item['Price'],
-                        'Availability' : item['Availability'],
-                        'LastUpdated' : str_to_datetime(item['LastUpdated']),
+        if response:
+            if response.status_code == 200:
+                stopwatch = timer(stopwatch, f'{server_name} : Response Success {response.status_code}')
+                
+                soup = BeautifulSoup(response.content, "html.parser")
+                item_list = json.loads(str(soup))
+                item_check_ref = {}
+                #for i in range(len(item_list)):
+                for item in item_list:
+                    name = item['ItemName'].replace("'","").replace(" ","_").lower()
+                    if name in full_item_check_list:
+                        item_check_ref[name] = {
+                            'ID': item['ItemId'],
+                            'Price' : item['Price'],
+                            'Availability' : item['Availability'],
+                            'LastUpdated' : str_to_datetime(item['LastUpdated']),
+                        }
+                        
+                dates_list=[]
+                for item, data in item_check_ref.items():
+                    server_dict[server_name]['items'][item] = {
+                        'Name': item,
+                        'ID': data['ID'],
+                        'Price' : data['Price'],
+                        'Availability' : data['Availability'],
+                        'LastUpdated' : data['LastUpdated'],
                     }
-                    
-            dates_list=[]
-            for item, data in item_check_ref.items():
-                server_dict[server_name]['items'][item] = {
-                    'Name': item,
-                    'ID': data['ID'],
-                    'Price' : data['Price'],
-                    'Availability' : data['Availability'],
-                    'LastUpdated' : data['LastUpdated'],
-                }
-                    
-                dates_list.append(data['LastUpdated'])
+                        
+                    dates_list.append(data['LastUpdated'])
 
-            if len(dates_list) > 0:
-                latest_date = max(dates_list)
-                server_dict[server_name]['latest_date'] = latest_date
+                if len(dates_list) > 0:
+                    latest_date = max(dates_list)
+                    server_dict[server_name]['latest_date'] = latest_date
+                else:
+                    server_dict[server_name]['latest_date'] = None
             else:
-                server_dict[server_name]['latest_date'] = None
+                stopwatch = timer(stopwatch, f'{server_name} : Unable to connect. Response from server: {response.status_code}')
+                continue
         else:
-            stopwatch = timer(stopwatch, f'{server_name} : Unable to connect. Response from server: {response.status_code}')
+            stopwatch = timer(stopwatch, f'{server_name} : Unable to connect. No response from server.')
             continue
         
     # Push data to db
@@ -154,6 +161,7 @@ def request_server_data(stopwatch, server_name_num):
 
 
 def main():
+    #time.sleep(14400)
     with app.app_context():
         stopwatch = timer()
         try:
