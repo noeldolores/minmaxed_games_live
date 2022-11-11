@@ -10,10 +10,10 @@ from website.scripts.newworld import player_data
 
 def print_stderr(output=str):
   try:
-    print(output)
+    print(output, flush=True)
     return True
   except Exception as e:
-    print(f"print_stderr: {e}")
+    print(f"print_stderr: {e}", flush=True)
     return False
 
 
@@ -162,9 +162,8 @@ def main():
                 lines = file.readlines()
                 for line in lines:
                     server_name_num = line.rstrip().lower()
-            #server_name_num = "Delos,9"
                     full_pull = request_server_data(stopwatch, server_name_num)
-                    print(full_pull)
+                    print(full_pull, flush=True)
         except Exception as e:
             full_pull = False
             db.session.rollback()
