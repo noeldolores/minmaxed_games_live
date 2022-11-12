@@ -13,7 +13,7 @@ def print_stderr(output=str):
     print(output, flush=True)
     return True
   except Exception as e:
-    print(f"print_stderr: {e}" flush=True)
+    print(f"print_stderr: {e}", flush=True)
     return False
 
 
