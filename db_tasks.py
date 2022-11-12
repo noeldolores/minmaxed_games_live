@@ -28,7 +28,7 @@ def timer(time_history=None, to_print=None):
     lap_num = len(time_history) - 1
     total_time = round(stamp - time_history[0][1], 4)
     lap_time = round(total_time - time_history[lap_num][2], 4)
-    lap_data = ((str(to_print), lap_time, total_time))
+    lap_data = ((str(to_print), lap_time, f'{total_time} ({round(total_time/60,2)})m'))
     time_history.append(lap_data)
     if to_print:
         print_stderr(lap_data)
@@ -146,7 +146,7 @@ def request_server_data(stopwatch, server_name_num):
                 server.last_update = latest_date
                 item_update_count = len(item_data)
                 update_percentage = round((item_update_count / total_item_count)*100,1)
-                stopwatch = timer(stopwatch, f'{server_name} : {update_percentage}% to {latest_date}')
+                stopwatch = timer(stopwatch, f'{server_name} : {update_percentage}% to {datetime_to_str(latest_date)}')
         else:
             stopwatch = timer(stopwatch, f'{server_name} : Empty item_data dictionary')
             
