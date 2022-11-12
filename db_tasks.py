@@ -113,10 +113,10 @@ def request_server_data(stopwatch, server_name_num):
                 else:
                     server_dict[server_name]['latest_date'] = None
             else:
-                stopwatch = timer(stopwatch, f'{server_name} : Unable to connect. Response from server: {response.status_code}')
+                stopwatch = timer(stopwatch, None)
                 continue
         else:
-            stopwatch = timer(stopwatch, f'{server_name} : Unable to connect. No response from server.')
+            stopwatch = timer(stopwatch, None)
             continue
         
     # Push data to db
@@ -148,13 +148,14 @@ def request_server_data(stopwatch, server_name_num):
                 update_percentage = round((item_update_count / total_item_count)*100,1)
                 stopwatch = timer(stopwatch, f'{server_name} : {update_percentage}% to {datetime_to_str(latest_date)}')
         else:
-            stopwatch = timer(stopwatch, f'{server_name} : Empty item_data dictionary')
+            stopwatch = timer(stopwatch, f'{server_name} : Unable to connect.')
             
         db.session.commit()
     return True
 
 
 def main():
+    time.sleep(10800)
     with app.app_context():
         stopwatch = timer()
         try:

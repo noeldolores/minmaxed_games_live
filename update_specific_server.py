@@ -71,7 +71,8 @@ def request_server_data(stopwatch, server_name_num):
                     full_item_check_list.append(item)
         else:
             full_item_check_list.extend(trophy_list[1:])
-            
+    
+    total_item_count = len(full_item_check_list)
     for server_name, server_data in server_dict.items():
         api_id = server_data['api_id']
         url = f"https://nwmarketprices.com/api/latest-prices/{api_id}/"
