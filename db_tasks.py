@@ -46,18 +46,14 @@ def datetime_to_str(date_time):
     return _date
 
 
-def request_nwmarketprices(stopwatch):
+def request_server_data(stopwatch, server_name_num):
     # Retrieve server name/id dictionary
     server_dict = {}
-    server_list_file = '/home/noeldolores/minmaxed_games/website/static/newworld/txt/api_server_list.txt'
-    with open(server_list_file) as file:
-        lines = file.readlines()
-        for line in lines:
-            server_name, api_id = line.rstrip().lower().split(",")
-            server_dict[server_name] = {
-                'api_id' : api_id,
-                'items' : {}
-                }
+    server_name, api_id = server_name_num.lower().split(",")
+    server_dict[server_name] = {
+        'api_id' : api_id,
+        'items' : {}
+        }
     
     # Filter by used items
     material_source = player_data.trade_post_order()
@@ -75,7 +71,8 @@ def request_nwmarketprices(stopwatch):
                     full_item_check_list.append(item)
         else:
             full_item_check_list.extend(trophy_list[1:])
-            
+    
+    total_item_count = len(full_item_check_list)
     for server_name, server_data in server_dict.items():
         api_id = server_data['api_id']
         url = f"https://nwmarketprices.com/api/latest-prices/{api_id}/"
@@ -83,45 +80,63 @@ def request_nwmarketprices(stopwatch):
             my_timeout = 300
             response = requests.request(method='GET', url=url, timeout=my_timeout)
         except Exception as e:
-            print(response.status_code, e)
+            if response:
+                print(response.status_code, e)
+            else:
+                print(e)
             continue
         
-        if response.status_code == 200:
-            stopwatch = timer(stopwatch, f'{server_name} : Response Success {response.status_code}')
-            
-            soup = BeautifulSoup(response.content, "html.parser")
-            item_list = json.loads(str(soup))
-            item_check_ref = {}
-            #for i in range(len(item_list)):
-            for item in item_list:
-                name = item['ItemName'].replace("'","").replace(" ","_").lower()
-                if name in full_item_check_list:
-                    item_check_ref[name] = {
-                        'ID': item['ItemId'],
-                        'Price' : item['Price'],
-                        'Availability' : item['Availability'],
-                        'LastUpdated' : str_to_datetime(item['LastUpdated']),
-                    }
-                    
-            dates_list=[]
-            for item, data in item_check_ref.items():
-                server_dict[server_name]['items'][item] = {
-                    'Name': item,
-                    'ID': data['ID'],
-                    'Price' : data['Price'],
-                    'Availability' : data['Availability'],
-                    'LastUpdated' : data['LastUpdated'],
-                }
-                    
-                dates_list.append(data['LastUpdated'])
+        if response:
+            if response.status_code == 200:
+                stopwatch = timer(stopwatch, f'{server_name} : Response Success {response.status_code}')
+                
+                soup = BeautifulSoup(response.content, "html.parser")
+                item_list = json.loads(str(soup))
+                item_check_ref = {}
+                #for i in range(len(item_list)):
+                dates_list=[]
+                for item in item_list:
+                    name = item['ItemName'].replace("'","").replace(" ","_").lower()
+                    # if name in full_item_check_list:
+                    #     item_check_ref[name] = {
+                    #         'ID': item['ItemId'],
+                    #         'Price' : item['Price'],
+                    #         'Availability' : item['Availability'],
+                    #         'LastUpdated' : str_to_datetime(item['LastUpdated']),
+                    #     }
+                    if name in full_item_check_list:
+                        _date = str_to_datetime(item['LastUpdated'])
+                        dates_list.append(_date)
+                        server_dict[server_name]['items'][name] = {
+                            'Name': name,
+                            'ID': item['ItemId'],
+                            'Price' : item['Price'],
+                            'Availability' : item['Availability'],
+                            'LastUpdated' : _date,
+                        }
+                        
+                # dates_list=[]
+                # for item, data in item_check_ref.items():
+                #     server_dict[server_name]['items'][item] = {
+                #         'Name': item,
+                #         'ID': data['ID'],
+                #         'Price' : data['Price'],
+                #         'Availability' : data['Availability'],
+                #         'LastUpdated' : data['LastUpdated'],
+                #     }
+                        
+                #     dates_list.append(data['LastUpdated'])
 
-            if len(dates_list) > 0:
-                latest_date = max(dates_list)
-                server_dict[server_name]['latest_date'] = latest_date
+                if len(dates_list) > 0:
+                    latest_date = max(dates_list)
+                    server_dict[server_name]['latest_date'] = latest_date
+                else:
+                    server_dict[server_name]['latest_date'] = None
             else:
-                server_dict[server_name]['latest_date'] = None
+                stopwatch = timer(stopwatch, f'{server_name} : Unable to connect. Response from server: {response.status_code}')
+                continue
         else:
-            stopwatch = timer(stopwatch, f'{server_name} : Unable to connect. Response from server: {response.status_code}')
+            stopwatch = timer(stopwatch, f'{server_name} : Unable to connect. No response from server.')
             continue
         
     # Push data to db
@@ -161,7 +176,11 @@ def main():
     with app.app_context():
         stopwatch = timer()
         try:
-            full_pull = request_nwmarketprices(stopwatch)
+            lines = ["Abaton,24", "Nysa,27"]
+            for line in lines:
+                server_name_num = line
+                full_pull = request_server_data(stopwatch, server_name_num)
+                print(full_pull, flush=True)
         except Exception as e:
             full_pull = False
             db.session.rollback()
@@ -169,4 +188,4 @@ def main():
         stopwatch = timer(stopwatch, f'Task completed...{full_pull}')
     
 if __name__ == "__main__":
-  main()
+    main()
