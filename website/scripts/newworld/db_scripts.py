@@ -13,10 +13,15 @@ def datetime_to_str(date_time):
 
 
 def load_market_server(server_id):
+    server = None
+    tries = 0
     try:
-        server = Market.query.filter_by(server_id=server_id).first()
+        while server is None:
+            if tries > 5:
+                break
+            server = Market.query.filter_by(server_id=server_id).first()
+            tries += 1
     except Exception as e:
-        server = None
         print(e)
         db.session.rollback()
         db.session.remove()
