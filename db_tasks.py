@@ -31,7 +31,7 @@ def timer(time_history=None, to_print=None):
     lap_data = ((str(to_print), lap_time, total_time))
     time_history.append(lap_data)
     if to_print:
-        print_stderr(lap_data, f'({round(total_time/60,2)})m')
+        print_stderr(f'{lap_data} : ({round(total_time/60,2)})m')
     return time_history
 
 
