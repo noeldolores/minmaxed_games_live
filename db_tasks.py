@@ -163,7 +163,7 @@ def main():
                 lines = file.readlines()
                 for line in lines:
                     server_name_num = line.rstrip().lower()
-                full_pull = request_server_data(stopwatch, server_name_num)
+                    full_pull = request_server_data(stopwatch, server_name_num)
         except Exception as e:
             full_pull = False
             db.session.rollback()
