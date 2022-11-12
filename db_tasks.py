@@ -41,8 +41,8 @@ def str_to_datetime(date_string):
 
 
 def datetime_to_str(date_time):
-    _local = pytz.utc.localize(date_time, is_dst=None).astimezone()
-    _date = datetime.strftime(_local, '%m/%d %I:%M %p')
+    #_local = pytz.utc.localize(date_time, is_dst=None).astimezone()
+    _date = datetime.strftime(date_time, '%m/%d %I:%M %p')
     return _date
 
 
