@@ -10,28 +10,28 @@ from website.scripts.newworld import player_data
 
 def print_stderr(output=str):
   try:
-    print(output)
+    print(output, flush=True)
     return True
   except Exception as e:
-    print(f"print_stderr: {e}")
+    print(f"print_stderr: {e}" flush=True)
     return False
 
 
-def timer(time_history=None, function=None):
-  if not time_history:
-    base = time.time()
-    time_history = [('Beginning task...', base, 0)]
-    print_stderr(time_history[0])
-    return time_history
+def timer(time_history=None, to_print=None):
+    if not time_history:
+        base = time.time()
+        time_history = [('Beginning task...', base, 0)]
+        print_stderr(time_history[0])
+        return time_history
 
-  if function:
     stamp = time.time()
     lap_num = len(time_history) - 1
     total_time = round(stamp - time_history[0][1], 4)
     lap_time = round(total_time - time_history[lap_num][2], 4)
-    lap_data = ((str(function), lap_time, total_time))
+    lap_data = ((str(to_print), lap_time, total_time))
     time_history.append(lap_data)
-    print_stderr(lap_data)
+    if to_print:
+        print_stderr(lap_data)
     return time_history
 
 
@@ -88,22 +88,14 @@ def request_server_data(stopwatch, server_name_num):
         
         if response:
             if response.status_code == 200:
-                stopwatch = timer(stopwatch, f'{server_name} : Response Success {response.status_code}')
+                stopwatch = timer(stopwatch)
                 
                 soup = BeautifulSoup(response.content, "html.parser")
                 item_list = json.loads(str(soup))
-                item_check_ref = {}
-                #for i in range(len(item_list)):
+
                 dates_list=[]
                 for item in item_list:
                     name = item['ItemName'].replace("'","").replace(" ","_").lower()
-                    # if name in full_item_check_list:
-                    #     item_check_ref[name] = {
-                    #         'ID': item['ItemId'],
-                    #         'Price' : item['Price'],
-                    #         'Availability' : item['Availability'],
-                    #         'LastUpdated' : str_to_datetime(item['LastUpdated']),
-                    #     }
                     if name in full_item_check_list:
                         _date = str_to_datetime(item['LastUpdated'])
                         dates_list.append(_date)
@@ -114,18 +106,6 @@ def request_server_data(stopwatch, server_name_num):
                             'Availability' : item['Availability'],
                             'LastUpdated' : _date,
                         }
-                        
-                # dates_list=[]
-                # for item, data in item_check_ref.items():
-                #     server_dict[server_name]['items'][item] = {
-                #         'Name': item,
-                #         'ID': data['ID'],
-                #         'Price' : data['Price'],
-                #         'Availability' : data['Availability'],
-                #         'LastUpdated' : data['LastUpdated'],
-                #     }
-                        
-                #     dates_list.append(data['LastUpdated'])
 
                 if len(dates_list) > 0:
                     latest_date = max(dates_list)
