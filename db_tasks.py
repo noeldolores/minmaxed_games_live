@@ -27,11 +27,11 @@ def timer(time_history=None, to_print=None):
     stamp = time.time()
     lap_num = len(time_history) - 1
     total_time = round(stamp - time_history[0][1], 4)
-    lap_time = round(float(total_time) - float(time_history[lap_num][2]), 4)
-    lap_data = ((str(to_print), lap_time, f'{total_time} ({round(total_time/60,2)})m'))
+    lap_time = round(total_time - time_history[lap_num][2], 4)
+    lap_data = ((str(to_print), lap_time, total_time))
     time_history.append(lap_data)
     if to_print:
-        print_stderr(lap_data)
+        print_stderr(lap_data, f'({round(total_time/60,2)})m')
     return time_history
 
 
@@ -88,7 +88,7 @@ def request_server_data(stopwatch, server_name_num):
         
         if response:
             if response.status_code == 200:
-                stopwatch = timer(stopwatch)
+                stopwatch = timer(stopwatch, None)
                 
                 soup = BeautifulSoup(response.content, "html.parser")
                 item_list = json.loads(str(soup))
