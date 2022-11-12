@@ -144,7 +144,9 @@ def request_server_data(stopwatch, server_name_num):
             latest_date = server_dict[server_name]['latest_date']
             if latest_date:
                 server.last_update = latest_date
-                stopwatch = timer(stopwatch, f'{server_name} updated with {len(item_data)} items to {latest_date}')
+                item_update_count = len(item_data)
+                update_percentage = round((item_update_count / total_item_count)*100,1)
+                stopwatch = timer(stopwatch, f'{server_name} : {update_percentage}% to {datetime_to_str(latest_date)}')
         else:
             stopwatch = timer(stopwatch, f'{server_name} : Empty item_data dictionary')
             
@@ -160,11 +162,10 @@ def main():
             for line in lines:
                 server_name_num = line
                 full_pull = request_server_data(stopwatch, server_name_num)
-                print(full_pull, flush=True)
         except Exception as e:
             full_pull = False
             db.session.rollback()
-            print(e)
+            print_stderr(full_pull, e)
         stopwatch = timer(stopwatch, f'Task completed...{full_pull}')
     
 if __name__ == "__main__":
