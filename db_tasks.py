@@ -158,9 +158,11 @@ def main():
     with app.app_context():
         stopwatch = timer()
         try:
-            lines = ["Abaton,24", "Nysa,27"]
-            for line in lines:
-                server_name_num = line
+            server_list_file = '/home/noeldolores/minmaxed_games/website/static/newworld/txt/api_server_list.txt'
+            with open(server_list_file) as file:
+                lines = file.readlines()
+                for line in lines:
+                    server_name_num = line.rstrip().lower()
                 full_pull = request_server_data(stopwatch, server_name_num)
         except Exception as e:
             full_pull = False
