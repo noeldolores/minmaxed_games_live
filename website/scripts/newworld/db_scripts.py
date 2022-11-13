@@ -14,6 +14,7 @@ def datetime_to_str(date_time):
 
 def load_market_server(server_id):
     server = None
+    market_dict = {}
     tries = 0
     try:
         while server is None:
@@ -21,22 +22,20 @@ def load_market_server(server_id):
                 break
             server = Market.query.filter_by(server_id=server_id).first()
             tries += 1
+        
+        item_dict = {}
+        if server: 
+            for item in server.items:
+                item_name = item.name
+                item_dict[item_name] = float(item.price)
+
+            market_dict['name'] = server.name
+            market_dict['last_update'] = datetime_to_str(server.last_update)
+            market_dict['items'] = item_dict
+
     except Exception as e:
         print(e)
-        db.session.rollback()
+
+    finally:
         db.session.remove()
-        
-    market_dict = {}
-    item_dict = {}
-    if server: 
-        for item in server.items:
-            item_name = item.name
-            item_dict[item_name] = float(item.price)
-
-        market_dict['name'] = server.name
-        market_dict['last_update'] = datetime_to_str(server.last_update)
-        market_dict['items'] = item_dict
-
         return market_dict
-    else:
-        return None
