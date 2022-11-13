@@ -591,7 +591,7 @@ def server_api():
                     'items': server_prices
                 }
                 session['api_loaded'] = True
-
+            
     template_order = player_data.trade_post_order()
     trophy_order = player_data.trade_post_trophy_order()
 

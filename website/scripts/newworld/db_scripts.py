@@ -14,17 +14,18 @@ def datetime_to_str(date_time):
 
 def load_market_server(server_id):
     server = None
-    market_dict = {}
+    market_dict = None
     tries = 0
     try:
         while server is None:
-            if tries > 5:
+            if tries > 10:
                 break
             server = Market.query.filter_by(server_id=server_id).first()
             tries += 1
         
         item_dict = {}
         if server: 
+            market_dict = {}
             for item in server.items:
                 item_name = item.name
                 item_dict[item_name] = float(item.price)
