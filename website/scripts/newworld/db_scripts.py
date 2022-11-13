@@ -2,7 +2,7 @@ from datetime import datetime
 import pytz
 from ... import db
 from ...models import Market, Item
-import player_data
+from . import player_data
 
 
 def datetime_to_str(date_time):
