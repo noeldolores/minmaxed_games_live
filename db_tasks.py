@@ -56,23 +56,23 @@ def request_server_data(stopwatch, server_name_num):
         }
     
     # Filter by used items
-    material_source = player_data.trade_post_order()
-    trophy_source = player_data.trade_post_trophy_order()
-    full_item_check_list = []
-    for material_list in material_source:
-        full_item_check_list.extend(material_list[1:])
-    for trophy_list in trophy_source:
-        category = trophy_list[0]
-        if category != "components":
-            for item in trophy_list[1:]:
-                if item in ['minor', 'basic', 'major']:
-                    full_item_check_list.append(f'{item}_{category}_trophy')
-                else:
-                    full_item_check_list.append(item)
-        else:
-            full_item_check_list.extend(trophy_list[1:])
+    # material_source = player_data.trade_post_order()
+    # trophy_source = player_data.trade_post_trophy_order()
+    # full_item_check_list = []
+    # for material_list in material_source:
+    #     full_item_check_list.extend(material_list[1:])
+    # for trophy_list in trophy_source:
+    #     category = trophy_list[0]
+    #     if category != "components":
+    #         for item in trophy_list[1:]:
+    #             if item in ['minor', 'basic', 'major']:
+    #                 full_item_check_list.append(f'{item}_{category}_trophy')
+    #             else:
+    #                 full_item_check_list.append(item)
+    #     else:
+    #         full_item_check_list.extend(trophy_list[1:])
     
-    total_item_count = len(full_item_check_list)
+    # total_item_count = len(full_item_check_list)
     for server_name, server_data in server_dict.items():
         api_id = server_data['api_id']
         url = f"https://nwmarketprices.com/api/latest-prices/{api_id}/"
@@ -92,20 +92,22 @@ def request_server_data(stopwatch, server_name_num):
                 
                 soup = BeautifulSoup(response.content, "html.parser")
                 item_list = json.loads(str(soup))
-
+                
+                total_item_count = max(len(item_list),1)
+                
                 dates_list=[]
                 for item in item_list:
                     name = item['ItemName'].replace("'","").replace(" ","_").lower()
-                    if name in full_item_check_list:
-                        _date = str_to_datetime(item['LastUpdated'])
-                        dates_list.append(_date)
-                        server_dict[server_name]['items'][name] = {
-                            'Name': name,
-                            'ID': item['ItemId'],
-                            'Price' : item['Price'],
-                            'Availability' : item['Availability'],
-                            'LastUpdated' : _date,
-                        }
+                    #if name in full_item_check_list:
+                    _date = str_to_datetime(item['LastUpdated'])
+                    dates_list.append(_date)
+                    server_dict[server_name]['items'][name] = {
+                        'Name': name,
+                        'ID': item['ItemId'],
+                        'Price' : item['Price'],
+                        'Availability' : item['Availability'],
+                        'LastUpdated' : _date,
+                    }
 
                 if len(dates_list) > 0:
                     latest_date = max(dates_list)
@@ -155,7 +157,7 @@ def request_server_data(stopwatch, server_name_num):
 
 
 def main():
-    time.sleep(7200)
+    #time.sleep(7200)
     with app.app_context():
         stopwatch = timer()
         try:
