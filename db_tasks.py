@@ -36,7 +36,7 @@ def timer(time_history=None, to_print=None):
 
 
 def str_to_datetime(date_string):
-    _date = datetime.strptime(date_string, '%Y-%m-%d %H:%M:%S.%f')
+    _date = datetime.strptime(date_string, '%Y-%m-%d %H:%M:%S')
     return _date.astimezone(pytz.utc)
 
 
@@ -130,8 +130,9 @@ def request_server_data(stopwatch, server_name_num):
             db.session.add(server)
             db.session.commit()
             server = models.Market.query.filter_by(name=server_name).first()
-            
+        
         item_data = server_data['items']
+        item_update_count = 0
         if len(item_data) > 0:
             for item, item_info in item_data.items():
                 item_check = models.Item.query.filter_by(market_id=server.id).filter_by(item_id=item_info['ID']).first()
@@ -139,16 +140,18 @@ def request_server_data(stopwatch, server_name_num):
                     item_check.price = item_info['Price']
                     item_check.availability = item_info['Availability']
                     item_check.last_update = item_info['LastUpdated']
+                    item_update_count += 1 
                 else:
                     new_item = models.Item(last_update=item_info['LastUpdated'], item_id=item_info['ID'], name=item_info['Name'], price=item_info['Price'], availability=item_info['Availability'], market_id=server.id)
                     db.session.add(new_item)
+                    item_update_count += 1 
             
             latest_date = server_dict[server_name]['latest_date']
             if latest_date:
                 server.last_update = latest_date
-                item_update_count = len(item_data)
+                #item_update_count = len(item_data)
                 update_percentage = round((item_update_count / total_item_count)*100,1)
-                stopwatch = timer(stopwatch, f'{server_name} : {update_percentage}% to {datetime_to_str(latest_date)}')
+                stopwatch = timer(stopwatch, f'{server_name} : {update_percentage}% ({item_update_count}) to {datetime_to_str(latest_date)}')
         else:
             stopwatch = timer(stopwatch, f'{server_name} : Unable to connect.')
             
