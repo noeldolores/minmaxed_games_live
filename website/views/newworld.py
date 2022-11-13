@@ -357,21 +357,24 @@ def refining():
 
 @newworld.route('/refining_hx', methods=['GET', 'POST'])
 def refining_hx():
+    init_session()
+    
     template_order = player_data.refining_order()
 
-    price_list = session['price_list']
+    if 'price_list' in session:
+        price_dict = session['price_list']
     if 'api_loaded' in session:
         if session['api_loaded']:
             if 'server_data' in session:
                 if 'items' in session['server_data']:
-                    price_list = session['server_data']['items']
+                    price_dict = session['server_data']['items']
     else:
-        price_list = session['price_list']
+        price_dict = session['price_list']
 
     taxes_fees = session['taxes_fees']
     
-    all_tiers_all_routes, financial_data = calcs.tp_cost_to_refine_all_routes_all_tiers(price_list, session['skill_levels']['refining'], session['gear_sets'], taxes_fees)
-    cheapest_route = calcs.cheapest_tp_cost_route_to_refine_each_tier(price_list, all_tiers_all_routes, taxes_fees, financial_data)
+    all_tiers_all_routes, financial_data = calcs.tp_cost_to_refine_all_routes_all_tiers(price_dict, session['skill_levels']['refining'], session['gear_sets'], taxes_fees)
+    cheapest_route = calcs.cheapest_tp_cost_route_to_refine_each_tier(price_dict, all_tiers_all_routes, taxes_fees, financial_data)
     
     return render_template('newworld/refining_hx.html', cheapest_route=cheapest_route, template_order=template_order)
 
@@ -420,8 +423,11 @@ def material_primary(material):
 
 
 @newworld.route('/material_primary_hx/<material>', methods=['GET', 'POST'])
-def material_table(material):    
-    price_dict = session['price_list']
+def material_table(material):
+    init_session()
+    
+    if 'price_list' in session:
+        price_dict = session['price_list']
     if 'api_loaded' in session:
         if session['api_loaded']:
             if 'server_data' in session:
@@ -469,7 +475,10 @@ def material_raw(material):
 
 @newworld.route('/material_raw_hx/<material>', methods=['GET', 'POST'])
 def material_raw_hx(material):
-    price_dict = session['price_list']
+    init_session()
+    
+    if 'price_list' in session:
+        price_dict = session['price_list']
     if 'api_loaded' in session:
         if session['api_loaded']:
             if 'server_data' in session:
@@ -509,7 +518,8 @@ def material_price_hx(material):
     init_session()
     dictionary_key_replacements()
     
-    price_dict = session['price_list']
+    if 'price_list' in session:
+        price_dict = session['price_list']
     if 'api_loaded' in session:
         if session['api_loaded']:
             if 'server_data' in session:
@@ -589,7 +599,8 @@ def server_api():
     #     stopwatch = db_scripts.timer()
     #     full_server = db_scripts.request_nwmarketprices(stopwatch)
 
-    price_list = session['price_list']
+    if 'price_list' in session:
+        price_dict = session['price_list']
     if 'server_data' in session:
         if 'items' in session['server_data']:
             price_list_server = session['server_data']['items']
@@ -599,10 +610,10 @@ def server_api():
                     if key not in price_list_server:
                         price_list_server[key] = {}
                     if mat not in price_list_server[key]:
-                        price_list_server[key][mat] = price_list[key][mat]
-            price_list = price_list_server.copy()
+                        price_list_server[key][mat] = price_dict[key][mat]
+            price_dict = price_list_server.copy()
 
-    return render_template('newworld/server_api.html', server_dict=server_dict, price_list=price_list, template_order=template_order, trophy_order=trophy_order)
+    return render_template('newworld/server_api.html', server_dict=server_dict, price_list=price_dict, template_order=template_order, trophy_order=trophy_order)
 
 
 @newworld.route('/server_api_hx', methods=['GET', 'POST'])
@@ -612,7 +623,8 @@ def server_api_hx():
     
     template_order = player_data.trade_post_order()
 
-    price_list = session['price_list']
+    if 'price_list' in session:
+        price_dict = session['price_list']
     if 'server_data' in session:
         if 'items' in session['server_data']:
             price_list_server = session['server_data']['items']
@@ -622,10 +634,10 @@ def server_api_hx():
                     if key not in price_list_server:
                         price_list_server[key] = {}
                     if mat not in price_list_server[key]:
-                        price_list_server[key][mat] = price_list[key][mat]
-            price_list = price_list_server.copy()
+                        price_list_server[key][mat] = price_dict[key][mat]
+            price_dict = price_list_server.copy()
 
-    return render_template('newworld/server_api_hx.html', price_list=price_list, template_order=template_order)
+    return render_template('newworld/server_api_hx.html', price_list=price_dict, template_order=template_order)
 
 
 @newworld.route('/navbar_api_hx', defaults={'material':None}, methods=['GET', 'POST'])
@@ -666,9 +678,6 @@ def taxes_and_bonuses():
 
 @newworld.route('/taxes_and_bonuses_hx', methods=['GET', 'POST'])
 def taxes_and_bonuses_hx():
-    init_session()
-    dictionary_key_replacements()
-
     search = search_function()
     if search:
         return redirect(url_for('newworld.material', material=search))
@@ -758,7 +767,8 @@ def market_calculator():
     
 @newworld.route('/market_calculator_hx', methods=['GET', 'POST'])
 def market_calculator_hx():
-    taxes_fees = session['taxes_fees']
+    if 'taxes_fees' in session:
+        taxes_fees = session['taxes_fees']
     
     purchase_price, purchase_quant, sell_price, sell_quant = 1,1,1,1
     p_price, p_quant, s_price, s_quant = False, False, False, False
@@ -875,21 +885,22 @@ def trophy_calculator():
 def trophy_calculator_hx():
     template_order = player_data.trade_post_trophy_order()
 
-    price_list = session['price_list']
+    if 'price_list' in session:
+        price_dict = session['price_list']
     if 'api_loaded' in session:
         if session['api_loaded']:
             if 'server_data' in session:
                 if 'items' in session['server_data']:
-                    price_list = session['server_data']['items']
+                    price_dict = session['server_data']['items']
     
     taxes_fees = session['taxes_fees']
     skill_level = session['skill_levels']['refining']
     gear_set = session['gear_sets']
     taxes_fees = session['taxes_fees']
     
-    all_tiers_all_routes, financial_data = calcs.tp_cost_to_refine_all_routes_all_tiers(price_list, session['skill_levels']['refining'], session['gear_sets'], taxes_fees)
-    cheapest_route = calcs.cheapest_tp_cost_route_to_refine_each_tier(price_list, all_tiers_all_routes, taxes_fees, financial_data)
+    all_tiers_all_routes, financial_data = calcs.tp_cost_to_refine_all_routes_all_tiers(price_dict, session['skill_levels']['refining'], session['gear_sets'], taxes_fees)
+    cheapest_route = calcs.cheapest_tp_cost_route_to_refine_each_tier(price_dict, all_tiers_all_routes, taxes_fees, financial_data)
     
-    data = calcs.calculate_trophy_profitability(cheapest_route, price_list, taxes_fees, skill_level, gear_set)
+    data = calcs.calculate_trophy_profitability(cheapest_route, price_dict, taxes_fees, skill_level, gear_set)
     
     return render_template('newworld/trophy_calculator_hx.html', data=data, template_order=template_order)
