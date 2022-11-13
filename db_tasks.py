@@ -36,8 +36,15 @@ def timer(time_history=None, to_print=None):
 
 
 def str_to_datetime(date_string):
-    _date = datetime.strptime(date_string, '%Y-%m-%d %H:%M:%S')
-    return _date.astimezone(pytz.utc)
+    try:
+        if '.' in date_string:
+            _date = datetime.strptime(date_string, '%Y-%m-%d %H:%M:%S.%f')
+        else:
+            _date = datetime.strptime(date_string, '%Y-%m-%d %H:%M:%S')
+        return _date.astimezone(pytz.utc)
+    except Exception as e:
+        print_stderr(f'{e} str_to_datetime: {date_string}')
+        return None
 
 
 def datetime_to_str(date_time):
@@ -151,7 +158,7 @@ def request_server_data(stopwatch, server_name_num):
                 server.last_update = latest_date
                 #item_update_count = len(item_data)
                 update_percentage = round((item_update_count / total_item_count)*100,1)
-                stopwatch = timer(stopwatch, f'{server_name} : {update_percentage}% ({item_update_count}) to {datetime_to_str(latest_date)}')
+                stopwatch = timer(stopwatch, f'{server_name} : {update_percentage}% () to {datetime_to_str(latest_date)}')
         else:
             stopwatch = timer(stopwatch, f'{server_name} : Unable to connect.')
             
