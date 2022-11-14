@@ -560,7 +560,7 @@ def server_api():
         if "servers" in request.form:
             server_id = request.form["servers"]
             market_dict = db_scripts.load_market_server(server_id)
-
+            print(market_dict)
             if market_dict:
                 item_dict = market_dict['items']
                 item_ref = player_data.trade_post_order()
