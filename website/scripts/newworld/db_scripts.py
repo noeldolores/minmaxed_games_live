@@ -45,7 +45,7 @@ def load_market_server(server_id):
             market_dict = {}
             for item in server.items:
                 item_name = item.name.lower()
-                if item in full_item_check_list:
+                if item_name in full_item_check_list:
                     #item_name = item.name
                     item_dict[item_name] = float(item.price)
 
