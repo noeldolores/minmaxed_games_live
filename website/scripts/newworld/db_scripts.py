@@ -32,7 +32,6 @@ def load_market_server(server_id):
                     full_item_check_list.append(item)
         else:
             full_item_check_list.extend(trophy_list[1:])
-    print(full_item_check_list)
     try:
         while server is None:
             if tries > 20:
@@ -56,5 +55,4 @@ def load_market_server(server_id):
         print(e)
         db.session.remove()
     finally:
-        print(market_dict)
         return market_dict
