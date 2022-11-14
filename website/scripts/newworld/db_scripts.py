@@ -57,5 +57,5 @@ def load_market_server(server_id):
         print(e)
         db.session.remove()
     finally:
-        
+        print(market_dict)
         return market_dict
