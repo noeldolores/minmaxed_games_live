@@ -35,7 +35,7 @@ def load_market_server(server_id):
     
     try:
         while server is None:
-            if tries > 10:
+            if tries > 20:
                 break
             server = Market.query.filter_by(server_id=server_id).first()
             tries += 1
