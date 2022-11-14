@@ -55,7 +55,7 @@ def load_market_server(server_id):
 
     except Exception as e:
         print(e)
-
-    finally:
         db.session.remove()
+    finally:
+        
         return market_dict
