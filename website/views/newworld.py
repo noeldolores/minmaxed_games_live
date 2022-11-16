@@ -599,10 +599,12 @@ def server_api():
     #     stopwatch = db_scripts.timer()
     #     full_server = db_scripts.request_nwmarketprices(stopwatch)
 
+    copy_available = False
     if 'price_list' in session:
         price_dict = session['price_list']
     if 'server_data' in session:
         if 'items' in session['server_data']:
+            copy_available = True
             price_list_server = session['server_data']['items']
 
             for key, value in session['price_list'].items():
@@ -613,9 +615,22 @@ def server_api():
                         price_list_server[key][mat] = price_dict[key][mat]
             price_dict = price_list_server.copy()
 
-    return render_template('newworld/server_api.html', server_dict=server_dict, price_list=price_dict, template_order=template_order, trophy_order=trophy_order)
+    return render_template('newworld/server_api.html', server_dict=server_dict, price_list=price_dict, template_order=template_order, trophy_order=trophy_order, copy_available=copy_available)
 
 
+@newworld.route('/copy_server_data', methods=['GET', 'POST'])
+def copy_server_data():
+
+    if 'server_data' in session:
+        if 'items' in session['server_data']:
+            price_list_server = session['server_data']['items']
+            session['price_list'] = price_list_server
+
+    return """
+    <button class="btn btn-outline-light loadMarket" type="submit" hx-post="/newworld/copy_server_data" hx-target="#copy_server_div" hx-confirm="This will override your Trade Post prices"> Copy All</button>
+    """
+    
+    
 @newworld.route('/server_api_hx', methods=['GET', 'POST'])
 def server_api_hx():
     init_session()

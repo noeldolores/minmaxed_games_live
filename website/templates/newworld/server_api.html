@@ -46,6 +46,11 @@
                     <button class="btn btn-outline-light loadMarket" type="submit" name="load_server">Load Server</button>
                 </div>
 
+                {% if copy_available %}
+                <div id="copy_server_div">
+                    <button class="btn btn-outline-light loadMarket" type="submit" hx-post="/newworld/copy_server_data" hx-target="#copy_server_div" hx-confirm="This will override your Trade Post prices"> Copy All</button>
+                </div>
+                {% endif %}
             </form>
         </div>   
     </div>
