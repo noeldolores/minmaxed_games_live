@@ -546,39 +546,42 @@ def server_api():
 
     if "load_server" in request.form:
         if "servers" in request.form:
-            server_id = request.form["servers"]
-            market_dict = db_scripts.load_market_server(server_id)
-            
-            if market_dict:
-                item_dict = market_dict['items']
-                item_ref = player_data.trade_post_order()
-                trophy_ref = player_data.trade_post_trophy_order()
-
-                server_prices = {}
-                for item_list in item_ref:
-                    header = item_list[0]
-                    server_prices[header] = {}
-                    for item in item_list:
-                        if item in item_dict:
-                            server_prices[header][item] = item_dict[item]
+            try:
+                server_id = request.form["servers"]
+                market_dict = db_scripts.load_market_server(server_id)
                 
-                for trophy_list in trophy_ref:
-                    header = trophy_list[0]
-                    server_prices[header] = {}
-                    for item in trophy_list:
-                        if item in ['minor', 'basic', 'major']:
-                            trophy = f'{item}_{header}_trophy'
-                            if trophy in item_dict:
-                                server_prices[header][trophy] = item_dict[trophy]
-                        elif item in item_dict:
-                            server_prices[header][item] = item_dict[item]
+                if market_dict:
+                    item_dict = market_dict['items']
+                    item_ref = player_data.trade_post_order()
+                    trophy_ref = player_data.trade_post_trophy_order()
 
-                session['server_data'] = {
-                    'name' : market_dict['name'],
-                    'last_update': market_dict['last_update'],
-                    'items': server_prices
-                }
-                session['api_loaded'] = True
+                    server_prices = {}
+                    for item_list in item_ref:
+                        header = item_list[0]
+                        server_prices[header] = {}
+                        for item in item_list:
+                            if item in item_dict:
+                                server_prices[header][item] = item_dict[item]
+                    
+                    for trophy_list in trophy_ref:
+                        header = trophy_list[0]
+                        server_prices[header] = {}
+                        for item in trophy_list:
+                            if item in ['minor', 'basic', 'major']:
+                                trophy = f'{item}_{header}_trophy'
+                                if trophy in item_dict:
+                                    server_prices[header][trophy] = item_dict[trophy]
+                            elif item in item_dict:
+                                server_prices[header][item] = item_dict[item]
+
+                    session['server_data'] = {
+                        'name' : market_dict['name'],
+                        'last_update': market_dict['last_update'],
+                        'items': server_prices
+                    }
+                    session['api_loaded'] = True
+            except Exception as e:
+                print(e)
             
     template_order = player_data.trade_post_order()
     trophy_order = player_data.trade_post_trophy_order()
