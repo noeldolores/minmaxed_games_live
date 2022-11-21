@@ -1,0 +1,163 @@
+{% extends "newworld/base.html" %} 
+
+{% block head %}
+<title>Trading Post - NW Calculators</title>
+<link id="style" rel="stylesheet" href="{{ url_for('static', filename='newworld/css/trading_post.css') }}"/>
+{% endblock %}
+
+{% block content%}
+<div class="container col-xl-5 col-lg-6 col-md-6">
+    <br><br>
+    <br><br>
+    <div class="card bg-secondary border-warning">
+        <div class="card-header button btn-outline-warning" id="headingOne" type="button" data-toggle="collapse" data-target="#collapseOne">
+            <h1>Trading Post</h1>
+        </div>
+
+        <div id="collapseOne" class="collapse">
+            <div class="card-body bg-dark">
+                <p1>This table shows the full data available for your selected server.</p1><br>
+                <p1>Images will be added in a future update.</p1><br>
+            </div>
+        </div>
+    </div>
+
+    <br><br>
+</div>
+
+<div class="container">
+    {% if server %}
+    <div class="row tradingPost tpBackground" _="on click in <button/> set filter to its value call it.blur()
+                            if #mytable show <tbody>tr/> in #mytable when it's textContent contains filter">
+        <div class="col tradingCategory">
+            <ul class="nav nav-tabs flex-column" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link btn-dark tradeCat active" id="allCategories-icon" value="" data-toggle="tab" data-target="#allCategories" type="button" role="tab" aria-controls="allCategories" aria-selected="true"  _="on click
+                    remove .active from .allToggled add .active to #allCategories">
+                        <img src="/static/newworld/images/icons/itemtypes/itemtype_all.png"></button>
+                </li>
+    
+                <!--<li class="nav-item" role="presentation">
+                    <button class="nav-link btn-dark allToggled tradeCat disabled" id="Weapons-icon" value="Weapons" data-toggle="tab" data-target="#Weapons" type="button" role="tab" aria-controls="Weapons" aria-selected="false"  _="on click call me.blur() 
+                    show <tbody>tr/> in #mytable when it's textContent.toLowerCase() contains my value.toLowerCase()">
+                        <img src="/static/newworld/images/icons/itemtypes/itemtype_weapons.png"></button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link btn-dark allToggled tradeCat disabled" id="Tools-icon" value="Tools" data-toggle="tab" data-target="#Tools" type="button" role="tab" aria-controls="Tools" aria-selected="false"  _="on click call me.blur()
+                    show <tbody>tr/> in #mytable when it's textContent.toLowerCase() contains my value.toLowerCase()">
+                        <img src="/static/newworld/images/icons/itemtypes/itemtype_tools.png"></button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link btn-dark allToggled tradeCat disabled" id="Apparel-icon" value="Apparel" data-toggle="tab" data-target="#Apparel" type="button" role="tab" aria-controls="Apparel" aria-selected="false"  _="on click call me.blur()
+                    show <tbody>tr/> in #mytable when it's textContent.toLowerCase() contains my value.toLowerCase()">
+                        <img src="/static/newworld/images/icons/itemtypes/itemtype_apparel.png"></button>
+                </li>-->
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link btn-dark allToggled tradeCat" id="Resources-icon" value="Resources" data-toggle="tab" data-target="#Resources" type="button" role="tab" aria-controls="Resources" aria-selected="false">
+                        <img src="/static/newworld/images/icons/itemtypes/itemtype_resources.png">
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link btn-dark allToggled tradeCat" id="Consumables-icon" value="Utilities" data-toggle="tab" data-target="#Consumables" type="button" role="tab" aria-controls="Consumables" aria-selected="false">
+                        <img src="/static/newworld/images/icons/itemtypes/itemtype_utilities.png">
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link btn-dark allToggled tradeCat" id="Ammunition-icon" value="Ammo" data-toggle="tab" data-target="#Ammunition" type="button" role="tab" aria-controls="Ammunition" aria-selected="false">
+                        <img src="/static/newworld/images/icons/itemtypes/itemtype_ammo.png">
+                    </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link btn-dark allToggled tradeCat" id="House-icon" value="Furnishings" data-toggle="tab" data-target="#House" type="button" role="tab" aria-controls="House" aria-selected="false">
+                        <img src="/static/newworld/images/icons/itemtypes/itemtype_furnishings.png">
+                    </button>
+                </li>
+
+
+                <li class="nav-item" role="presentation">
+                    <button class="nav-link btn-dark tradeCat disabled" type="button" role="tab"></button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button  class="nav-link btn-dark tradeCat disabled" type="button" role="tab"></button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button  class="nav-link btn-dark tradeCat disabled" type="button" role="tab"></button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button disabled class="nav-link btn-dark tradeCat disabled" type="button" role="tab"></button>
+                </li>
+                <li class="nav-item serverButton" role="presentation">
+                    <a href="/newworld/server_api" target="#"><button class="nav-link btn-dark allToggled tradeCat" type="button" role="tab" aria-controls="Server" aria-selected="false">
+                        <span class="serverText">SERVER</span>
+                    </button></a>
+                </li>
+            </ul>
+        </div>
+    
+        <div class="col tradingFamily" id="tradingFamily">
+            <div class="tab-content">
+                <div class="tab-pane allToggled active" id="allCategories" role="tabpanel" aria-labelledby="allCategories">
+                    <ul class="nav nav-tabs flex-column allToggled" role="tablist">
+                        <li class="familyHeader">
+                            <span id="famHeadText">All Items</span>
+                        </li>
+                        <!--<li class="nav-item" role="presentation">
+                            <button class="nav-link btn-outline-secondary allToggled tradeFam disabled" id="Weapons_L" value="Weapons" data-toggle="tab" data-target="#Weapons" type="button" role="tab" aria-controls="Weapons" aria-selected="false"  _="on click call me.blur() add .active to #Weapons-icon remove .active from #allCategories-icon remove .active from me
+                            show <tbody>tr/> in #mytable when it's textContent.toLowerCase() contains my value.toLowerCase()">Weapons</button>
+                            </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link btn-outline-secondary allToggled tradeFam disabled" id="Tools_L" value="Tools" data-toggle="tab" data-target="#Tools" type="button" role="tab" aria-controls="Tools" aria-selected="false"  _="on click call me.blur() add .active to #Tools-icon remove .active from #allCategories-icon remove .active from me
+                            show <tbody>tr/> in #mytable when it's textContent.toLowerCase() contains my value.toLowerCase()">Tools</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link btn-outline-secondary allToggled tradeFam disabled" id="Apparel_L" value="Apparel" data-toggle="tab" data-target="#Apparel" type="button" role="tab" aria-controls="Apparel" aria-selected="false" _="on click call me.blur() add .active to #Apparel-icon remove .active from #allCategories-icon remove .active from me
+                            show <tbody>tr/> in #mytable when it's textContent.toLowerCase() contains my value.toLowerCase()">Apparel</button>
+                        </li>-->
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link btn-outline-secondary allToggled tradeFam" id="Resources_L" value="Resources" data-toggle="tab" data-target="#Resources" type="button" role="tab" aria-controls="Resources" aria-selected="false" _="on click add .active to #Resources-icon remove .active from #allCategories-icon remove .active from me
+                            ">Resources</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link btn-outline-secondary allToggled tradeFam" id="Consumables_L" value="Utilities" data-toggle="tab" data-target="#Consumables" type="button" role="tab" aria-controls="Consumables" aria-selected="false" _="on click add .active to #Consumables-icon remove .active from #allCategories-icon remove .active from me
+                            ">Consumables</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link btn-outline-secondary allToggled tradeFam" id="Ammunition_L" value="Ammo" data-toggle="tab" data-target="#Ammunition" type="button" role="tab" aria-controls="Ammunition" aria-selected="false" _="on click add .active to #Ammunition-icon remove .active from #allCategories-icon remove .active from me
+                            ">Ammunition</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link btn-outline-secondary allToggled tradeFam" id="House_L" value="Furnishings" data-toggle="tab" data-target="#House" type="button" role="tab" aria-controls="House" aria-selected="false" _="on click add .active to #House-icon remove .active from #allCategories-icon remove .active from me
+                            ">House</button>
+                        </li>
+                    </ul>
+                </div>
+                
+                <!--{% include "newworld/trading_post/weapons.html" %}-->
+                <!--{% include "newworld/trading_post/tools.html" %}-->
+                <!--{% include "newworld/trading_post/apparel.html" %}-->
+                {% include "newworld/trading_post/resources.html" %}
+                {% include "newworld/trading_post/consumables.html" %}
+                {% include "newworld/trading_post/ammunition.html" %}
+                {% include "newworld/trading_post/house.html" %}
+            </div>
+        </div>
+        
+        <div class="col tradingPostTable" hx-get="/newworld/trading_post_hx" hx-trigger="load" hx-target="#tradingPostTable">
+            <div id="tradingPostTable">
+                <img class="loadingImage" alt="Result loading..." class="htmx-indicator" width="256px" src="/static/newworld/images/ball-triangle.svg"/>
+            </div>
+        </div>
+    </div>
+
+    {% else %}
+    <div class="container-fluid">
+        <div class="row justify-content-center">
+            <div class="col-lg-6 col-md-6 col-sm-6">
+                <a href="/newworld/server_api"><button type="button" class="btn btn-warning btn-lg btn-block mb-2 mt-2 home-button">Choose Server<br><span style="font-size:1.35rem">(then reload page)</span></button></a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+{% endblock %}

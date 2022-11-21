@@ -1,5 +1,7 @@
 html, body {
   background-color: rgb(30, 30, 32);
+  background-image: url('/static/newworld/images/icons/tradepost/tradedetailbg.png');
+  background-size: cover;
 }
 
 html {

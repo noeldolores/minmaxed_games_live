@@ -1,0 +1,26 @@
+{% if item_data %}
+<table class="table table-hover table-dark" id='mytable'>
+    <thead>
+        <tr>
+            <th scope="col" style="width:50%"><input placeholder=" Search" style="width:250px;" _="on input
+                show <tbody>tr/> in closest <table/>
+                when it's textContent.toLowerCase() contains my value.toLowerCase()"/>
+            </th>
+            <th style="width:25%">Price</th>
+            <th style="width:25%">Available</th>
+        </tr>
+    </thead>
+    <tbody class="customScroll">
+        {% for item in item_data %}
+        <tr>
+            <td scope="row" style="width:50%">{{item['Name']}}</td>
+            <td style="width:25%">{{item['Price']}}</td>
+            <td style="width:25%">{{item['Avail']}}</td>
+            <td style="display:none;">{{item['Category']}}</td>
+            <td style="display:none;">{{item['Family']}}</td>
+            <td style="display:none;">{{item['Group']}}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endif %}

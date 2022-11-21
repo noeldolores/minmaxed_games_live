@@ -12,7 +12,6 @@ def datetime_to_str(date_time):
     return _date
 
 
-
 def load_market_server(server_id):
     server = None
     market_dict = None
@@ -57,7 +56,247 @@ def load_market_server(server_id):
         db.session.remove()
     finally:
         return market_dict
+
+def retrieve_itemdata_for_tradingpost(server_name):
+    if server_name:
+        items = ItemData.query.all()
+        
+        item_dict = {}
+        for item in items:
+            if item.TradingCategory is not None:
+                if item.TradingCategory not in ["Weapons", "Tools", "Apparel"]:
+                    item_id = item.ItemID.lower()
+                    item_dict[item_id] = {
+                        'Name': item.Name,
+                        'Category': item.TradingCategory,
+                        'Family': item.TradingFamily,
+                        'Group': item.TradingGroup,
+                        'Price': 0,
+                        'Avail': 0
+                    }
+        
+        server = Market.query.filter_by(name=server_name).first()
+        if server:
+            added_items = 0
+            for item in server.items:
+                if item.item_id in item_dict:
+                    item_dict[item.item_id]['Price'] = round(item.price, 2)
+                    item_dict[item.item_id]['Avail'] = item.availability
+                else:
+                    try:
+                        item_name = item.name.replace("_"," ").title()
+                        filters = add_custom_category_family_group(item.item_id, item_name)
+                        item_dict[item.item_id] = {
+                            'Name': item_name,
+                            'Category': filters['Category'],
+                            'Family': filters['Family'],
+                            'Group': filters['Group'],
+                            'Price': round(item.price, 2),
+                            'Avail': item.availability
+                        }
+                        added_items += 1
+                    except Exception as e:
+                        print(e)
+            if added_items > 0:
+                print(f'Added {added_items} items')
+                db.session.commit()
+                    
+
+            for key in list(item_dict.keys()):
+                if item_dict[key]['Price'] == 0:
+                    item_dict.pop(key)
+            
+            item_list_dicts = []
+            for value in item_dict.values():
+                item_list_dicts.append(value)
+                
+        else:
+            print('Server not Found')
+        return item_list_dicts
+    return None
+
+
+def add_custom_category_family_group(itemID, itemName):
+    filters = {
+        'Category': "",
+        'Family': "",
+        'Group': ""
+    }
     
+    ## Furnishings
+    if "house" in itemID:
+        filters['Category'] = "Furnishings"
+        #Miscellaneous
+        if "plant" in itemID or "vegetation" in itemID or "flowerpot" in itemID or "floral" in itemID:
+            filters['Family'] = "houseMisc"
+            filters['Group'] = "decorVegetation"
+        elif "storage" in itemID:
+            filters['Family'] = "houseMisc"
+            filters['Group'] = "decorStorage"
+        elif "chimes" in itemID or "cask" in itemID or "cairn" in itemID or "weaponrack" in itemID or "wheelbarrow" in itemID or "pirate_decor_water" in itemID:
+            filters['Family'] = "houseMisc"
+            filters['Group'] = "decorMisc"
+        
+        #Decorations
+        elif "decor" in itemID:
+            filters['Family'] = "houseDecorations"
+            if "painting" in itemID:
+                filters['Group'] = "decorPaintings"
+                
+        elif "lighting" in itemID:
+            filters['Family'] = "houseDecorations"
+            filters['Group'] = "decorLighting"
+        elif "urtain" in itemID or "urtain" in itemName:
+            filters['Family'] = "houseDecorations"
+            filters['Group'] = "decorCurtains"
+        elif "rug" in itemID:
+            filters['Family'] = "houseDecorations"
+            filters['Group'] = "decorRugs"
+        elif "dish" in itemID or "demijohn" in itemID or "cookware" in itemID or "potsandpans" in itemID or "vase_" in itemID or "placesetting" in itemID or "Amphora" in itemName or "Pot" in itemName or "jar" in itemID or "tea" in itemID or "drinkset" in itemID or "drinkcrate" in itemID or "jug" in itemID or "Rum Crate" in itemName or "Tea Set" in itemName:
+            filters['Family'] = "houseDecorations"
+            filters['Group'] = "decorDishes"
+        elif "paper" in itemID or "writing" in itemID or "Writing" in itemName or "oldbook" in itemID or "Map" in itemName or "Fireplace Books" in itemName or "scroll0" in itemID:
+            filters['Family'] = "houseDecorations"
+            filters['Group'] = "decorBooksPapers"
+        elif "Wreath" in itemName:
+            filters['Family'] = "houseDecorations"
+            filters['Group'] = "decorOther"
+            
+        #Trophies
+        elif "Trophy" in itemName:
+            filters['Family'] = "houseTrophy"
+            if "Combat" in itemName:
+                filters['Group'] = "combatBuffs"
+            elif "Crafting" in itemName:
+                filters['Group'] = "craftingBuffs"
+            elif "Gathering" in itemName:
+                filters['Group'] = "gatheringBuffs"
+            else: 
+                filters['Group'] = "otherBuffs"
+        
+        #Furniture
+        elif "chair" in itemID or "stool" in itemID:
+            filters['Family'] = "houseFurniture"
+            filters['Group'] = "decorChairs"
+        elif "table_" in itemID or "wallwaves" in itemID:
+            filters['Family'] = "houseFurniture"
+            filters['Group'] = "decorTables"
+        elif "shelf0" in itemID or "bookcase" in itemID:
+            filters['Family'] = "houseFurniture"
+            filters['Group'] = "decorShelves"
+        elif "Stove" in itemName:
+            filters['Family'] = "houseFurniture"
+            filters['Group'] = "decorStoves"
+        elif "bed_" in itemID:
+            filters['Family'] = "houseFurniture"
+            filters['Group'] = "decorBeds"
+        elif "cabinet" in itemID or "Cabinet" in itemName or "armoire" in itemID or "Armoire" in itemName or "dresser" in itemID:
+            filters['Family'] = "houseFurniture"
+            filters['Group'] = "decorCabinets"
+        
+        # Final pass
+        elif "dynasty_decor" in itemID or "settler_decor" in itemID or "pirate_decor" in itemID:
+            filters['Family'] = "houseDecorations"
+            filters['Group'] = "decorOther"
+        elif "legion_decor" in itemID:
+            filters['Family'] = "houseFurniture"
+            filters['Group'] = "decorTables"
+        elif "pirate" in itemID:
+            filters['Family'] = "houseMisc"
+            filters['Group'] = "decorMisc"
+        else:
+            filters['Family'] = "houseDecorations"
+            filters['Group'] = "decorOther"
+
+    ## Utilities  
+    elif "Sheet Music" in itemName:
+        filters['Category'] = "Utilities"
+        filters['Family'] = "musicSheets"
+        if "azothflute" in itemID:
+            filters['Group'] = "sheetsFlute"
+        elif "guitar" in itemID:
+            filters['Group'] = "sheetsGuitar"
+        elif "mandolin" in itemID:
+            filters['Group'] = "sheetsMandolin"
+        elif "urbass" in itemID:
+            filters['Group'] = "sheetsUrbass"
+        elif "drums" in itemID:
+            filters['Group'] = "sheetsDrums"
+    elif "repairkit" in itemID:
+        filters['Category'] = "Utilities"
+        filters['Family'] = "repairKits"
+        filters['Group'] = "repairKits"
+    elif "summermedley_" in itemID or "wcconsumable_" in itemID:
+        filters['Category'] = "Utilities"
+        filters['Family'] = "EventConsumables"
+        filters['Group'] = "FoodAttribute"
+    elif "rabbitseasontotem" in itemID:
+        filters['Category'] = "Utilities"
+        filters['Family'] = "EventConsumables"
+        filters['Group'] = "FoodLuck"
+        
+    ## Resources 
+    elif "Pattern:" in itemName:
+        filters['Category'] = "Resources"
+        filters['Family'] = "raw"
+        filters['Group'] = "CraftingPatterns"
+    elif "seal_" in itemID:
+        filters['Category'] = "Resources"
+        filters['Family'] = "raw"
+        filters['Group'] = "CraftingComponents"
+    elif "perfectsalvage" in itemID:
+        filters['Category'] = "Resources"
+        filters['Family'] = "raw"
+        filters['Group'] = "perfectSalvage"
+    
+    if filters["Category"] != "":
+        new_item = ItemData(
+            ItemType = filters["Category"], 
+            ItemClass = filters["Family"], 
+            Tier = "", 
+            ItemID = itemID, 
+            Name = itemName, 
+            ItemTypeDisplayName = "", 
+            Description = "", 
+            TradingCategory = filters["Category"], 
+            TradingFamily = filters["Family"], 
+            TradingGroup = filters["Group"], 
+            BindOnPickup = 0, 
+            BindOnEquip = 0, 
+            GearScoreOverride = "", 
+            MinGearScore = "", 
+            MaxGearScore = "", 
+            ItemStatsRef = "", 
+            CanHavePerks = -1, 
+            CanReplaceGem = -1, 
+            Perk1 = "", 
+            Perk2 = "", 
+            Perk3 = "", 
+            Perk4 = "", 
+            Perk5 = "", 
+            ForceRarity = 0, 
+            RequiredLevel = 0, 
+            UseTypeAffix = 0, 
+            UseMaterialAffix = 0, 
+            UseMagicAffix = 0, 
+            IconCaptureGroup = 0, 
+            UiItemClass = "", 
+            ArmorAppearanceM = "", 
+            ArmorAppearanceF = "", 
+            WeaponAppearanceOverride = "", 
+            IconPath = "", 
+            CraftingRecipe = "", 
+            IngredientCategories = "", 
+            Durability = -1, 
+            Weight = -1, 
+            AttributionId = "", 
+            CraftedAt = ""
+        )
+        db.session.add(new_item)
+            
+    return filters
+
+
 # Run each time new items are loaded
 def import_itemdata_to_table():
     try:

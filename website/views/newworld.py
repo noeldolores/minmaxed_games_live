@@ -218,9 +218,7 @@ def home():
     if search:
         return redirect(url_for("newworld.material", material=search))
 
-    rand_mat = random_material()
-
-    return render_template('newworld/base.html', rand_mat=rand_mat)
+    return render_template('newworld/base.html')
 
 
 @newworld.route('/trade_skills_refining', methods=['GET', 'POST'])
@@ -232,9 +230,7 @@ def trade_skills_refining():
     if search:
         return redirect(url_for("newworld.material", material=search))
 
-    rand_mat = random_material()
-
-    return render_template('newworld/trade_skills_refining.html', rand_mat=rand_mat)
+    return render_template('newworld/trade_skills_refining.html')
 
 
 @newworld.route('/skills', methods=['GET', 'POST'])
@@ -368,8 +364,6 @@ def refining_hx():
             if 'server_data' in session:
                 if 'items' in session['server_data']:
                     price_dict = session['server_data']['items']
-    else:
-        price_dict = session['price_list']
 
     taxes_fees = session['taxes_fees']
     
@@ -433,8 +427,6 @@ def material_table(material):
             if 'server_data' in session:
                 if 'items' in session['server_data']:
                     price_dict = session['server_data']['items']
-    else:
-        price_dict = session['price_list']
 
     material_check = material.replace(" ","_").lower()
     discipline = calcs.determine_discipline(material_check)
@@ -484,8 +476,6 @@ def material_raw_hx(material):
             if 'server_data' in session:
                 if 'items' in session['server_data']:
                     price_dict = session['server_data']['items']
-    else:
-        price_dict = session['price_list']
 
     material_check = material.replace(" ","_").lower()
     discipline = calcs.determine_discipline(material_check)
@@ -525,8 +515,6 @@ def material_price_hx(material):
             if 'server_data' in session:
                 if 'items' in session['server_data']:
                     price_dict = session['server_data']['items']
-    else:
-        price_dict = session['price_list']
     
     material_check = material.replace(" ","_").lower()
     discipline = calcs.determine_discipline(material_check)
@@ -920,12 +908,45 @@ def trophy_calculator_hx():
     
     return render_template('newworld/trophy_calculator_hx.html', data=data, template_order=template_order)
 
+
+@newworld.route('/trading_post', methods=['GET', 'POST'])
+def trading_post():
+    init_session()
+    dictionary_key_replacements()
+    
+    search = search_function()
+    if search:
+        return redirect(url_for('newworld.material', material=search))
+    
+    server_name = None
+    if 'server_data' in session:
+        server_name = session['server_data']['name']
+        
+    return render_template('newworld/trading_post.html', server=server_name)
+
+
+@newworld.route('/trading_post_hx', methods=['GET', 'POST'])
+def trading_post_hx():
+    server_name = None
+    if 'server_data' in session:
+        server_name = session['server_data']['name']
+        try:
+            item_data = db_scripts.retrieve_itemdata_for_tradingpost(server_name)
+            item_data_price = sorted(item_data, key=lambda d: d['Price'])
+        except Exception as e:
+            print(e)
+            item_data_price = None
+    else:
+        item_data_price = None
+        
+    return render_template('newworld/trading_post_hx.html', item_data=item_data_price)
+
+
 @newworld.route('/test_scripts', methods=['GET', 'POST'])
 def test_scripts():
     
-    update_table = db_scripts.import_itemdata_to_table()
-    print(update_table)
-    rename = db_scripts.rename_default_groups()
-    print(rename)
-    
+    # update_table = db_scripts.import_itemdata_to_table()
+    # print(update_table)
+    # rename = db_scripts.rename_default_groups()
+    # print(rename)
     return redirect(url_for("newworld.home"))

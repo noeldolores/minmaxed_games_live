@@ -1,8 +1,8 @@
 {% extends "newworld/base.html" %} 
 
 {% block head %}
-<title>Trade Post - NW Calculators</title>
-<link id="style" rel="stylesheet" href="{{ url_for('static', filename='newworld/css/tradepost.css') }}"/>
+<title>User Prices - NW Calculators</title>
+<link id="style" rel="stylesheet" href="{{ url_for('static', filename='newworld/css/user_prices.css') }}"/>
 {% endblock %}
 
 {% block content%}
@@ -11,12 +11,13 @@
     <br><br>
     <div class="card bg-secondary border-warning">
         <div class="card-header button btn-outline-warning" id="headingOne" type="button" data-toggle="collapse" data-target="#collapseOne">
-            <h1>Trade Post</h1>
+            <h1>User Prices</h1>
         </div>
 
         <div id="collapseOne" class="collapse">
             <div class="card-body bg-dark">
-                <p1>Enter the price of each item below to generate data for the <a href="/newworld/refining" target="#"><u>Refining Cost</u></a> tables.</p1><br>
+                <p1>Enter the price of each item below to generate data for the various tables and calculators found on this site.</p1><br>
+                <p1>Visit the <a href="/newworld/server_api" target="#"><u>Server API</u></a> page to Copy the most recent pricing data from your server to here.</p1><br>
                 <p1>The data you enter will be saved to your browser for future visits.</p1>
             </div>
         </div>
@@ -26,9 +27,9 @@
 </div>
 
 <div class="container tradePrices">
-    <form hx-post="/newworld/tradepost_hx" hx-target="#tradepost_hx">
-        <div id="tradepost_hx">  
-            {% include "newworld/tradepost_hx.html" %}
+    <form hx-post="/newworld/user_prices_hx" hx-target="#user_prices_hx">
+        <div id="user_prices_hx">  
+            {% include "newworld/user_prices_hx.html" %}
         </div>
 
         <div>
