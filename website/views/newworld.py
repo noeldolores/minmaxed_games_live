@@ -919,3 +919,13 @@ def trophy_calculator_hx():
     data = calcs.calculate_trophy_profitability(cheapest_route, price_dict, taxes_fees, skill_level, gear_set)
     
     return render_template('newworld/trophy_calculator_hx.html', data=data, template_order=template_order)
+
+@newworld.route('/test_scripts', methods=['GET', 'POST'])
+def test_scripts():
+    
+    update_table = db_scripts.import_itemdata_to_table()
+    print(update_table)
+    rename = db_scripts.rename_default_groups()
+    print(rename)
+    
+    return redirect(url_for("newworld.home"))
