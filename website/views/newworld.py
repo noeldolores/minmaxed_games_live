@@ -615,8 +615,8 @@ def server_api():
             name, num = line.rstrip().lower().split(",")
             server_dict[name] = num
 
-    # if 'price_list' in session:
-    #     price_dict = session['price_list']
+    if 'price_list' in session:
+        price_dict = session['price_list']
         
     copy_available = False
     if 'server_api' in session:
