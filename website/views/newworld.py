@@ -15,8 +15,13 @@ def init_session():
         session['gear_sets'] = player_data.init_gear_sets()
         session['price_list'] = player_data.init_price_list()
         session['taxes_fees'] = player_data.init_taxes_and_fees()
-        session['api_loaded'] = False
-
+        
+        session['server_api'] = {
+            'server_name': None,
+            'server_id': None,
+            'last_update': None,
+            'force_load': False
+        }
         session.pop('_flashes', None)
         flash("We use only the necessary cookies to store the data you provide so it is available for your next visit. No data is shared with any third party. By continuing, you agree to this use of cookies.", category='success')
 
@@ -178,25 +183,6 @@ def dictionary_key_replacements():
                             session['price_list'][category][trophy] = 0
                         else:
                             session['price_list'][category][item] = 0
-        
-    if 'server_data' in session:
-        if 'items' in session['server_data']:
-            if 'refining_components' in session['server_data']['items']:
-                session['server_data']['items']['refining_component'] = session['server_data']['items']['refining_components']
-                print("Rename: " + str(session['server_data']['items'].pop('refining_components', None)))
-            
-            if 'smelting_precious' not in session['server_data']['items']:
-                session['server_data']['items']['smelting_precious'] = {
-                    "silver_ore" : 0,
-                    "silver_ingot" : 0,
-                    "gold_ore" : 0,
-                    "gold_ingot" : 0,
-                    "platinum_ore" : 0,
-                    "platinum_ingot" : 0,
-                    "charcoal" : 0,
-                    "orichalcum_ore" : 0,
-                    "orichalcum_ingot_platinum" : 0
-                }
                 
     if 'taxes_fees' not in session:
         session['taxes_fees'] = player_data.init_taxes_and_fees()
@@ -206,6 +192,96 @@ def dictionary_key_replacements():
         session['taxes_fees']['crafting'] = {
             'station': 0
         }
+    
+    if 'server_api' not in session: 
+        server_name = None    
+        server_id = None    
+        last_update = None
+        force_load = False
+        if 'server_data' in session:
+            server_dict = {}
+            basedir = os.path.abspath(os.path.dirname(__file__))
+            server_list_file = os.path.join(basedir, '../static/newworld/txt/api_server_list.txt')
+            with open(server_list_file) as file:
+                lines = file.readlines()
+                lines.sort()
+                for line in lines:
+                    name, num = line.rstrip().lower().split(",")
+                    server_dict[name] = num
+                    
+            server_name = session['server_data']['name']
+            last_update = session['server_data']['last_update']
+            server_id = server_dict[server_name]
+        
+        if 'api_loaded' in session:
+            if session['api_loaded']:
+                force_load = True
+            session.pop('api_loaded')
+                
+        session['server_api'] = {
+            'server_name': server_name,
+            'server_id': server_id,
+            'last_update': last_update,
+            'force_load': force_load
+        }
+    
+    if 'server_data' in session:
+        session.pop('server_data')
+
+
+def load_api_server_data(server_name):
+    server_dict = {}
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    server_list_file = os.path.join(basedir, '../static/newworld/txt/api_server_list.txt')
+    with open(server_list_file) as file:
+        lines = file.readlines()
+        lines.sort()
+        for line in lines:
+            name, num = line.rstrip().lower().split(",")
+            server_dict[name] = num
+            
+    server_id = server_dict[server_name]
+    try:
+        market_dict = db_scripts.load_market_server(server_id)
+
+        if market_dict:
+            item_dict = market_dict['items']
+    
+            server_price_list = copy.deepcopy(session['price_list'])
+            for key, value in server_price_list.items():
+                for mat in value.keys():
+                    if mat in item_dict:
+                        server_price_list[key][mat] = item_dict[mat]
+                     
+            server_data = {
+                'name' : market_dict['name'],
+                'last_update': market_dict['last_update'],
+                'items': server_price_list
+            }
+            
+            session['server_api'] = {
+                'server_name': market_dict['name'],
+                'server_id': server_id,
+                'last_update': market_dict['last_update'],
+                'force_load': True
+            }
+            return server_data
+    except Exception as e:
+        print(e)
+        session['server_api']['force_load'] = False
+        return None
+
+
+def force_load_server_api_check():
+    if 'server_api' in session:
+        if session['server_api']['force_load'] == True:
+            server_name = session['server_api']['server_name']
+            if server_name:
+                server_data = load_api_server_data(server_name)
+                if server_data:
+                    if 'items' in server_data:
+                        return server_data['items']
+    return None
 
 
 @newworld.route('/', methods=['GET', 'POST'])
@@ -359,11 +435,9 @@ def refining_hx():
 
     if 'price_list' in session:
         price_dict = session['price_list']
-    if 'api_loaded' in session:
-        if session['api_loaded']:
-            if 'server_data' in session:
-                if 'items' in session['server_data']:
-                    price_dict = session['server_data']['items']
+    force_load = force_load_server_api_check()
+    if force_load is not None:
+        price_dict = force_load
 
     taxes_fees = session['taxes_fees']
     
@@ -422,11 +496,9 @@ def material_table(material):
     
     if 'price_list' in session:
         price_dict = session['price_list']
-    if 'api_loaded' in session:
-        if session['api_loaded']:
-            if 'server_data' in session:
-                if 'items' in session['server_data']:
-                    price_dict = session['server_data']['items']
+    force_load = force_load_server_api_check()
+    if force_load is not None:
+        price_dict = force_load
 
     material_check = material.replace(" ","_").lower()
     discipline = calcs.determine_discipline(material_check)
@@ -471,11 +543,9 @@ def material_raw_hx(material):
     
     if 'price_list' in session:
         price_dict = session['price_list']
-    if 'api_loaded' in session:
-        if session['api_loaded']:
-            if 'server_data' in session:
-                if 'items' in session['server_data']:
-                    price_dict = session['server_data']['items']
+    force_load = force_load_server_api_check()
+    if force_load is not None:
+        price_dict = force_load
 
     material_check = material.replace(" ","_").lower()
     discipline = calcs.determine_discipline(material_check)
@@ -510,16 +580,17 @@ def material_price_hx(material):
     
     if 'price_list' in session:
         price_dict = session['price_list']
-    if 'api_loaded' in session:
-        if session['api_loaded']:
-            if 'server_data' in session:
-                if 'items' in session['server_data']:
-                    price_dict = session['server_data']['items']
+    force_load = force_load_server_api_check()
+    if force_load is not None:
+        price_dict = force_load
     
     material_check = material.replace(" ","_").lower()
     discipline = calcs.determine_discipline(material_check)
     
-    material_price = price_dict[discipline][material_check]
+    if material_check == "orichalcum_ingot_platinum":
+        material_price = price_dict["smelting"]["orichalcum_ingot"]
+    else:
+        material_price = price_dict[discipline][material_check]
     
     return render_template('newworld/material_price_hx.html', material_price=material_price)
     
@@ -535,7 +606,6 @@ def server_api():
 
     server_dict = {}
     basedir = os.path.abspath(os.path.dirname(__file__))
-
     server_list_file = os.path.join(basedir, '../static/newworld/txt/api_server_list.txt')
     with open(server_list_file) as file:
         lines = file.readlines()
@@ -544,78 +614,59 @@ def server_api():
             name, num = line.rstrip().lower().split(",")
             server_dict[name] = num
 
+    if 'price_list' in session:
+        price_dict = session['price_list']
+        
+    copy_available = False
+    if 'server_api' in session:
+        server_name = session['server_api']['server_name']
+        if server_name:
+            copy_available = True
+            server_data = load_api_server_data(server_name)
+            if server_data:
+                if 'items' in server_data:
+                    server_dict = server_data['items']
+                    
     if "load_server" in request.form:
         if "servers" in request.form:
-            try:
-                server_id = request.form["servers"]
-                market_dict = db_scripts.load_market_server(server_id)
-                
-                if market_dict:
-                    item_dict = market_dict['items']
-                    item_ref = player_data.trade_post_order()
-                    trophy_ref = player_data.trade_post_trophy_order()
+            server_id = request.form["servers"]
+            market_dict = db_scripts.load_market_server(server_id)
 
-                    server_prices = {}
-                    for item_list in item_ref:
-                        header = item_list[0]
-                        server_prices[header] = {}
-                        for item in item_list:
-                            if item in item_dict:
-                                server_prices[header][item] = item_dict[item]
-                    
-                    for trophy_list in trophy_ref:
-                        header = trophy_list[0]
-                        server_prices[header] = {}
-                        for item in trophy_list:
-                            if item in ['minor', 'basic', 'major']:
-                                trophy = f'{item}_{header}_trophy'
-                                if trophy in item_dict:
-                                    server_prices[header][trophy] = item_dict[trophy]
-                            elif item in item_dict:
-                                server_prices[header][item] = item_dict[item]
+            if market_dict:
+                item_dict = market_dict['items']
+                price_dict = copy.deepcopy(session['price_list'])
+                for key, value in price_dict.items():
+                    for mat in value.keys():
+                        if mat in item_dict:
+                            price_dict[key][mat] = item_dict[mat]
 
-                    session['server_data'] = {
-                        'name' : market_dict['name'],
-                        'last_update': market_dict['last_update'],
-                        'items': server_prices
-                    }
-                    session['api_loaded'] = True
-            except Exception as e:
-                print(e)
-            
-    template_order = player_data.trade_post_order()
-    trophy_order = player_data.trade_post_trophy_order()
+                copy_available = True
+                session['server_api'] = {
+                    'server_name': market_dict['name'],
+                    'server_id': server_id,
+                    'last_update': market_dict['last_update'],
+                    'force_load': True
+                }
 
     # if "load_all" in request.form:
     #     stopwatch = db_scripts.timer()
     #     full_server = db_scripts.request_nwmarketprices(stopwatch)
-
-    copy_available = False
-    if 'price_list' in session:
-        price_dict = session['price_list']
-    if 'server_data' in session:
-        if 'items' in session['server_data']:
-            copy_available = True
-            price_list_server = session['server_data']['items']
-
-            for key, value in session['price_list'].items():
-                for mat in value.keys():
-                    if key not in price_list_server:
-                        price_list_server[key] = {}
-                    if mat not in price_list_server[key]:
-                        price_list_server[key][mat] = price_dict[key][mat]
-            price_dict = price_list_server.copy()
-
-    return render_template('newworld/server_api.html', server_dict=server_dict, price_list=price_dict, template_order=template_order, trophy_order=trophy_order, copy_available=copy_available)
+        
+    template_order = player_data.trade_post_order()
+    trophy_order = player_data.trade_post_trophy_order()
+    
+    return render_template('newworld/server_api.html', server_dict=server_dict, price_list=price_dict, template_order=template_order, trophy_order=trophy_order,copy_available=copy_available)
 
 
-@newworld.route('/copy_server_data', methods=['GET', 'POST'])
+@newworld.route('/copy_server_data',methods=['GET', 'POST'])
 def copy_server_data():
-
-    if 'server_data' in session:
-        if 'items' in session['server_data']:
-            price_list_server = session['server_data']['items']
-            session['price_list'] = price_list_server
+    if 'server_api' in session:
+        server_name = session['server_api']['server_name']
+        if server_name:
+            server_data = load_api_server_data(server_name)
+            if server_data:
+                if 'items' in server_data:
+                    session['price_list'] = server_data['items']
 
     return """
     <button class="btn btn-outline-light loadMarket" type="submit" hx-post="/newworld/copy_server_data" hx-target="#copy_server_div" hx-confirm="This will override your Trade Post prices"> Copy All</button>
@@ -628,22 +679,19 @@ def server_api_hx():
     dictionary_key_replacements()
     
     template_order = player_data.trade_post_order()
+    trophy_order = player_data.trade_post_trophy_order()
 
     if 'price_list' in session:
         price_dict = session['price_list']
-    if 'server_data' in session:
-        if 'items' in session['server_data']:
-            price_list_server = session['server_data']['items']
+    if 'server_api' in session:
+        server_name = session['server_api']['server_name']
+        if server_name:
+            server_data = load_api_server_data(server_name)
+            if server_data:
+                if 'items' in server_data:
+                    price_dict = server_data['items']
 
-            for key, value in session['price_list'].items():
-                for mat in value.keys():
-                    if key not in price_list_server:
-                        price_list_server[key] = {}
-                    if mat not in price_list_server[key]:
-                        price_list_server[key][mat] = price_dict[key][mat]
-            price_dict = price_list_server.copy()
-
-    return render_template('newworld/server_api_hx.html', price_list=price_dict, template_order=template_order)
+    return render_template('newworld/server_api_hx.html', price_list=price_dict, template_order=template_order, trophy_order=trophy_order)
 
 
 @newworld.route('/navbar_api_hx', defaults={'material':None}, methods=['GET', 'POST'])
@@ -653,15 +701,15 @@ def navbar_api_hx(material):
     if material:
         material_hx = material.lower().replace(" ","_") 
 
-    is_loaded = session['api_loaded']
-
-    if is_loaded:
-        session['api_loaded'] = False
+    force_load = session['server_api']['force_load']
+    
+    if force_load:
+        session['server_api']['force_load'] = False
         status = 'Load API'
         css_class = "btn-outline-secondary"
 
     else:
-        session['api_loaded'] = True
+        session['server_api']['force_load'] = True
         status = 'API Active'
         css_class = "btn-outline-success"
 
@@ -893,11 +941,9 @@ def trophy_calculator_hx():
 
     if 'price_list' in session:
         price_dict = session['price_list']
-    if 'api_loaded' in session:
-        if session['api_loaded']:
-            if 'server_data' in session:
-                if 'items' in session['server_data']:
-                    price_dict = session['server_data']['items']
+    force_load = force_load_server_api_check()
+    if force_load is not None:
+        price_dict = force_load
     
     taxes_fees = session['taxes_fees']
     skill_level = session['skill_levels']['refining']
@@ -922,8 +968,8 @@ def trading_post():
         return redirect(url_for('newworld.material', material=search))
     
     server_name = None
-    if 'server_data' in session:
-        server_name = session['server_data']['name']
+    if 'server_api' in session:
+        server_name = session['server_api']['server_name']
         
     return render_template('newworld/trading_post.html', server=server_name)
 
@@ -931,14 +977,15 @@ def trading_post():
 @newworld.route('/trading_post_hx', methods=['GET', 'POST'])
 def trading_post_hx():
     server_name = None
-    if 'server_data' in session:
-        server_name = session['server_data']['name']
-        try:
-            item_data = db_scripts.retrieve_itemdata_for_tradingpost(server_name)
-            item_data_price = sorted(item_data, key=lambda d: d['Price'])
-        except Exception as e:
-            print(e)
-            item_data_price = None
+    if 'server_api' in session:
+        server_name = session['server_api']['server_name']
+        if server_name:
+            try:
+                item_data = db_scripts.retrieve_itemdata_for_tradingpost(server_name)
+                item_data_price = sorted(item_data, key=lambda d: d['Price'])
+            except Exception as e:
+                print(e)
+                item_data_price = None
     else:
         item_data_price = None
         

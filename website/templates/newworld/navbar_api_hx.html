@@ -3,11 +3,11 @@
                         if #material_price fetch /newworld/material_price_hx/{{material.lower()|replace(" ","_")}} put the result into #material_price
                         if #material_container fetch /newworld/material_primary_hx/{{material.lower()|replace(" ","_")}} put the result into #material_container set #quant_field.value to 1
                             else if #raw_container fetch /newworld/material_raw_hx/{{material.lower()|replace(" ","_")}} put the result into #raw_container set #quant_field.value to 1">
-    {% if session['api_loaded'] %}
-    <button name="api" hx-trigger="click" hx-post="/newworld/navbar_api_hx/{{material}}" hx-target='#api_toggle' type="button" class="btn btn-outline-success btn-sm" _="on click call me.blur()">{{session['server_data']['name']|title }} Active</button>
-    <a href="/newworld/server_api"><p1 class="pl-2" style="color: rgb(175, 175, 175);">Updated: {{session['server_data']['last_update']}}</p1></a>
+    {% if session['server_api']['force_load'] %}
+    <button name="api" hx-trigger="click" hx-post="/newworld/navbar_api_hx/{{material}}" hx-target='#api_toggle' type="button" class="btn btn-outline-success btn-sm" _="on click call me.blur()">{{session['server_api']['server_name']|title }} Active</button>
+    <a href="/newworld/server_api"><p1 class="pl-2" style="color: rgb(175, 175, 175);">Updated: {{session['server_api']['last_update']}}</p1></a>
     {% else %}
-    <button name="api" name="api" hx-trigger="click" hx-post="/newworld/navbar_api_hx/{{material}}" hx-target='#api_toggle' type="button" class="btn btn-outline-secondary btn-sm" _="on click call me.blur()">Load {{session['server_data']['name']|title }}</button>
+    <button name="api" name="api" hx-trigger="click" hx-post="/newworld/navbar_api_hx/{{material}}" hx-target='#api_toggle' type="button" class="btn btn-outline-secondary btn-sm" _="on click call me.blur()">Load {{session['server_api']['server_name']|title }}</button>
     {% endif %}
     
 {% else %}
@@ -16,11 +16,11 @@
                         else
                         if #refining_container fetch /newworld/refining_hx put the result into #refining_container
                         ">
-    {% if session['api_loaded'] %}
-    <button name="api" hx-trigger="click" hx-post="/newworld/navbar_api_hx" hx-target='#api_toggle' type="button" class="btn btn-outline-success btn-sm" _="on click call me.blur()">{{session['server_data']['name']|title }} Active</button>
-    <a href="/newworld/server_api"><p1 class="pl-2" style="color: rgb(175, 175, 175);">Updated: {{session['server_data']['last_update']}}</p1></a>
+    {% if session['server_api']['force_load'] %}
+    <button name="api" hx-trigger="click" hx-post="/newworld/navbar_api_hx" hx-target='#api_toggle' type="button" class="btn btn-outline-success btn-sm" _="on click call me.blur()">{{session['server_api']['server_name']|title }} Active</button>
+    <a href="/newworld/server_api"><p1 class="pl-2" style="color: rgb(175, 175, 175);">Updated: {{session['server_api']['last_update']}}</p1></a>
     {% else %}
-    <button name="api" name="api" hx-trigger="click" hx-post="/newworld/navbar_api_hx" hx-target='#api_toggle' type="button" class="btn btn-outline-secondary btn-sm" _="on click call me.blur()">Load {{session['server_data']['name']|title }}</button>
+    <button name="api" name="api" hx-trigger="click" hx-post="/newworld/navbar_api_hx" hx-target='#api_toggle' type="button" class="btn btn-outline-secondary btn-sm" _="on click call me.blur()">Load {{session['server_api']['server_name']|title }}</button>
     {% endif %}
 {% endif %}
 </form>

@@ -38,10 +38,12 @@
                 </div>
             </li>
             
-            {% if 'server_data' in session %}
-            <li class="nav-item active form-check-inline" id="api_toggle">
-                {% include '/newworld/navbar_api_hx.html'%}
-            </li>
+            {% if 'server_api' in session %}
+                {% if session['server_api']['server_name'] %}
+                <li class="nav-item active form-check-inline" id="api_toggle">
+                    {% include '/newworld/navbar_api_hx.html'%}
+                </li>
+                {% endif %}
             {% endif %}
         </ul>
 

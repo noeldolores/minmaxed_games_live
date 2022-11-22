@@ -125,10 +125,11 @@ def request_server_data(stopwatch, server_name_num):
             for item, item_info in item_data.items():
                 item_check = models.Item.query.filter_by(market_id=server.id).filter_by(item_id=item_info['ID']).first()
                 if item_check:
-                    item_check.price = item_info['Price']
-                    item_check.availability = item_info['Availability']
-                    item_check.last_update = item_info['LastUpdated']
-                    item_update_count += 1 
+                    if float(item_info['Price']) > 0:
+                        item_check.price = item_info['Price']
+                        item_check.availability = item_info['Availability']
+                        item_check.last_update = item_info['LastUpdated']
+                        item_update_count += 1 
                 else:
                     new_item = models.Item(last_update=item_info['LastUpdated'], item_id=item_info['ID'], name=item_info['Name'], price=item_info['Price'], availability=item_info['Availability'], market_id=server.id)
                     db.session.add(new_item)

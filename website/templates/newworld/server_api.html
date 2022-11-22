@@ -34,8 +34,8 @@
         <div class="col col-lg-6 col-sm-10 text-center">
             <form method="post">
                 <select class="form-control" name="servers">
-                    {% if 'server_data' in session %}
-                    <option hidden disable value={{server_dict[session['server_data']['name']|lower]}}>{{session['server_data']['name']|title}}</option>
+                    {% if 'server_api' in session %}
+                    <option hidden disable value={{server_dict[session['server_api']['server_name']|lower]}}>{{session['server_api']['server_name']|title}}</option>
                     {%endif%}
                     {% for key, value in server_dict.items() %}
                     <option value={{value}}>{{key|title}}</option>
@@ -64,11 +64,9 @@
 
     <br><br>
     
-    {% if session['server_data'] %}
-    <form hx-post="/newworld/server_api_hx" hx-target="#server_api_hx">
-        <div class="container" id="server_api_hx">  
-            {% include "newworld/server_api_hx.html" %}
-        </div>
+    {% if copy_available %}
+    <form hx-post="/newworld/server_api_hx" hx-target="#server_api_hx" _="init fetch /newworld/server_api_hx put the result into #server_api_hx">
+        <div class="container" id="server_api_hx"></div>
     </form> 
 
     <br><br>
