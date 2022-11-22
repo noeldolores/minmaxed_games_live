@@ -382,8 +382,8 @@ def gearsets_hx():
     return render_template('newworld/gearsets_hx.html', gear_sets=session['gear_sets'])
 
 
-@newworld.route('/tradepost', methods=['GET', 'POST'])
-def tradepost():
+@newworld.route('/user_prices', methods=['GET', 'POST'])
+def user_prices():
     init_session()
     dictionary_key_replacements()
     
@@ -394,11 +394,11 @@ def tradepost():
     template_order = player_data.trade_post_order()
     trophy_order = player_data.trade_post_trophy_order()
     
-    return render_template('newworld/tradepost.html', price_list=session['price_list'], template_order=template_order, trophy_order=trophy_order)
+    return render_template('newworld/user_prices.html', price_list=session['price_list'], template_order=template_order, trophy_order=trophy_order)
 
 
-@newworld.route('/tradepost_hx', methods=['GET', 'POST'])
-def tradepost_hx():
+@newworld.route('/user_prices_hx', methods=['GET', 'POST'])
+def user_prices_hx():
     template_order = player_data.trade_post_order()
     trophy_order = player_data.trade_post_trophy_order()
                     
@@ -412,7 +412,7 @@ def tradepost_hx():
                         if item == "orichalcum_ingot_platinum":
                             session['price_list'][category][item] = strip_leading_zeros(True, request.form["orichalcum_ingot"])     
             
-    return render_template('newworld/tradepost_hx.html', price_list=session['price_list'], template_order=template_order, trophy_order=trophy_order)
+    return render_template('newworld/user_prices_hx.html', price_list=session['price_list'], template_order=template_order, trophy_order=trophy_order)
 
 
 @newworld.route('/refining', methods=['GET', 'POST'])
