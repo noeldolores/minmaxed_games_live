@@ -142,7 +142,7 @@
             </div>
         </div>
         
-        <div class="col tradingPostTable" hx-get="/newworld/trading_post_hx" hx-trigger="load" hx-target="#tradingPostTable">
+        <div class="col tradingPostTable" _="init fetch /newworld/trading_post_hx put the result into #tradingPostTable">
             <div id="tradingPostTable">
                 <img class="loadingImage" alt="Result loading..." class="htmx-indicator" width="256px" src="/static/newworld/images/ball-triangle.svg"/>
             </div>
