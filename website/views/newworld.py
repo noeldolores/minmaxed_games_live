@@ -2,6 +2,7 @@ from flask import Blueprint, request, flash, render_template, redirect, url_for,
 import random
 from ..scripts.newworld import player_data, calculations as calcs, db_scripts
 import os
+import copy
 
 
 newworld = Blueprint('newworld', __name__)
