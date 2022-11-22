@@ -40,12 +40,10 @@ Avalon,52
 Devourer,53
 Death,54
 Nomad,55
-Barataria,56
 Ulthar,57
 Nyx,58
 Arjuna,59
 Sutekh,60
-Thule,61
 Gaea,62
 Jormungandr,63
 Titan,64
@@ -64,3 +62,6 @@ Mayari,76
 Nedenyek,77
 Artorius,78
 Jupiter,79
+Imhotep,80
+Medusa,83
+Enkidu,84
