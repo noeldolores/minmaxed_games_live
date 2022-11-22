@@ -615,8 +615,8 @@ def server_api():
             name, num = line.rstrip().lower().split(",")
             server_dict[name] = num
 
-    if 'price_list' in session:
-        price_dict = session['price_list']
+    # if 'price_list' in session:
+    #     price_dict = session['price_list']
         
     copy_available = False
     if 'server_api' in session:
@@ -626,7 +626,7 @@ def server_api():
             server_data = load_api_server_data(server_name)
             if server_data:
                 if 'items' in server_data:
-                    server_dict = server_data['items']
+                    price_dict = server_data['items']
                     
     if "load_server" in request.form:
         if "servers" in request.form:
