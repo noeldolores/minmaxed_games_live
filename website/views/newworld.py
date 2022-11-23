@@ -593,10 +593,10 @@ def material_price_hx(material):
     else:
         material_price = price_dict[discipline][material_check]
 
-    buy_tax = calcs.apply_trade_post_tax_buy(material_price, session['taxes_fees'])
+    buy_tax = round(calcs.apply_trade_post_tax_buy(material_price, session['taxes_fees']),2)
     final_price = material_price + buy_tax
     
-    return render_template('newworld/material_price_hx.html', material_price=final_price)
+    return render_template('newworld/material_price_hx.html', material_price=material_price, final_price=final_price, buy_tax=buy_tax)
     
 
 @newworld.route('/server_api', methods=['GET', 'POST'])
