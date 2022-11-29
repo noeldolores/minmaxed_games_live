@@ -1,9 +1,10 @@
-from flask import Blueprint, request, flash, render_template, redirect, url_for, escape, session
+from flask import Blueprint, request, flash, render_template, redirect, url_for, escape, session, make_response, Response
 import random
 from ..scripts.newworld import player_data, calculations as calcs, db_scripts
 import os
 import copy
-
+from datetime import datetime, timezone
+import json
 
 newworld = Blueprint('newworld', __name__)
 
@@ -22,6 +23,9 @@ def init_session():
             'server_id': None,
             'last_update': None,
             'force_load': False
+        }
+        session['server_cookies'] = {
+            'last_update': None
         }
         session.pop('_flashes', None)
         flash("We use only the necessary cookies to store the data you provide so it is available for your next visit. No data is shared with any third party. By continuing, you agree to this use of cookies.", category='success')
@@ -42,11 +46,6 @@ def validate_search(search):
     components = os.path.join(basedir, '../static/newworld/txt/components.txt')
     arcana = os.path.join(basedir, '../static/newworld/txt/arcana.txt')
     trophies = os.path.join(basedir, '../static/newworld/txt/trophies.txt')
-    primary_list = []
-    secondary_list = []
-    components_list = []
-    arcana_list = []
-    trophies_list = []
     
     search_list = []
 
@@ -240,6 +239,77 @@ def dictionary_key_replacements():
     
     if 'server_data' in session:
         session.pop('server_data')
+    
+    if 'server_cookies' not in session:
+        session['server_cookies'] = {
+            'last_update': None
+        }
+
+
+def init_cookies():
+    if request.cookies.get('server_api_refine') is None:
+        resp = make_response(redirect(url_for(request.endpoint, **request.view_args)))
+        resp.set_cookie('server_api_refine', "")
+        resp.set_cookie('server_api_trophy', "")
+        resp.set_cookie('server_api_alchemy', "")
+        return resp
+    else:
+        return None
+    
+
+def update_cookies_check():
+    if request.cookies.get('server_api_refine') == "":
+        return True
+    
+    update_threshold = 1800
+    current_time = datetime.now(timezone.utc)
+    last_update = datetime.now(timezone.utc)
+    if 'server_cookies' in session:
+        last_update = session['server_cookies']['last_update']
+    
+    if (current_time - last_update).total_seconds() >= update_threshold:
+        return True
+    return False
+
+
+def get_price_dict_from_cookies():
+    price_dict = {}
+    cookie_string_list = []
+    cookie_string_list.append(request.cookies.get('server_api_refine'))
+    cookie_string_list.append(request.cookies.get('server_api_trophy'))
+    cookie_string_list.append(request.cookies.get('server_api_alchemy'))
+    
+    for cookie_string in cookie_string_list:
+        price_dict.update(json.loads(cookie_string))
+    return price_dict
+
+
+def set_price_dict_to_cookies(price_dict):
+    template_order = [i[0] for i in player_data.trade_post_order()]
+    trophy_order = [i[0] for i in player_data.trade_post_trophy_order()]
+    alchemy_order = [i[0] for i in player_data.alchemy_order()]
+    
+    server_api_refine = {}
+    server_api_trophy = {}
+    server_api_alchemy = {}
+    
+    for key, value in price_dict.items():
+        if key in template_order:
+            server_api_refine[key] = value
+        elif key in trophy_order:
+            server_api_trophy[key] = value
+        elif key in alchemy_order:
+            server_api_alchemy[key] = value
+        else:
+            print(key)
+    
+    session['server_cookies']['last_update'] = datetime.now(timezone.utc)
+    
+    resp = make_response(redirect(url_for(request.endpoint, **request.view_args)))
+    resp.set_cookie('server_api_refine', json.dumps(server_api_refine))
+    resp.set_cookie('server_api_trophy', json.dumps(server_api_trophy))
+    resp.set_cookie('server_api_alchemy', json.dumps(server_api_alchemy))
+    return resp
 
 
 def load_api_server_data(server_name):
@@ -290,10 +360,17 @@ def force_load_server_api_check():
         if session['server_api']['force_load'] == True:
             server_name = session['server_api']['server_name']
             if server_name:
-                server_data = load_api_server_data(server_name)
-                if server_data:
-                    if 'items' in server_data:
-                        return server_data['items']
+                cookie_check = update_cookies_check()
+                if cookie_check is True:
+                    # update server data and cookies
+                    server_data = load_api_server_data(server_name)
+                    if server_data:
+                        if 'items' in server_data:
+                            cookie_response = set_price_dict_to_cookies(server_data['items'])
+                            return cookie_response
+                else:
+                    price_dict = get_price_dict_from_cookies()
+                    return price_dict     
     return None
 
 
@@ -302,8 +379,11 @@ def home():
     init_session()
     dictionary_key_replacements()
     
-    search = search_function()
+    _cookie_response = init_cookies()
+    if _cookie_response:
+        return _cookie_response
     
+    search = search_function()
     if search:
         return redirect(url_for("newworld.material", material=search))
 
@@ -314,6 +394,10 @@ def home():
 def trade_skills_refining():
     init_session()
     dictionary_key_replacements()
+    
+    _cookie_response = init_cookies()
+    if _cookie_response:
+        return _cookie_response
     
     search = search_function()
     if search:
@@ -327,6 +411,10 @@ def skills():
     init_session()
     dictionary_key_replacements()
     
+    _cookie_response = init_cookies()
+    if _cookie_response:
+        return _cookie_response
+    
     search = search_function()
     if search:
         return redirect(url_for('newworld.material', material=search))
@@ -336,7 +424,6 @@ def skills():
 
 @newworld.route('/skills_hx', methods=['GET', 'POST'])
 def skills_hx():
-    
     if request.method == 'POST':
         if "save" in request.form:
             session['skill_levels'] = {
@@ -373,6 +460,10 @@ def gearsets():
     init_session()
     dictionary_key_replacements()
     
+    _cookie_response = init_cookies()
+    if _cookie_response:
+        return _cookie_response
+    
     search = search_function()
     if search:
         return redirect(url_for('newworld.material', material=search))
@@ -382,7 +473,6 @@ def gearsets():
 
 @newworld.route('/gearsets_hx', methods=['GET', 'POST'])
 def gearsets_hx():
-
     if request.method == 'POST':
         if "save" in request.form:
             for i in session['gear_sets'].keys():
@@ -399,6 +489,10 @@ def gearsets_hx():
 def user_prices():
     init_session()
     dictionary_key_replacements()
+    
+    _cookie_response = init_cookies()
+    if _cookie_response:
+        return _cookie_response
     
     search = search_function()
     if search:
@@ -437,6 +531,10 @@ def refining():
     init_session()
     dictionary_key_replacements()
     
+    _cookie_response = init_cookies()
+    if _cookie_response:
+        return _cookie_response
+    
     search = search_function()
     if search:
         return redirect(url_for('newworld.material', material=search))
@@ -446,14 +544,14 @@ def refining():
 
 @newworld.route('/refining_hx', methods=['GET', 'POST'])
 def refining_hx():
-    init_session()
-    
     template_order = player_data.refining_order()
 
     if 'price_list' in session:
         price_dict = session['price_list']
     force_load = force_load_server_api_check()
     if force_load is not None:
+        if type(force_load) == Response:
+            return force_load
         price_dict = force_load
 
     taxes_fees = session['taxes_fees']
@@ -469,6 +567,10 @@ def material(material):
     init_session()
     dictionary_key_replacements()
 
+    _cookie_response = init_cookies()
+    if _cookie_response:
+        return _cookie_response
+    
     search = search_function()
     if search:
         return redirect(url_for('newworld.material', material=search))
@@ -504,6 +606,10 @@ def material_primary(material):
     init_session()
     dictionary_key_replacements()
     
+    _cookie_response = init_cookies()
+    if _cookie_response:
+        return _cookie_response
+    
     material_display = material.replace("_"," ").lower().title()
     tier = calcs.determine_tier(material)
     
@@ -518,6 +624,8 @@ def material_table(material):
         price_dict = session['price_list']
     force_load = force_load_server_api_check()
     if force_load is not None:
+        if type(force_load) == Response:
+            return force_load
         price_dict = force_load
 
     material_check = material.replace(" ","_").lower()
@@ -553,6 +661,10 @@ def material_raw(material):
     init_session()
     dictionary_key_replacements()
     
+    _cookie_response = init_cookies()
+    if _cookie_response:
+        return _cookie_response
+    
     material_display = material.replace("_"," ").lower().title()
     tier = calcs.determine_tier(material)
     
@@ -567,6 +679,8 @@ def material_raw_hx(material):
         price_dict = session['price_list']
     force_load = force_load_server_api_check()
     if force_load is not None:
+        if type(force_load) == Response:
+            return force_load
         price_dict = force_load
 
     material_check = material.replace(" ","_").lower()
@@ -597,13 +711,12 @@ def material_raw_hx(material):
 
 @newworld.route('/material_price_hx/<material>', methods=['GET', 'POST'])
 def material_price_hx(material):
-    init_session()
-    dictionary_key_replacements()
-    
     if 'price_list' in session:
         price_dict = session['price_list']
     force_load = force_load_server_api_check()
     if force_load is not None:
+        if type(force_load) == Response:
+            return force_load
         price_dict = force_load
     
     material_check = material.replace(" ","_").lower()
@@ -625,6 +738,10 @@ def material_price_hx(material):
 def server_api():
     init_session()
     dictionary_key_replacements()
+    
+    _cookie_response = init_cookies()
+    if _cookie_response:
+        return _cookie_response
     
     search = search_function()
     if search:
@@ -656,23 +773,24 @@ def server_api():
     if "load_server" in request.form:
         if "servers" in request.form:
             server_id = request.form["servers"]
-            market_dict = db_scripts.load_market_server(server_id)
+            if session['server_api']['server_id'] != server_id:
+                market_dict = db_scripts.load_market_server(server_id)
 
-            if market_dict:
-                item_dict = market_dict['items']
-                price_dict = copy.deepcopy(session['price_list'])
-                for key, value in price_dict.items():
-                    for mat in value.keys():
-                        if mat in item_dict:
-                            price_dict[key][mat] = item_dict[mat]
+                if market_dict:
+                    item_dict = market_dict['items']
+                    price_dict = copy.deepcopy(session['price_list'])
+                    for key, value in price_dict.items():
+                        for mat in value.keys():
+                            if mat in item_dict:
+                                price_dict[key][mat] = item_dict[mat]
 
-                copy_available = True
-                session['server_api'] = {
-                    'server_name': market_dict['name'],
-                    'server_id': server_id,
-                    'last_update': market_dict['last_update'],
-                    'force_load': True
-                }
+                    copy_available = True
+                    session['server_api'] = {
+                        'server_name': market_dict['name'],
+                        'server_id': server_id,
+                        'last_update': market_dict['last_update'],
+                        'force_load': True
+                    }
 
     # if "load_all" in request.form:
     #     stopwatch = db_scripts.timer()
@@ -701,9 +819,6 @@ def copy_server_data():
     
 @newworld.route('/server_api_hx', methods=['GET', 'POST'])
 def server_api_hx():
-    init_session()
-    dictionary_key_replacements()
-    
     template_order = player_data.trade_post_order()
     trophy_order = player_data.trade_post_trophy_order()
     alchemy_order = player_data.alchemy_order()
@@ -748,6 +863,10 @@ def taxes_and_bonuses():
     init_session()
     dictionary_key_replacements()
 
+    _cookie_response = init_cookies()
+    if _cookie_response:
+        return _cookie_response
+
     search = search_function()
     if search:
         return redirect(url_for('newworld.material', material=search))
@@ -759,10 +878,6 @@ def taxes_and_bonuses():
 
 @newworld.route('/taxes_and_bonuses_hx', methods=['GET', 'POST'])
 def taxes_and_bonuses_hx():
-    search = search_function()
-    if search:
-        return redirect(url_for('newworld.material', material=search))
-    
     if request.method == 'POST':
         if "save" in request.form:
             for i in session['taxes_fees'].keys():
@@ -838,6 +953,10 @@ def datalist():
 def market_calculator():
     init_session()
     dictionary_key_replacements()
+
+    _cookie_response = init_cookies()
+    if _cookie_response:
+        return _cookie_response
 
     search = search_function()
     if search:
@@ -955,6 +1074,10 @@ def trophy_calculator():
     init_session()
     dictionary_key_replacements()
     
+    _cookie_response = init_cookies()
+    if _cookie_response:
+        return _cookie_response
+
     search = search_function()
     if search:
         return redirect(url_for('newworld.material', material=search))
@@ -970,6 +1093,8 @@ def trophy_calculator_hx():
         price_dict = session['price_list']
     force_load = force_load_server_api_check()
     if force_load is not None:
+        if type(force_load) == Response:
+            return force_load
         price_dict = force_load
     
     taxes_fees = session['taxes_fees']
@@ -989,6 +1114,10 @@ def trophy_calculator_hx():
 def trading_post():
     init_session()
     dictionary_key_replacements()
+    
+    _cookie_response = init_cookies()
+    if _cookie_response:
+        return _cookie_response
     
     search = search_function()
     if search:
@@ -1024,6 +1153,14 @@ def material_alchemy_primary(material):
     init_session()
     dictionary_key_replacements()
     
+    _cookie_response = init_cookies()
+    if _cookie_response:
+        return _cookie_response
+    
+    search = search_function()
+    if search:
+        return redirect(url_for('newworld.material', material=search))
+    
     material_display = material.replace("_"," ").lower().title()
     tier = calcs.determine_tier(material)
 
@@ -1038,6 +1175,8 @@ def material_alchemy_primary_hx(material):
         price_dict = session['price_list']
     force_load = force_load_server_api_check()
     if force_load is not None:
+        if type(force_load) == Response:
+            return force_load
         price_dict = force_load
 
     if "update_quantity" in request.args:
@@ -1064,6 +1203,14 @@ def material_alchemy_raw(material):
     init_session()
     dictionary_key_replacements()
     
+    _cookie_response = init_cookies()
+    if _cookie_response:
+        return _cookie_response
+    
+    search = search_function()
+    if search:
+        return redirect(url_for('newworld.material', material=search))
+    
     material_display = material.replace("_"," ").lower().title()
     tier = calcs.determine_tier(material)
     
@@ -1078,6 +1225,8 @@ def material_alchemy_raw_hx(material):
         price_dict = session['price_list']
     force_load = force_load_server_api_check()
     if force_load is not None:
+        if type(force_load) == Response:
+            return force_load
         price_dict = force_load
 
     if "quantity_have" in request.args:

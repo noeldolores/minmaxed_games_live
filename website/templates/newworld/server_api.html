@@ -19,9 +19,10 @@
         <div id="collapseOne" class="collapse">
             <div class="card-body bg-dark">
                 <p1>Pricing data is sourced by <a href="https://nwmarketprices.com/" target="#"><u>NWMarketPrices</u></a> community members.</p1><br>
-                <p1>Use the Load Server button to import their latest data.</p1><br>
-                <p1>You can toggle this price list by using the Server button on the navigation bar to view alternate data on the tables under the Tools pages.</p1><br>
-                <p1>Once loaded, you can view the server Trade Post prices below.</p1><br>
+                <p1>Select your server from the dropdown and select the Choose Server button.</p1><br>
+                <p1>You can toggle between the API data and your User Prices by selecting the Server button on the top bar.</p1><br>
+                <p1>You can override your User Prices with the server data by selecting the Copy All button.</p1><br>
+                <p1>You can view your server's Prices below. You can also view a full Trading Post view by selecting the Trading Post button.</p1><br>
             </div>
         </div>
     </div>
@@ -44,12 +45,12 @@
                 
                 <div class="row justify-content-around">
                     <div>
-                        <button class="btn btn-outline-light loadMarket" type="submit" name="load_server">Load Server</button>
+                        <button class="btn btn-outline-light loadMarket" type="submit" name="load_server">Choose Server</button>
                     </div>
 
                     {% if copy_available %}
                     <div id="copy_server_div">
-                        <button class="btn btn-outline-light loadMarket" type="submit" hx-post="/newworld/copy_server_data" hx-target="#copy_server_div" hx-confirm="This will override your Trade Post prices"> Copy All</button>
+                        <button class="btn btn-outline-light loadMarket" type="submit" hx-post="/newworld/copy_server_data" hx-target="#copy_server_div" hx-confirm="This will override your User Prices with the data below"> Copy All</button>
                     </div>
                     {% endif %}
                 </div>
