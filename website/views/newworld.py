@@ -308,7 +308,6 @@ def set_price_dict_to_cookies(price_dict):
     server_api_alchemy_2 = {}
     
     for key, value in price_dict.items():
-        print(key)
         if key in template_order:
             if len(list(server_api_refine.keys())) < template_order_size/2:
                 server_api_refine[key] = value
@@ -329,9 +328,7 @@ def set_price_dict_to_cookies(price_dict):
     
     session['server_cookies']['last_update'] = datetime.now(timezone.utc)
     
-    print(server_api_refine)
-    
-    resp = make_response(redirect(url_for(request.endpoint, **request.view_args)))
+    resp = make_response(render_template('newworld/base.html'))
     resp.set_cookie('server_api_refine', json.dumps(server_api_refine))
     resp.set_cookie('server_api_refine_2', json.dumps(server_api_refine_2))
     resp.set_cookie('server_api_trophy', json.dumps(server_api_trophy))
@@ -402,7 +399,7 @@ def force_load_server_api_check():
                             return cookie_response
                 else:
                     price_dict = get_price_dict_from_cookies()
-                    return price_dict     
+                    return price_dict
     return None
 
 
