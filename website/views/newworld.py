@@ -328,6 +328,13 @@ def set_price_dict_to_cookies(price_dict):
     
     session['server_cookies']['last_update'] = datetime.now(timezone.utc)
     
+    print(server_api_refine,
+    server_api_refine_2,
+    server_api_trophy,
+    server_api_trophy_2,
+    server_api_alchemy,
+    server_api_alchemy_2)
+    
     resp = make_response(redirect(url_for(request.endpoint, **request.view_args)))
     resp.set_cookie('server_api_refine', json.dumps(server_api_refine))
     resp.set_cookie('server_api_refine_2', json.dumps(server_api_refine_2))
