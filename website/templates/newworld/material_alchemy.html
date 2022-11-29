@@ -1,0 +1,34 @@
+{% extends "newworld/base.html" %} 
+
+{% block head %}
+<title>{{material}} - NW Calculators</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='newworld/css/material.css') }}"/>
+{% endblock %}
+
+{% block content%}
+<div>
+    {% include "newworld/navbar_alchemy.html"%}
+</div>
+
+<br><br><br>
+
+<h1>{{material}}</h1>
+    
+<div class="container">
+    <br>
+    <div id="material_price" class="row justify-content-center" _="init fetch /newworld/material_price_hx/{{material.lower()|replace(" ","_")}} put the result into me"></div>
+
+    <div class="active list-unstyled components">
+        {% if tier == 0 %}
+        <div id="tabs" hx-get="/newworld/material_alchemy_raw/{{material.lower()|replace(" ","_")}}" hx-trigger="load" hx-target="#tabs" hx-swap="innerHTML"></div>
+        {% elif tier == 5 %}
+        <div id="tabs" hx-get="/newworld/material_alchemy_primary/{{material.lower()|replace(" ","_")}}" hx-trigger="load" hx-target="#tabs" hx-swap="innerHTML"></div>
+        {% else %}
+        <div id="tabs" hx-get="/newworld/material_alchemy_primary/{{material.lower()|replace(" ","_")}}" hx-trigger="load" hx-target="#tabs" hx-swap="innerHTML"></div>
+        {% endif %}
+    </div>
+</div>
+
+<br><br>
+<br><br>
+{% endblock %}

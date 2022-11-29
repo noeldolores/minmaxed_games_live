@@ -1,0 +1,27 @@
+<nav class="navbar navbar-expand navbar-light bg-dark nav-material">
+    <div class="container-fluid justify-content-center">
+        <form class="row">
+            {% for item in material_nav_items[0] %}
+                {% if name_list[1] == item %}
+                <a href="/newworld/material/{{name_list[0]}}_{{item}}" class="btn btn-sm btn-outline-info mr-2 ml-2" role="button" style="width:100px">{{item.title()|replace("_"," ") }}</a>
+                {% else %}
+                <a href="/newworld/material/{{name_list[0]}}_{{item}}" class="btn btn-sm btn-dark mr-2 ml-2" role="button" style="width:100px">{{item.title()|replace("_"," ") }}</a>
+                {% endif %}
+            {% endfor %}
+        </form>
+    </div>
+</nav>
+
+<nav class="navbar navbar-expand navbar-light nav-material">
+    <div class="container-fluid justify-content-center">
+        <form class="row">
+            {% for item in material_nav_items[1] %}
+                {% if name_list[0] == item %}
+                <a href="/newworld/material/{{item}}_{{name_list[1]}}" class="btn btn-sm btn-outline-warning mr-2 ml-2" role="button" style="width:75px">{{item.title()|replace("_"," ") }}</a>
+                {% else %}
+                <a href="/newworld/material/{{item}}_{{name_list[1]}}" class="btn btn-sm btn-dark mr-2 ml-2" role="button" style="width:75px">{{item.title()|replace("_"," ") }}</a>
+                {% endif %}
+            {% endfor %}
+        </form>
+    </div>
+</nav>

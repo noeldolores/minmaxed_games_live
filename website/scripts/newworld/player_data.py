@@ -490,6 +490,61 @@ navbar_template = [
     ]
 ]
 
+alchemy_template = [
+    [   "mote",
+        "air_mote",
+        "death_mote",
+        "earth_mote",
+        "fire_mote",
+        "life_mote",
+        "soul_mote",
+        "water_mote"
+    ],
+    [   "wisp",
+        "air_wisp",
+        "death_wisp",
+        "earth_wisp",
+        "fire_wisp",
+        "life_wisp",
+        "soul_wisp",
+        "water_wisp"
+    ],
+    [   "essence",
+        "air_essence",
+        "death_essence",
+        "earth_essence",
+        "fire_essence",
+        "life_essence",
+        "soul_essence",
+        "water_essence"
+    ],
+    [   "quintessence",
+        "air_quintessence",
+        "death_quintessence",
+        "earth_quintessence",
+        "fire_quintessence",
+        "life_quintessence",
+        "soul_quintessence",
+        "water_quintessence"
+    ]
+]
+
+alchemy_navbar_order = [
+    [   "mote",
+        "wisp",
+        "essence",
+        "quintessence"
+    ],
+    [   "air",
+        "death",
+        "earth",
+        "fire",
+        "life",
+        "soul",
+        "water"
+    ]
+]
+
 def init_skill_levels():
     return skill_levels
 
@@ -513,3 +568,9 @@ def init_taxes_and_fees():
 
 def material_navbar():
     return navbar_template
+
+def alchemy_order():
+    return alchemy_template
+
+def alchemy_navbar():
+    return alchemy_navbar_order

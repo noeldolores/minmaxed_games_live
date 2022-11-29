@@ -123,8 +123,10 @@ def determine_material_category(material):
         return "primary"
     elif material in secondary_list:
         return "secondary"
-    elif material in components_list or material in arcana_list or material in trophies_list:
+    elif material in components_list or material in trophies_list:
         return "component"
+    elif material in arcana_list:
+        return "arcana"
     return None
 
 
@@ -184,7 +186,17 @@ def dictionary_key_replacements():
                             session['price_list'][category][trophy] = 0
                         else:
                             session['price_list'][category][item] = 0
-                
+        
+        if 'mote' not in session['price_list']:
+            alchemy_order = player_data.alchemy_order()
+            for items in alchemy_order:
+                category = items[0]
+                category_list = items[1:]
+                if category not in session['price_list']:
+                    session['price_list'][category] = {}
+                    for item in category_list:
+                        session['price_list'][category][item] = 0
+                        
     if 'taxes_fees' not in session:
         session['taxes_fees'] = player_data.init_taxes_and_fees()
     elif 'weavers_fen' not in session['taxes_fees']['territory']:
@@ -394,26 +406,30 @@ def user_prices():
 
     template_order = player_data.trade_post_order()
     trophy_order = player_data.trade_post_trophy_order()
+    alchemy_order = player_data.alchemy_order()
     
-    return render_template('newworld/user_prices.html', price_list=session['price_list'], template_order=template_order, trophy_order=trophy_order)
+    return render_template('newworld/user_prices.html', price_list=session['price_list'], template_order=template_order, trophy_order=trophy_order, alchemy_order=alchemy_order)
 
 
 @newworld.route('/user_prices_hx', methods=['GET', 'POST'])
 def user_prices_hx():
     template_order = player_data.trade_post_order()
     trophy_order = player_data.trade_post_trophy_order()
-                    
+    alchemy_order = player_data.alchemy_order()
+    
     if request.method == 'POST':
         if "save" in request.form:
             for category, items in session['price_list'].items():
                 for item in items.keys():
-                    if item in request.form:
+                    if category in ["mote"]:
+                        session['price_list'][category][item] = strip_leading_zeros(True, request.form[f"alchemy_{item}"])
+                    elif item in request.form:
                         session['price_list'][category][item] = strip_leading_zeros(True, request.form[item])
                     else:
                         if item == "orichalcum_ingot_platinum":
-                            session['price_list'][category][item] = strip_leading_zeros(True, request.form["orichalcum_ingot"])     
+                            session['price_list'][category][item] = strip_leading_zeros(True, request.form["orichalcum_ingot"]) 
             
-    return render_template('newworld/user_prices_hx.html', price_list=session['price_list'], template_order=template_order, trophy_order=trophy_order)
+    return render_template('newworld/user_prices_hx.html', price_list=session['price_list'], template_order=template_order, trophy_order=trophy_order, alchemy_order=alchemy_order)
 
 
 @newworld.route('/refining', methods=['GET', 'POST'])
@@ -475,9 +491,12 @@ def material(material):
 
     if category == "primary":
         return render_template('newworld/material.html', material=material_display, material_nav_items=material_nav_items, tier=tier)
-    
-    if category == "component" or category == "secondary":
+    elif category == "component" or category == "secondary":
         return render_template('newworld/material_component.html', material=material_display)
+    elif category == "arcana":
+        material_nav_items = player_data.alchemy_navbar()
+        name_list = list(material_display.lower().split(" "))
+        return render_template('newworld/material_alchemy.html', material=material_display, material_nav_items=material_nav_items,tier=tier, name_list=name_list)
 
 
 @newworld.route('/material_primary/<material>', methods=['GET', 'POST'])
@@ -511,10 +530,12 @@ def material_table(material):
     else:
         quantity = 1
     
+    skill_level = 0
+    gear_set = 0
     if discipline == "smelting_precious":
         skill_level = session['skill_levels']['refining']['smelting']
         gear_set = session['gear_sets']['smelting']
-    else:
+    elif discipline in session['skill_levels']['refining']:
         skill_level = session['skill_levels']['refining'][discipline]
         gear_set = session['gear_sets'][discipline]
     
@@ -586,6 +607,7 @@ def material_price_hx(material):
         price_dict = force_load
     
     material_check = material.replace(" ","_").lower()
+    
     discipline = calcs.determine_discipline(material_check)
     
     if material_check == "orichalcum_ingot_platinum":
@@ -593,7 +615,7 @@ def material_price_hx(material):
     else:
         material_price = price_dict[discipline][material_check]
 
-    buy_tax = round(calcs.apply_trade_post_tax_buy(material_price, session['taxes_fees']),2)
+    buy_tax = round(calcs.apply_trade_post_tax_buy(material_price, session['taxes_fees']), 2)
     final_price = material_price + buy_tax
     
     return render_template('newworld/material_price_hx.html', material_price=material_price, final_price=final_price, buy_tax=buy_tax)
@@ -994,6 +1016,86 @@ def trading_post_hx():
         item_data_price = None
         
     return render_template('newworld/trading_post_hx.html', item_data=item_data_price)
+
+
+@newworld.route('/material_alchemy_primary/<material>', methods=['GET', 'POST'])
+def material_alchemy_primary(material):
+    init_session()
+    dictionary_key_replacements()
+    
+    material_display = material.replace("_"," ").lower().title()
+    tier = calcs.determine_tier(material)
+
+    return render_template('newworld/material_alchemy_primary.html', material=material_display, tier=tier)
+
+
+@newworld.route('/material_alchemy_primary_hx/<material>', methods=['GET', 'POST'])
+def material_alchemy_primary_hx(material):    
+    init_session()
+    
+    if 'price_list' in session:
+        price_dict = session['price_list']
+    force_load = force_load_server_api_check()
+    if force_load is not None:
+        price_dict = force_load
+
+    if "update_quantity" in request.args:
+        if request.args['update_quantity'] == "":
+            quantity = 1
+        else:
+            quantity = max(int(request.args['update_quantity']), 1)
+    else:
+        quantity = 1
+    
+    skill_level = session['skill_levels']['crafting']['arcana']
+    taxes_fees = session['taxes_fees']
+    
+    _data = calcs.materials_to_refine_alchemy(material, quantity, price_dict, taxes_fees, skill_level)
+    
+    material_display = material.replace("_"," ").lower().title()
+    element = list(material_display.split(" "))[0].lower()
+    
+    return render_template('newworld/material_alchemy_primary_hx.html', quantity=quantity, material=material_display, _data=_data, element=element)
+
+
+@newworld.route('/material_alchemy_raw/<material>', methods=['GET', 'POST'])
+def material_alchemy_raw(material):
+    init_session()
+    dictionary_key_replacements()
+    
+    material_display = material.replace("_"," ").lower().title()
+    tier = calcs.determine_tier(material)
+    
+    return render_template('newworld/material_alchemy_raw.html', material=material_display, tier=tier)
+
+
+@newworld.route('/material_alchemy_raw_hx/<material>', methods=['GET', 'POST'])
+def material_alchemy_raw_hx(material):
+    init_session()
+    
+    if 'price_list' in session:
+        price_dict = session['price_list']
+    force_load = force_load_server_api_check()
+    if force_load is not None:
+        price_dict = force_load
+
+    if "quantity_have" in request.args:
+        if request.args['quantity_have'] == "":
+            quantity = 1
+        else:
+            quantity = max(int(request.args['quantity_have']), 1)
+    else:
+        quantity = 1
+    
+    skill_level = session['skill_levels']['crafting']['arcana']
+    taxes_fees = session['taxes_fees']
+    
+    data = calcs.alchemy_refining_up_profitability_table(material, quantity, skill_level, price_dict, taxes_fees)
+    
+    material_display = material.replace("_"," ").lower().title()
+    element = list(material_display.split(" "))[0].lower()
+    
+    return render_template('newworld/material_alchemy_raw_hx.html', data=data, quantity=quantity, material=material_display, element=element)
 
 
 @newworld.route('/test_scripts', methods=['GET', 'POST'])

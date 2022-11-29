@@ -1,0 +1,66 @@
+<br>
+
+<div class="container">
+    <div class="tab-list justify-content-left">
+        <ul class="nav nav-tabs">
+            {% if tier == 0 %}
+            <li class="nav-item">
+                <a class="nav-link active selected cursor-click" data-mdb-toggle="tab" hx-get="/newworld/material_alchemy_raw/{{material.lower()|replace(" ","_")}}">Sell</a>
+            </li>
+            {% elif tier == 5 %}
+            <li class="nav-item">
+                <a class="nav-link active selected cursor-click" data-mdb-toggle="tab" hx-get="/newworld/material_alchemy_primary/{{material.lower()|replace(" ","_")}}">Craft</a>
+            </li>
+            {% else %}
+            <li class="nav-item">
+                <a class="nav-link active selected cursor-click" data-mdb-toggle="tab" hx-get="/newworld/material_alchemy_primary/{{material.lower()|replace(" ","_")}}">Craft</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link cursor-click" data-mdb-toggle="tab" hx-get="/newworld/material_alchemy_raw/{{material.lower()|replace(" ","_")}}">Sell</a>
+            </li>
+            {% endif %}
+        </ul>
+    </div>
+</div>
+
+<br>
+
+<div class="container col-xl-5 col-lg-6 col-md-6">
+    <div class="card bg-secondary border-danger">
+        <div class="card-header button btn-sm btn-outline-danger" id="headingOne" type="button" data-toggle="collapse" data-target="#collapseOne">
+            <h3>Info</h3>
+        </div>
+        <div id="collapseOne" class="collapse">
+            <div class="card-body bg-dark">
+                <p1>This table shows the ingredients to craft {{material}}.</p1><br>
+                <p1>Rows are separate refining routes that each start at a different base tier.</p1><br>
+                <p1><b style="color:aqua;">Craft:</b> The number to target on the workbench.</p1><br>
+                <p1>A (#) appears when the output is estimated to be more than your input after <span style="color: green">xCraft Bonus</span>.</p1><br>
+                <p1><b style="color:orange;">Value:</b> The total gold received after all taxes and fees from selling on the trading post. Click the Craft or Value box for more info.</p1><br>
+                <p1><b style="color:red;">Cost:</b> Includes the all purchase prices and refinement fees: total (each). Click the rows for more info.</p1><br>
+                <p1><b style="color:green;">Profit:</b> Value minus Cost: total (each). </p1><br>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container">
+    <div class="active list-unstyled components">
+
+        <form class="form-row justify-content-center">
+            <div class="col-sm-auto col-md-5 col-lg-5 p-2 input-group">
+                <input type="number" id="quant_field" class="form-control" name="update_quantity" placeholder="1" min="1" max="2147483646" value="{{quantity}}" onkeydown="if(event.key==='.'){event.preventDefault();}" 
+                    hx-get="/newworld/material_alchemy_primary_hx/{{material.lower()|replace(" ","_")}}" 
+                    hx-trigger="keyup[key=='Enter'] from:body, keyup[key!='Enter'] changed delay:650ms" 
+                    hx-target="#alchemy_container" 
+                    _="on keyup add .load to #values">
+                <input type="text" style="display: none;"/>
+            </div>
+        </form>
+
+        <div id="alchemy_container" _="init fetch /newworld/material_alchemy_primary_hx/{{material.lower()|replace(" ","_")}} put the result into #alchemy_container"></div>
+
+    </div>
+</div>
+
+<br><br>

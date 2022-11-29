@@ -200,6 +200,26 @@ conversions = {
     }
 }
 
+alchemy_conversions = {
+    "mote": {
+        "tier": 0
+    },
+    "wisp": {
+        "tier": 2,
+        'primary': "mote",
+        "mote": 5
+    },
+    "essence": {
+        "tier": 3,
+        'primary': "wisp",
+        'wisp': 4
+    },
+    "quintessence": {
+        "tier": 5,
+        'primary': "essence",
+        'essence': 3
+    }
+}
 
 def cost_comparison(list_of_prices):
     cheapest_price = min(list_of_prices, key=lambda tup: tup[1])
@@ -612,6 +632,11 @@ def determine_discipline(material):
         for k in value.keys():
             if material in value[k]:
                 return key
+            
+    for key in alchemy_conversions.keys():
+        if f'_{key}' in material:
+            return key
+        
     return None
 
 
@@ -924,10 +949,16 @@ def refining_up_profitability_table(discipline, material, quantity, skill_level,
             craft_cost = _material_data['craft']['final_cost']
             final_profit = base_market_value - listing_fee - transaction_charge - craft_cost
 
-            refining_dict[_material]['sell']['base_value'] = base_market_value
-            refining_dict[_material]['sell']['listing_fee'] = listing_fee
-            refining_dict[_material]['sell']['transaction_charge'] = transaction_charge
-            refining_dict[_material]['sell']['final_profit'] = final_profit
+            if base_market_value > 0:
+                refining_dict[_material]['sell']['base_value'] = base_market_value
+                refining_dict[_material]['sell']['listing_fee'] = listing_fee
+                refining_dict[_material]['sell']['transaction_charge'] = transaction_charge
+                refining_dict[_material]['sell']['final_profit'] = final_profit
+            else:
+                refining_dict[_material]['sell']['base_value'] = 0
+                refining_dict[_material]['sell']['listing_fee'] = 0
+                refining_dict[_material]['sell']['transaction_charge'] = 0
+                refining_dict[_material]['sell']['final_profit'] = 0
         
         return refining_dict
     return None
@@ -935,7 +966,8 @@ def refining_up_profitability_table(discipline, material, quantity, skill_level,
 
 def determine_tier(material):
     discipline = determine_discipline(material)
-    if discipline:
+    
+    if discipline in conversions:
         if material in conversions[discipline]:
             return conversions[discipline][material]['tier']
         else:
@@ -943,6 +975,10 @@ def determine_tier(material):
                 if key != "refining_components":
                     if material in value:
                         return 0
+        
+    elif discipline in alchemy_conversions:
+        return alchemy_conversions[discipline]['tier']
+        
     return None
 
 
@@ -1326,3 +1362,307 @@ def calculate_trophy_profitability(cheapest_route, price_list, taxes_fees, skill
         }
 
     return trophy_dict
+
+
+def round_to_nearest_multiple(number, multiple):
+    return multiple * math.ceil(number/multiple)
+
+
+# keys in alchemy_station_tax represent ingredient used to make +1 tier. Mote -> Wisp tax = alchemy_station_tax[mote]
+def alchemy_station_tax(material, taxes_fees):  
+    discount = 1 - (taxes_fees['crafting']['station'] / 100)
+    town_tax = 0.5
+    alchemy_station_tax = {
+        'mote': 0.15,
+        'wisp': 0.37,
+        'essence': 0.9
+    }
+    
+    if material in alchemy_station_tax:
+        return discount * alchemy_station_tax[material] * town_tax
+    else:
+        return 0
+
+
+def materials_to_refine_alchemy(material, quantity, price_dict, taxes_fees, skill_level):
+    skill_bonus = 1 + (int(skill_level) * 0.001)
+    
+    element = None
+    category = None
+    for key in alchemy_conversions.keys():
+        if f'_{key}' in material:
+            category = key
+            element = material.replace(f'_{key}', '')
+    
+    essence_base = alchemy_conversions["quintessence"]["essence"]
+    wisp_base = alchemy_conversions["essence"]["wisp"]
+    mote_base = alchemy_conversions["wisp"]["mote"]
+    
+    number_of_crafts = 0
+    if category == "quintessence":
+        essence_quant = round_to_nearest_multiple((essence_base * quantity) / (skill_bonus), essence_base)
+        wisp_quant = round_to_nearest_multiple((wisp_base * essence_quant) / (skill_bonus), wisp_base)
+        mote_quant = round_to_nearest_multiple((mote_base * wisp_quant) / (skill_bonus), mote_base)
+        
+        ingredient_options = {
+            "essence" : {
+                "crafts": essence_quant / essence_base,
+                "essence": essence_quant
+            },
+            "wisp" : {
+                "crafts": wisp_quant / wisp_base,
+                "wisp": wisp_quant
+            },
+            "mote" : {
+                "crafts": mote_quant / mote_base,
+                "mote": mote_quant
+            }
+        }
+        number_of_crafts = essence_quant / essence_base
+    elif category == "essence":
+        wisp_quant = round_to_nearest_multiple((wisp_base * quantity) / (skill_bonus), wisp_base)
+        mote_quant = round_to_nearest_multiple((mote_base * wisp_quant) / (skill_bonus), mote_base)
+        ingredient_options = {
+            "wisp" : {
+                "crafts": wisp_quant / wisp_base,
+                "wisp": wisp_quant
+            },
+            "mote" : {
+                "crafts": mote_quant / mote_base,
+                "mote": mote_quant
+            }
+        }
+        number_of_crafts = wisp_quant / wisp_base
+    elif category == "wisp":
+        mote_quant = round_to_nearest_multiple((mote_base * quantity) / (skill_bonus), mote_base)
+        ingredient_options = {
+            "mote" : {
+                "crafts": mote_quant / mote_base,
+                "mote": mote_quant
+            }
+        }
+        number_of_crafts = mote_quant / mote_base
+    
+    
+    output = round(number_of_crafts * (skill_bonus))
+    
+    value_pre_tax = price_dict[category][material] * output
+    transaction_charge = value_pre_tax * (taxes_fees['trade_post']['tax'] / 100)
+    listing_fee = determing_trade_post_sell_fee(value_pre_tax, taxes_fees)
+    value_post_tax = value_pre_tax - listing_fee - transaction_charge
+    
+    primary_ingredients = list(ingredient_options.keys())
+    financial = []
+    total_station_fee = 0
+    for material in primary_ingredients:
+        tp_buy_tax_total = 0
+        base_cost = 0
+        
+        material_quant = ingredient_options[material][material]
+        material_cost = price_dict[material][f'{element}_{material}']
+        base_cost = material_quant * material_cost
+        
+        tp_buy_tax_total = apply_trade_post_tax_buy(base_cost, taxes_fees)
+        
+        craft_quant = ingredient_options[material]['crafts']
+        material_station_fee = alchemy_station_tax(material, taxes_fees) * craft_quant
+        total_station_fee += material_station_fee
+        
+        final_cost = base_cost + tp_buy_tax_total + total_station_fee
+        cost_each = final_cost / output
+        
+        profit_craft = (value_post_tax - final_cost)
+        profit_craft_each = profit_craft / output
+        
+        financial.append({
+            'craft' : {
+                'base_cost' : base_cost,
+                'trade_post_tax' : tp_buy_tax_total,
+                'station_tax' : total_station_fee,
+                'final_cost': final_cost,
+                'final_cost_each': cost_each,
+            },
+            'sell' : {
+                'base_value' : value_pre_tax,
+                'listing_fee' : listing_fee,
+                'transaction_charge' : transaction_charge,
+                'final_profit': profit_craft,
+                'final_profit_each': profit_craft_each
+            }
+        })
+
+    ingredients_list = []
+    for material in primary_ingredients:
+        if material == "mote":
+            ingredients_list.append({
+                material: ingredient_options[material][material],
+                "wisp": "-",
+                "essence": "-"
+                
+            })
+        elif material == "wisp":
+            ingredients_list.append({
+                "mote": "-",
+                material: ingredient_options[material][material],
+                "essence": "-"
+                
+            })
+        elif material == "essence":
+            ingredients_list.append({
+                "mote": "-",
+                "wisp": "-",
+                material: ingredient_options[material][material]
+                
+            })
+    for material in primary_ingredients:
+        for mat_dict in ingredients_list:
+            target_tier = alchemy_conversions[category]['tier']
+            for key in list(mat_dict.keys()):
+                mat_tier =  alchemy_conversions[key]['tier']
+                if mat_tier >= target_tier:
+                    mat_dict.pop(key)
+
+    ingredients_list.reverse()
+    financial.reverse()
+    
+    data = {
+        'craft' : {
+            'input' : number_of_crafts,
+            'output': output,
+            'bonus' : skill_bonus,
+            'final_value' : value_post_tax
+        },
+        'ingredients' : ingredients_list,
+        'financial' : financial
+    }
+
+    return data
+    
+
+def alchemy_refining_up_profitability_table(material, quantity, skill_level, market, taxes_fees):
+    craft_bonus = 1 + (int(skill_level) * 0.001)
+
+    #determine material tier
+    tier = -1
+    
+    refining_list = (list(alchemy_conversions.keys()))
+    
+    material_category = None
+    for item in refining_list:
+        if f'_{item}' in material:
+            tier = alchemy_conversions[item]['tier']
+            material_category = item
+    
+    if tier != 5:
+        # Mote check
+        if tier == 0:
+            tier = 1
+            
+        refining_list = [material_category] + refining_list[tier:]
+        #init ref dict for items needed
+        refining_dict = {}
+        for item in refining_list:
+            refining_dict[item] = {
+                'craft' : {
+                    'quantity': 0,
+                    'station_tax' : 0,
+                    'final_cost': 0
+                    },
+                'sell': {
+                    'quantity': 0,
+                    'base_value': 0,
+                    'listing_fee' : 0,
+                    'transaction_charge' : 0,
+                    'final_profit': 0
+                    }
+            }
+        refining_dict[material_category]['sell']['quantity'] = quantity
+        
+        #determine how many can be made for each tier
+        for i in range(len(refining_list)-1):
+            refine_ingredient = refining_list[i]
+            for key in alchemy_conversions.keys():
+                if f'_{key}' in refine_ingredient:
+                    refine_ingredient = key
+                    
+            target_refine = refining_list[i+1]
+            for key in alchemy_conversions.keys():
+                if f'_{key}' in target_refine:
+                    target_refine = key
+            
+            quant_available = refining_dict[refine_ingredient]['sell']['quantity']
+            quant_per_craft = alchemy_conversions[target_refine][refine_ingredient]
+            
+            if quant_available >= quant_per_craft:
+                bonus = craft_bonus
+                number_of_crafts = math.floor(quant_available / quant_per_craft)
+                output = math.floor(number_of_crafts * bonus)
+                
+                refining_dict[target_refine]['craft']['quantity'] = number_of_crafts
+                refining_dict[target_refine]['sell']['quantity'] = output
+            else:
+                refining_dict[target_refine]['craft']['quantity'] = 0
+                refining_dict[target_refine]['sell']['quantity'] = 0
+            
+        # determine craft cost for each tier
+        station_tax = 0 
+        final_cost = 0
+        for i in range(len(refining_list)-1):
+            refine_ingredient = refining_list[i]
+            target_refine = refining_list[i+1]
+            
+            refine_ingredient = refining_list[i]
+            for key in alchemy_conversions.keys():
+                if f'_{key}' in refine_ingredient:
+                    refine_ingredient = key
+                    
+            target_refine = refining_list[i+1]
+            for key in alchemy_conversions.keys():
+                if f'_{key}' in target_refine:
+                    target_refine = key
+                    
+            quant_available = refining_dict[refine_ingredient]['sell']['quantity']
+            quant_per_craft = alchemy_conversions[target_refine][refine_ingredient]
+            
+            number_of_crafts = math.floor(quant_available / quant_per_craft)
+
+            #station fees
+            station_tax += alchemy_station_tax(refine_ingredient, taxes_fees) * number_of_crafts
+            
+            final_cost = station_tax
+            
+            refining_dict[target_refine]['craft']['quantity'] = number_of_crafts
+            refining_dict[target_refine]['craft']['station_tax'] = station_tax
+            refining_dict[target_refine]['craft']['final_cost'] = final_cost
+        
+        
+        #determine sell value for each tier
+        for _material, _material_data in refining_dict.items():
+            category = None
+            for key in alchemy_conversions.keys():
+                if f'_{key}' in material:
+                    category = key
+            
+            market_value_each = market[category][material]
+            sell_quant = _material_data['sell']['quantity']
+            base_market_value = market_value_each * sell_quant
+            
+            listing_fee = determing_trade_post_sell_fee(base_market_value, taxes_fees)
+            transaction_charge = base_market_value * (taxes_fees['trade_post']['tax'] / 100)
+            
+            craft_cost = _material_data['craft']['final_cost']
+            final_profit = base_market_value - listing_fee - transaction_charge - craft_cost
+
+            if base_market_value > 0:
+                refining_dict[_material]['sell']['base_value'] = base_market_value
+                refining_dict[_material]['sell']['listing_fee'] = listing_fee
+                refining_dict[_material]['sell']['transaction_charge'] = transaction_charge
+                refining_dict[_material]['sell']['final_profit'] = final_profit
+            else:
+                refining_dict[_material]['sell']['base_value'] = 0
+                refining_dict[_material]['sell']['listing_fee'] = 0
+                refining_dict[_material]['sell']['transaction_charge'] = 0
+                refining_dict[_material]['sell']['final_profit'] = 0
+        
+        return refining_dict
+    return None
