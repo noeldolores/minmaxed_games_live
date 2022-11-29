@@ -791,6 +791,12 @@ def server_api():
                         'last_update': market_dict['last_update'],
                         'force_load': True
                     }
+            else:
+                force_load = force_load_server_api_check()
+                if force_load is not None:
+                    if type(force_load) == Response:
+                        return force_load
+                    price_dict = force_load
 
     # if "load_all" in request.form:
     #     stopwatch = db_scripts.timer()
