@@ -331,10 +331,10 @@ def set_price_dict_to_cookies(price_dict):
     resp = make_response(render_template('newworld/base.html'))
     resp.set_cookie('server_api_refine', json.dumps(server_api_refine))
     resp.set_cookie('server_api_refine_2', json.dumps(server_api_refine_2))
-    # resp.set_cookie('server_api_trophy', json.dumps(server_api_trophy))
-    # resp.set_cookie('server_api_trophy_2', json.dumps(server_api_trophy_2))
-    # resp.set_cookie('server_api_alchemy', json.dumps(server_api_alchemy))
-    # resp.set_cookie('server_api_alchemy_2', json.dumps(server_api_alchemy_2))
+    resp.set_cookie('server_api_trophy', json.dumps(server_api_trophy))
+    resp.set_cookie('server_api_trophy_2', json.dumps(server_api_trophy_2))
+    resp.set_cookie('server_api_alchemy', json.dumps(server_api_alchemy))
+    resp.set_cookie('server_api_alchemy_2', json.dumps(server_api_alchemy_2))
     return resp
 
 
