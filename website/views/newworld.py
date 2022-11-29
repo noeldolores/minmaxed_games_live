@@ -247,11 +247,14 @@ def dictionary_key_replacements():
 
 
 def init_cookies():
-    if request.cookies.get('server_api_refine') is None:
+    if request.cookies.get('server_api_refine_2') is None:
         resp = make_response(redirect(url_for(request.endpoint, **request.view_args)))
         resp.set_cookie('server_api_refine', "")
+        resp.set_cookie('server_api_refine_2', "")
         resp.set_cookie('server_api_trophy', "")
+        resp.set_cookie('server_api_trophy_2', "")
         resp.set_cookie('server_api_alchemy', "")
+        resp.set_cookie('server_api_alchemy_2', "")
         return resp
     else:
         return None
@@ -276,8 +279,11 @@ def get_price_dict_from_cookies():
     price_dict = {}
     cookie_string_list = []
     cookie_string_list.append(request.cookies.get('server_api_refine'))
+    cookie_string_list.append(request.cookies.get('server_api_refine_2'))
     cookie_string_list.append(request.cookies.get('server_api_trophy'))
+    cookie_string_list.append(request.cookies.get('server_api_trophy_2'))
     cookie_string_list.append(request.cookies.get('server_api_alchemy'))
+    cookie_string_list.append(request.cookies.get('server_api_alchemy_2'))
     
     for cookie_string in cookie_string_list:
         price_dict.update(json.loads(cookie_string))
@@ -289,17 +295,33 @@ def set_price_dict_to_cookies(price_dict):
     trophy_order = [i[0] for i in player_data.trade_post_trophy_order()]
     alchemy_order = [i[0] for i in player_data.alchemy_order()]
     
+    template_order_size = len(template_order)
+    trophy_order_size = len(trophy_order)
+    alchemy_order_size = len(alchemy_order)
+    
     server_api_refine = {}
+    server_api_refine_2 = {}
     server_api_trophy = {}
+    server_api_trophy_2 = {}
     server_api_alchemy = {}
+    server_api_alchemy_2 = {}
     
     for key, value in price_dict.items():
         if key in template_order:
-            server_api_refine[key] = value
+            if len(list(server_api_refine.keys())) < template_order_size/2:
+                server_api_refine[key] = value
+            else:
+                server_api_refine_2[key] = value
         elif key in trophy_order:
-            server_api_trophy[key] = value
+            if len(list(server_api_trophy.keys())) < trophy_order_size/2:
+                server_api_trophy[key] = value
+            else:
+                server_api_trophy_2[key] = value
         elif key in alchemy_order:
-            server_api_alchemy[key] = value
+            if len(list(server_api_alchemy.keys())) < alchemy_order_size/2:
+                server_api_alchemy[key] = value
+            else:
+                server_api_alchemy_2[key] = value
         else:
             print(key)
     
@@ -307,8 +329,11 @@ def set_price_dict_to_cookies(price_dict):
     
     resp = make_response(redirect(url_for(request.endpoint, **request.view_args)))
     resp.set_cookie('server_api_refine', json.dumps(server_api_refine))
+    resp.set_cookie('server_api_refine_2', json.dumps(server_api_refine_2))
     resp.set_cookie('server_api_trophy', json.dumps(server_api_trophy))
+    resp.set_cookie('server_api_trophy_2', json.dumps(server_api_trophy_2))
     resp.set_cookie('server_api_alchemy', json.dumps(server_api_alchemy))
+    resp.set_cookie('server_api_alchemy_2', json.dumps(server_api_alchemy_2))
     return resp
 
 
