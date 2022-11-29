@@ -387,16 +387,13 @@ def force_load_server_api_check():
             server_name = session['server_api']['server_name']
             if server_name:
                 cookie_check = update_cookies_check()
-                print('cookie_check', cookie_check)
-                if cookie_check is True:
+                #if cookie_check is True:
                     # update server data and cookies
-                    server_data = load_api_server_data(server_name)
-                    print('server_data', server_data)
-                    if server_data:
-                        if 'items' in server_data:
-                            cookie_response = set_price_dict_to_cookies(server_data['items'])
-                            print('cookie_response', cookie_response)
-                            return cookie_response
+                server_data = load_api_server_data(server_name)
+                if server_data:
+                    if 'items' in server_data:
+                        #cookie_response = set_price_dict_to_cookies(server_data['items'])
+                        return server_data['items']
                 else:
                     price_dict = get_price_dict_from_cookies()
                     return price_dict
