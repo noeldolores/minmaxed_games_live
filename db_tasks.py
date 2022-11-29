@@ -38,9 +38,9 @@ def timer(time_history=None, to_print=None):
 def str_to_datetime(date_string):
     try:
         if '.' in date_string:
-            _date = datetime.strptime(date_string, '%Y-%m-%d %H:%M:%S.%f')
+            _date = datetime.strptime(date_string, '%Y-%m-%dT%H:%M:%S.%f')
         else:
-            _date = datetime.strptime(date_string, '%Y-%m-%d %H:%M:%S')
+            _date = datetime.strptime(date_string, '%Y-%m-%dT%H:%M:%S')
         return _date.astimezone(pytz.utc)
     except Exception as e:
         print_stderr(f'{e} str_to_datetime: {date_string}')
@@ -48,7 +48,6 @@ def str_to_datetime(date_string):
 
 
 def datetime_to_str(date_time):
-    #_local = pytz.utc.localize(date_time, is_dst=None).astimezone()
     _date = datetime.strftime(date_time, '%m/%d %I:%M %p')
     return _date
 
