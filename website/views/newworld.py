@@ -264,7 +264,6 @@ def load_api_server_data(server_name):
             for key, value in server_price_list.items():
                 for mat in value.keys():
                     if mat in item_dict:
-                        print(key)
                         server_price_list[key][mat] = item_dict[mat]
                      
             server_data = {
