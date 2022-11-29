@@ -308,6 +308,7 @@ def set_price_dict_to_cookies(price_dict):
     server_api_alchemy_2 = {}
     
     for key, value in price_dict.items():
+        print(key)
         if key in template_order:
             if len(list(server_api_refine.keys())) < template_order_size/2:
                 server_api_refine[key] = value
@@ -328,12 +329,7 @@ def set_price_dict_to_cookies(price_dict):
     
     session['server_cookies']['last_update'] = datetime.now(timezone.utc)
     
-    print(server_api_refine,
-    server_api_refine_2,
-    server_api_trophy,
-    server_api_trophy_2,
-    server_api_alchemy,
-    server_api_alchemy_2)
+    print(server_api_refine)
     
     resp = make_response(redirect(url_for(request.endpoint, **request.view_args)))
     resp.set_cookie('server_api_refine', json.dumps(server_api_refine))
