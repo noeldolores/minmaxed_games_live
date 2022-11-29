@@ -249,19 +249,19 @@ def dictionary_key_replacements():
 def init_cookies():
     if request.cookies.get('server_api_refine_2') is None:
         resp = make_response(redirect(url_for(request.endpoint, **request.view_args)))
-        resp.set_cookie('server_api_refine', "")
-        resp.set_cookie('server_api_refine_2', "")
-        resp.set_cookie('server_api_trophy', "")
-        resp.set_cookie('server_api_trophy_2', "")
-        resp.set_cookie('server_api_alchemy', "")
-        resp.set_cookie('server_api_alchemy_2', "")
+        resp.set_cookie('server_api_refine', "none", max_age=60*60*24*365)
+        resp.set_cookie('server_api_refine_2', "none", max_age=60*60*24*365)
+        resp.set_cookie('server_api_trophy', "none", max_age=60*60*24*365)
+        resp.set_cookie('server_api_trophy_2', "none", max_age=60*60*24*365)
+        resp.set_cookie('server_api_alchemy', "none", max_age=60*60*24*365)
+        resp.set_cookie('server_api_alchemy_2', "none", max_age=60*60*24*365)
         return resp
     else:
         return None
     
 
 def update_cookies_check():
-    if request.cookies.get('server_api_refine') == "":
+    if request.cookies.get('server_api_refine') == "none":
         return True
     
     update_threshold = 1800
