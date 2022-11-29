@@ -824,7 +824,10 @@ def server_api():
                 force_load = force_load_server_api_check()
                 if force_load is not None:
                     if type(force_load) == Response:
-                        return force_load
+                        try:
+                            return force_load
+                        except Exception as e:
+                            print('choose_server', e)
                     price_dict = force_load
 
     # if "load_all" in request.form:
