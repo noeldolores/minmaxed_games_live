@@ -707,7 +707,8 @@ def server_api_hx():
     
     template_order = player_data.trade_post_order()
     trophy_order = player_data.trade_post_trophy_order()
-
+    alchemy_order = player_data.alchemy_order()
+    
     if 'price_list' in session:
         price_dict = session['price_list']
     if 'server_api' in session:
@@ -718,7 +719,7 @@ def server_api_hx():
                 if 'items' in server_data:
                     price_dict = server_data['items']
 
-    return render_template('newworld/server_api_hx.html', price_list=price_dict, template_order=template_order, trophy_order=trophy_order)
+    return render_template('newworld/server_api_hx.html', price_list=price_dict, template_order=template_order, trophy_order=trophy_order, alchemy_order=alchemy_order)
 
 
 @newworld.route('/navbar_api_hx', defaults={'material':None}, methods=['GET', 'POST'])

@@ -6,6 +6,9 @@
     <li class="nav-item mr-1" role="presentation">
         <button class="nav-link btn-outline-danger" id="trophy-tab" data-toggle="tab" data-target="#trophy" type="button" role="tab" aria-controls="trophy" aria-selected="false" _="on click call #trophy-tab.blur()">Trophy</button>
     </li>
+    <li class="nav-item mr-1" role="presentation">
+        <button class="nav-link btn-outline-info" id="alchemy-tab" data-toggle="tab" data-target="#alchemy" type="button" role="tab" aria-controls="alchemy" aria-selected="false" _="on click call #alchemy-tab.blur()">Alchemy</button>
+    </li>
 </ul>
 
 <div class="tab-content">
@@ -188,6 +191,35 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <div class="tab-pane mt-2" id="alchemy" role="tabpanel" aria-labelledby="alchemy-tab">
+        <div>
+            <a class="btn btn-outline-info custom_toggle" _="on click call me.blur() if my.innerText == 'Show All' remove .collapsed from .collapse-alchemy set .collapse-alchemy's @aria-expanded to 'true' add .show to .collapseallAlchemy set my.innerText to 'Hide All' else add .collapsed to .collapse-alchemy remove .show from .collapseallAlchemy set .collapse-alchemy's @aria-expanded to 'false' set my.innerText to 'Show All'">Show All</a>
+        </div>
+        <div class='container'>
+            {% for i in range(0, alchemy_order|length) %}
+            <div id="collapse" href="#homeSubmenu{{i}}_alchemy" data-toggle="collapse" aria-expanded="false" class="btn btn-outline-secondary dropdown-toggle collapse-main collapsed collapse-alchemy">
+                {{alchemy_order[i][0].title() | replace("_"," ")}}
+            </div>
+            <ul class="collapse list-unstyled collapseallAlchemy" id="homeSubmenu{{i}}_alchemy">
+                <li id="listspace">
+                    <div class="form-row justify-content-center">
+                        {% for material in alchemy_order[i][1:] %}
+                        <div class="col-auto">
+                            <label for={{material}}><a href="/newworld/material/{{material}}" target="#"><u>{{material.title() | replace("_"," ")}}</u></a></label>
+                            {% if alchemy_order[i][0] == "mote" %}
+                            <input disabled id="alchemy_{{material}}" name="alchemy_{{material}}" class="form-control price" min="0" value="{{ '%.2f'|format(price_list[alchemy_order[i][0]][material]) }}">
+                            {% else %}
+                            <input disabled id="{{material}}" name="{{material}}" class="form-control price" min="0" value="{{ '%.2f'|format(price_list[alchemy_order[i][0]][material]) }}">
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </li>
+            </ul>
+            {% endfor %}
         </div>
     </div>
 </div>
