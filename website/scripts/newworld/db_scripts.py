@@ -19,6 +19,8 @@ def load_market_server(server_id):
     
     material_source = player_data.trade_post_order()
     trophy_source = player_data.trade_post_trophy_order()
+    alchemy_source = player_data.alchemy_order()
+    
     full_item_check_list = []
     for material_list in material_source:
         full_item_check_list.extend(material_list[1:])
@@ -32,6 +34,9 @@ def load_market_server(server_id):
                     full_item_check_list.append(item)
         else:
             full_item_check_list.extend(trophy_list[1:])
+    for alchemy_list in alchemy_source:
+        full_item_check_list.extend(alchemy_list[1:])
+        
     try:
         while server is None:
             if tries > 20:
