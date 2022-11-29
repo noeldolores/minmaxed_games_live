@@ -268,7 +268,8 @@ def update_cookies_check():
     current_time = datetime.now(timezone.utc)
     last_update = datetime.now(timezone.utc)
     if 'server_cookies' in session:
-        last_update = session['server_cookies']['last_update']
+        if session['server_cookies']['last_update'] is not None:
+            last_update = session['server_cookies']['last_update']
     
     if (current_time - last_update).total_seconds() >= update_threshold:
         return True
