@@ -387,6 +387,7 @@ def force_load_server_api_check():
             server_name = session['server_api']['server_name']
             if server_name:
                 cookie_check = update_cookies_check()
+                print('cookie_check', cookie_check)
                 if cookie_check is True:
                     # update server data and cookies
                     server_data = load_api_server_data(server_name)
