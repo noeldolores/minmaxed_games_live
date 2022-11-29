@@ -187,7 +187,7 @@ def dictionary_key_replacements():
                         else:
                             session['price_list'][category][item] = 0
         
-        if 'mote' not in session['price_list']:
+        if 'essence' not in session['price_list']:
             alchemy_order = player_data.alchemy_order()
             for items in alchemy_order:
                 category = items[0]
