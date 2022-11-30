@@ -66,3 +66,11 @@ class ItemData(db.Model):
   CraftedAt = db.Column(db.String(150)) # source javelindata_tooltiplayout.loc
   Cooldown	= db.Column(db.String(150))
   EffectDuration	= db.Column(db.String(150))
+  
+class User(db.Model):
+  id = db.Column(db.Integer, primary_key=True)
+  user_id = db.Column(db.String(36))
+  server_id = db.Column(db.Integer)
+  last_visit = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+  user_prices = db.Column(db.JSON)
+  server_prices = db.Column(db.JSON)
