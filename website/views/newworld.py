@@ -528,6 +528,9 @@ def refining():
 
 @newworld.route('/refining_hx', methods=['GET', 'POST'])
 def refining_hx():
+    init_session()
+    dictionary_key_replacements()
+    
     template_order = player_data.refining_order()
 
     if 'price_list' in session:
