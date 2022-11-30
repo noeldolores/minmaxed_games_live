@@ -261,7 +261,7 @@ def create_user(ID):
             server_id = session['server_api']['server_id']
         last_visit = datetime.now(timezone.utc)
         
-        user = User(user_id=ID, server_id=server_id, last_visit=last_visit, user_prices=None,server_prices={"data": {"key1": "value1", "key2": "value2"}})
+        user = User(user_id=ID, server_id=server_id, last_visit=last_visit, user_prices=None,server_prices=None)
         db.session.add(user)
         db.session.commit()
         
