@@ -613,7 +613,7 @@ def ingredients_needed_to_refine(discipline, material, quantity, skill_level, ge
         'craft' : {
             'input' : number_of_crafts,
             'output': output,
-            'bonus' : craft_bonus_dict[material],
+            'bonus' : round(craft_bonus_dict[material],2),
             'final_value' : value_post_tax
         },
         'ingredients' : ingredients_list,
@@ -1529,7 +1529,7 @@ def materials_to_refine_alchemy(material, quantity, price_dict, taxes_fees, skil
         'craft' : {
             'input' : number_of_crafts,
             'output': output,
-            'bonus' : skill_bonus,
+            'bonus' : round(skill_bonus,2),
             'final_value' : value_post_tax
         },
         'ingredients' : ingredients_list,
