@@ -1065,8 +1065,9 @@ def trophy_calculator_hx():
     return render_template('newworld/trophy_calculator_hx.html', data=data, template_order=template_order)
 
 
-@newworld.route('/trading_post', methods=['GET', 'POST'])
-def trading_post():
+@newworld.route('/trading_post', defaults={'server_id':None}, methods=['GET', 'POST'])
+@newworld.route('/trading_post/<server_id>', methods=['GET', 'POST'])
+def trading_post(server_id):
     init_session()
     dictionary_key_replacements()
     
@@ -1074,25 +1075,43 @@ def trading_post():
     if search:
         return redirect(url_for('newworld.material', material=search))
     
+    server_dict = {}
+    basedir = os.path.abspath(os.path.dirname(__file__))
+    server_list_file = os.path.join(basedir, '../static/newworld/txt/api_server_list.txt')
+    with open(server_list_file) as file:
+        lines = file.readlines()
+        lines.sort()
+        for line in lines:
+            name, num = line.rstrip().lower().split(",")
+            server_dict[name] = num
+
     server_name = None
-    if 'server_api' in session:
-        server_name = session['server_api']['server_name']
-        
-    return render_template('newworld/trading_post.html', server=server_name)
+    for key, value in server_dict.values():
+        if value == server_id:
+            server_name = key.title()
+    
+    if server_name is None:
+        if 'server_api' in session:
+            server_id = session['server_api']['server_id']
+            server_name = session['server_api']['server_name'].title()
+
+    return render_template('newworld/trading_post.html', server=server_id, name=server_name)
 
 
-@newworld.route('/trading_post_hx', methods=['GET', 'POST'])
-def trading_post_hx():
-    server_name = None
-    if 'server_api' in session:
-        server_name = session['server_api']['server_name']
-        if server_name:
-            try:
-                item_data = db_scripts.retrieve_itemdata_for_tradingpost(server_name)
-                item_data_price = sorted(item_data, key=lambda d: d['Price'])
-            except Exception as e:
-                print(e)
-                item_data_price = None
+@newworld.route('/trading_post_hx', defaults={'server_id':None}, methods=['GET', 'POST'])
+@newworld.route('/trading_post_hx/<server_id>', methods=['GET', 'POST'])
+def trading_post_hx(server_id):
+    if server_id is None:
+        if 'server_api' in session:
+            server_id = session['server_api']['server_id']
+            
+    if server_id:
+        try:
+            item_data = db_scripts.retrieve_itemdata_for_tradingpost(server_id)
+            item_data_price = sorted(item_data, key=lambda d: d['Price'])
+        except Exception as e:
+            print(e)
+            item_data_price = None
     else:
         item_data_price = None
         

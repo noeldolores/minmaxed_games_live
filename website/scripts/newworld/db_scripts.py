@@ -62,8 +62,8 @@ def load_market_server(server_id):
     finally:
         return market_dict
 
-def retrieve_itemdata_for_tradingpost(server_name):
-    if server_name:
+def retrieve_itemdata_for_tradingpost(server_id):
+    if server_id:
         items = ItemData.query.all()
         
         item_dict = {}
@@ -80,7 +80,7 @@ def retrieve_itemdata_for_tradingpost(server_name):
                         'Avail': 0
                     }
         
-        server = Market.query.filter_by(name=server_name).first()
+        server = Market.query.filter_by(server_id=server_id).first()
         if server:
             added_items = 0
             for item in server.items:

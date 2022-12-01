@@ -212,3 +212,8 @@ img {
 #collapseOne {
   text-align: center; 
 }
+
+.serverName {
+  text-align: center;
+  color: white;
+}
