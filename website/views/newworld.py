@@ -1097,7 +1097,9 @@ def trading_post(server_id):
     if server_name is None:
         if 'server_api' in session:
             server_id = session['server_api']['server_id']
-            server_name = session['server_api']['server_name'].title()
+            if session['server_api']['server_name']:
+                server_name = session['server_api']['server_name'].title()
+                
 
     return render_template('newworld/trading_post.html', server=server_id, name=server_name)
 
