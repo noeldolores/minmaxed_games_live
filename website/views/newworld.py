@@ -16,7 +16,7 @@ def init_session():
         session.permanent = True
         session['ID'] = str(uuid.uuid4())
         user = create_user(session['ID'])
-        print(user)
+        print('New user added', user)
         session['first_visit'] = True
         session['skill_levels'] = player_data.init_skill_levels()
         session['gear_sets'] = player_data.init_gear_sets()
@@ -247,7 +247,7 @@ def dictionary_key_replacements():
     if 'ID' not in session:
         session['ID'] = str(uuid.uuid4())
         user = create_user(session['ID'])
-        print(user)
+        print('Returning user added', user)
         
     if 'user_last_update' not in session:
         session['user_last_update'] = None
