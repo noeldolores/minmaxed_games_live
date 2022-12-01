@@ -1089,6 +1089,9 @@ def trading_post(server_id):
     for key, value in server_dict.items():
         if value == server_id:
             server_name = key.title()
+        elif key == server_id.lower().replace("_", " "):
+            server_name = key.title()
+            server_id = value
     
     if server_name is None:
         if 'server_api' in session:
