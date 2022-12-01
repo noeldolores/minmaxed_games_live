@@ -1086,7 +1086,7 @@ def trading_post(server_id):
             server_dict[name] = num
 
     server_name = None
-    for key, value in server_dict.values():
+    for key, value in server_dict.items():
         if value == server_id:
             server_name = key.title()
     
