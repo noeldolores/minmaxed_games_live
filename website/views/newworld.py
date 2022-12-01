@@ -394,7 +394,7 @@ def home():
     return render_template('newworld/base.html')
 
 
-@newworld.route('/trade_skills_refining', methods=['GET', 'POST'])
+@newworld.route('/trade_skills_refining/', methods=['GET', 'POST'])
 def trade_skills_refining():
     init_session()
     dictionary_key_replacements()
@@ -406,7 +406,7 @@ def trade_skills_refining():
     return render_template('newworld/trade_skills_refining.html')
 
 
-@newworld.route('/skills', methods=['GET', 'POST'])
+@newworld.route('/skills/', methods=['GET', 'POST'])
 def skills():
     init_session()
     dictionary_key_replacements()
@@ -451,7 +451,7 @@ def skills_hx():
     return render_template('newworld/skills_hx.html', skill_levels=session['skill_levels'])
 
 
-@newworld.route('/gearsets', methods=['GET', 'POST'])
+@newworld.route('/gearsets/', methods=['GET', 'POST'])
 def gearsets():
     init_session()
     dictionary_key_replacements()
@@ -477,7 +477,7 @@ def gearsets_hx():
     return render_template('newworld/gearsets_hx.html', gear_sets=session['gear_sets'])
 
 
-@newworld.route('/user_prices', methods=['GET', 'POST'])
+@newworld.route('/user_prices/', methods=['GET', 'POST'])
 def user_prices():
     init_session()
     dictionary_key_replacements()
@@ -514,7 +514,7 @@ def user_prices_hx():
     return render_template('newworld/user_prices_hx.html', price_list=session['price_list'], template_order=template_order, trophy_order=trophy_order, alchemy_order=alchemy_order)
 
 
-@newworld.route('/refining', methods=['GET', 'POST'])
+@newworld.route('/refining/', methods=['GET', 'POST'])
 def refining():
     init_session()
     dictionary_key_replacements()
@@ -703,7 +703,7 @@ def material_price_hx(material):
     return render_template('newworld/material_price_hx.html', material_price=material_price, final_price=final_price, buy_tax=buy_tax)
     
 
-@newworld.route('/server_api', methods=['GET', 'POST'])
+@newworld.route('/server_api/', methods=['GET', 'POST'])
 def server_api():
     init_session()
     dictionary_key_replacements()
@@ -827,7 +827,7 @@ def navbar_api_hx(material):
     return render_template('newworld/navbar_api_hx.html', status=status, css_class=css_class, material=material_hx)
 
 
-@newworld.route('/taxes_and_bonuses', methods=['GET', 'POST'])
+@newworld.route('/taxes_and_bonuses/', methods=['GET', 'POST'])
 def taxes_and_bonuses():
     init_session()
     dictionary_key_replacements()
@@ -914,7 +914,7 @@ def datalist():
     return render_template('newworld/datalist.html', datalist=parsed_list)
 
 
-@newworld.route('/market_calculator', methods=['GET', 'POST'])
+@newworld.route('/market_calculator/', methods=['GET', 'POST'])
 def market_calculator():
     init_session()
     dictionary_key_replacements()
@@ -1030,7 +1030,7 @@ def market_calculator_hx():
     return render_template('newworld/market_calculator_hx.html', data=data, only_purchase=only_purchase, purchase_quant=purchase_quant)
 
 
-@newworld.route('/crafting/trophy', methods=['GET', 'POST'])
+@newworld.route('/crafting/trophy/', methods=['GET', 'POST'])
 def trophy_calculator():
     init_session()
     dictionary_key_replacements()
