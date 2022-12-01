@@ -680,6 +680,8 @@ def material_raw_hx(material):
 
 @newworld.route('/material_price_hx/<material>', methods=['GET', 'POST'])
 def material_price_hx(material):
+    init_session()
+    
     if 'price_list' in session:
         price_dict = session['price_list']
     force_load = force_load_server_api_check()
