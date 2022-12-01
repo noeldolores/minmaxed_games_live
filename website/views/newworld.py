@@ -1065,7 +1065,7 @@ def trophy_calculator_hx():
     return render_template('newworld/trophy_calculator_hx.html', data=data, template_order=template_order)
 
 
-@newworld.route('/trading_post', defaults={'server_id':None}, methods=['GET', 'POST'])
+@newworld.route('/trading_post/', defaults={'server_id':None}, methods=['GET', 'POST'])
 @newworld.route('/trading_post/<server_id>', methods=['GET', 'POST'])
 def trading_post(server_id):
     init_session()
