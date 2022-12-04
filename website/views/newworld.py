@@ -1237,7 +1237,7 @@ def material_alchemy_raw_hx(material):
         if request.args['quantity_have'] == "":
             quantity = 1
         else:
-            quantity = max(int(float(request.args['update_quantity'])), 1)
+            quantity = max(int(float(request.args['quantity_have'])), 1)
     else:
         quantity = 1
     
