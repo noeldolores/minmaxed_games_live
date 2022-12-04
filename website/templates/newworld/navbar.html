@@ -57,6 +57,10 @@
                 <li class="nav-item active form-check-inline" id="api_toggle">
                     {% include '/newworld/navbar_api_hx.html'%}
                 </li>
+                {% else %}
+                <li class="nav-item active form-check-inline">
+                    <span type="button" class="btn btn-outline-danger btn-sm"><a href="/newworld/server/server_api">Choose Server</a></span>
+                </li>
                 {% endif %}
             {% endif %}
         </ul>
