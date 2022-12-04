@@ -17,7 +17,7 @@
         <div id="collapseOne" class="collapse">
             <div class="card-body bg-dark">
                 <p1>Enter the price of each item below to generate data for the various tables and calculators found on this site.</p1><br>
-                <p1>Visit the <a href="/newworld/server_api" target="#"><u>Server API</u></a> page to Copy the most recent pricing data from your server to here.</p1><br>
+                <p1>Visit the <a href="/newworld/server/server_api" target="_blank"><u>Server API</u></a> page to Copy the most recent pricing data from your server to here.</p1><br>
                 <p1>The data you enter will be saved to your browser for future visits.</p1>
             </div>
         </div>
@@ -27,9 +27,9 @@
 </div>
 
 <div class="container tradePrices">
-    <form hx-post="/newworld/user_prices_hx" hx-target="#user_prices_hx">
+    <form hx-post="/newworld/server/user_prices_hx" hx-target="#user_prices_hx">
         <div id="user_prices_hx">  
-            {% include "newworld/user_prices_hx.html" %}
+            {% include "newworld/server/user_prices_hx.html" %}
         </div>
 
         <div>

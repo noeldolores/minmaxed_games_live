@@ -57,38 +57,28 @@
 
       <div class="row justify-content-center">
         <div class="col-lg-3 col-md-4 col-sm-7">
-          <a class="nav-link" href="https://discord.com/invite/ACnsS59ERb" target="#"><button type="button" class="btn btn-outline-primary btn-lg btn-block mb-2 mt-2 home-button">Discord<br><span style="font-size:1.35rem">(chats, bugs, & suggestions)</span></button></a>
+          <a class="nav-link" href="https://discord.com/invite/ACnsS59ERb" target="_blank"><button type="button" class="btn btn-outline-primary btn-lg btn-block mb-2 mt-2 home-button">Discord<br><span style="font-size:1.35rem">(chats, bugs, & suggestions)</span></button></a>
         </div>
         <div class="col-lg-3 col-md-4 col-sm-7">
-          <a class="nav-link" href="/newworld/server_api"><button type="button" class="btn btn-secondary btn-lg btn-block mb-2 mt-2 home-button">Choose Server<br><span style="font-size:1.35rem">(start here)</span></button></a>
+          <a class="nav-link" href="/newworld/character" target="#"><button type="button" class="btn btn-success btn-lg btn-block mb-2 mt-2 home-button">Character Info<br><span style="font-size:1.35rem">(start here)</span></button></a>
         </div>
         <div class="col-lg-3 col-md-4 col-sm-7">
-          <a class="nav-link" href="/newworld/user_prices"><button type="button" class="btn btn-secondary btn-lg btn-block mb-2 mt-2 home-button">User Prices<br><span style="font-size:1.35rem">(fill this out)</span></button></a>
+          <a class="nav-link" href="/newworld/server" target="#"><button type="button" class="btn btn-danger btn-lg btn-block mb-2 mt-2 home-button">Server Details<br><span style="font-size:1.35rem">(then go here)</span></button></a>
         </div>
       </div>
 
       <div class="row justify-content-center">
         <div class="col-lg-3 col-md-4 col-sm-7">
-          <a class="nav-link" href="/newworld/skills"><button type="button" class="btn btn-light btn-lg btn-block mb-2 mt-2 home-button">Trade Skills<br><span style="font-size:1.35rem">(level up)</span></button></a>
+          <a class="nav-link" href="/newworld/tables" target="#"><button type="button" class="btn btn-secondary btn-lg btn-block mb-2 mt-2 home-button">Tables<br><span style="font-size:1.35rem">(cheapest routes)</span></button></a>
         </div>
         <div class="col-lg-3 col-md-4 col-sm-7">
-          <a class="nav-link" href="/newworld/gearsets"><button type="button" class="btn btn-light btn-lg btn-block mb-2 mt-2 home-button">Gear Sets<br><span style="font-size:1.35rem">(get dressed)</span></button></a>
+          <a class="nav-link" href="/newworld/calculators" target="#"><button type="button" class="btn btn-info btn-lg btn-block mb-2 mt-2 home-button">Calculators<br><span style="font-size:1.35rem">(behold, results!)</span></button></a>
         </div>
+        {% if server %}
         <div class="col-lg-3 col-md-4 col-sm-7">
-          <a class="nav-link" href="/newworld/taxes_and_bonuses"><button type="button" class="btn btn-light btn-lg btn-block mb-2 mt-2 home-button">Taxes & Bonuses<br><span style="font-size:1.35rem">(fine-tune results)</span></button></a>
+          <a class="nav-link" href="/newworld/server/trading_post" target="_blank"><button type="button" class="btn btn-warning btn-lg btn-block mb-2 mt-2 home-button">Trading Post<br><span style="font-size:1.35rem">(browse server items)</span></button></a>
         </div>
-      </div>
-
-      <div class="row justify-content-center">
-        <div class="col-lg-3 col-md-4 col-sm-7">
-          <a class="nav-link" href="/newworld/refining"><button type="button" class="btn btn-info btn-lg btn-block mb-2 mt-2 home-button">Refining Table<br><span style="font-size:1.35rem">(behold, results!)</span></button></a>
-        </div>
-        <div class="col-lg-3 col-md-4 col-sm-7">
-          <a class="nav-link" href="/newworld/crafting/trophy"><button type="button" class="btn btn-info btn-lg btn-block mb-2 mt-2 home-button">Trophy Table<br><span style="font-size:1.35rem">(behold, results!)</span></button></a>
-        </div>
-        <div class="col-lg-3 col-md-4 col-sm-7">
-          <a class="nav-link" href="/newworld/trading_post"><button type="button" class="btn btn-warning btn-lg btn-block mb-2 mt-2 home-button">Trading Post<br><span style="font-size:1.35rem">(view server prices)</span></button></a>
-        </div>
+        {% endif %}
       </div>
       
       <br>

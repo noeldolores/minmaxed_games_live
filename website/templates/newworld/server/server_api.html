@@ -18,7 +18,7 @@
 
         <div id="collapseOne" class="collapse">
             <div class="card-body bg-dark">
-                <p1>Pricing data is sourced by <a href="https://nwmarketprices.com/" target="#"><u>NWMarketPrices</u></a> community members.</p1><br>
+                <p1>Pricing data is sourced by <a href="https://nwmarketprices.com/" target="_blank"><u>NWMarketPrices</u></a> community members.</p1><br>
                 <p1>Select your server from the dropdown and select the Choose Server button.</p1><br>
                 <p1>You can toggle between the API data and your User Prices by selecting the Server button on the top bar.</p1><br>
                 <p1>You can override your User Prices with the server data by selecting the Copy All button.</p1><br>
@@ -56,7 +56,7 @@
                 </div>
 
                 <div>
-                    <a href="/newworld/trading_post"><span class="btn btn-outline-warning loadMarket">Trading Post</span></a>
+                    <a href="/newworld/server/trading_post"><span class="btn btn-outline-warning loadMarket">Trading Post</span></a>
                 </div>
 
             </form>
@@ -66,7 +66,7 @@
     <br><br>
     
     {% if copy_available %}
-    <form hx-post="/newworld/server_api_hx" hx-target="#server_api_hx" _="init fetch /newworld/server_api_hx put the result into #server_api_hx">
+    <form hx-post="/newworld/server/server_api_hx" hx-target="#server_api_hx" _="init fetch /newworld/server/server_api_hx put the result into #server_api_hx">
         <div class="container" id="server_api_hx"></div>
     </form> 
 

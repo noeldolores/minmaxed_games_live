@@ -1666,3 +1666,106 @@ def alchemy_refining_up_profitability_table(material, quantity, skill_level, mar
         
         return refining_dict
     return None
+
+
+def init_alchemy_cost_table():
+    alchemy_template = player_data.alchemy_order()
+    alchemy_dict = {}
+    for category in alchemy_template:
+        if category[0] != 'mote':
+            alchemy_dict[category[0]] = {}
+            for item in category[1:]:
+                alchemy_dict[category[0]][item] = {}
+    
+    for category, cat_data in alchemy_dict.items():
+        for item in cat_data.keys():
+            element = item.replace(f'_{category}','')
+            if category == 'wisp':
+                alchemy_dict[category][item] = {
+                    f'{element}_wisp': 0,
+                    f'{element}_mote': 0
+                }
+            elif category == 'essence':
+                alchemy_dict[category][item] = {
+                    f'{element}_essence': 0,
+                    f'{element}_mote': 0,
+                    f'{element}_wisp': 0
+                }
+            elif category == 'quintessence':
+                alchemy_dict[category][item] = {
+                    f'{element}_quintessence': 0,
+                    f'{element}_mote': 0,
+                    f'{element}_wisp': 0,
+                    f'{element}_essence': 0
+                }
+    return alchemy_dict
+
+
+def tp_cost_to_upgrade_all_alchemy(price_list, skill_level, taxes_fees):
+    _refining_dict = init_alchemy_cost_table()
+    _financials = init_alchemy_cost_table()
+
+    for discipline, discipline_data in _refining_dict.items():
+            
+        for material, material_data in discipline_data.items():
+            market_value = price_list[discipline][material]
+            purchase_total = market_value + apply_trade_post_tax_buy(market_value, taxes_fees)
+            
+            _refining_dict[discipline][material][material] = purchase_total
+            _financials[discipline][material][material] = {
+                'sell_profit' : 0,
+                'profit_margin' : 0
+            }
+            
+            quantity = 1000
+            _data = materials_to_refine_alchemy(material, quantity, price_list, taxes_fees, skill_level)
+                    
+
+            material_ingredient_list = list(material_data.keys())
+            material_ingredient_list.remove(material)
+            material_ingredient_list.reverse()
+
+            for i in range(len(material_ingredient_list)):
+                _financial = _data['financial'][i]
+                _craft_cost = _financial['craft']['final_cost_each']
+                _sell_profit = _financial['sell']['final_profit_each']
+                _profit_margin = _sell_profit / _craft_cost
+                
+                _refining_dict[discipline][material][material_ingredient_list[i]] = _craft_cost
+                _financials[discipline][material][material_ingredient_list[i]] = {
+                    'sell_profit' : _sell_profit,
+                    'profit_margin' : _profit_margin
+                }
+                    
+    return _refining_dict, _financials
+
+
+def generate_cheapest_route_alchemy_table(refining_dict_full, financials):
+    refining_dict_cheapest = {}
+    for discipline, discipline_data in refining_dict_full.items():
+        refining_dict_cheapest[discipline] = {}
+        for material, material_data in discipline_data.items():
+            
+            material_list = list(material_data.items())
+
+            material_from_tp = material_list[0]
+            craft_cost = [material_from_tp]
+            for i in material_list:
+                mat = i[0]
+                cost = i[1]
+                profit = financials[discipline][material][mat]['sell_profit']
+                if profit >= 0.01:
+                    craft_cost.append((mat, cost))
+                
+            _price_data = cost_comparison(craft_cost)
+            tp_flip = financials[discipline][material][_price_data[0]]['sell_profit']
+            tp_margin= financials[discipline][material][_price_data[0]]['profit_margin']
+
+            refining_dict_cheapest[discipline][material] = {
+                "source": _price_data[0],
+                "price" : round(_price_data[1], 2),
+                "tp_flip": round(tp_flip, 2),
+                "tp_margin": round(tp_margin * 100, 2)
+            }
+            
+    return refining_dict_cheapest

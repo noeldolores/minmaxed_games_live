@@ -1,0 +1,27 @@
+{% extends "newworld/base.html" %} 
+
+{% block head %}
+<title>Tables - NW Calculators</title>
+<link id="style" rel="stylesheet" href="{{ url_for('static', filename='newworld/css/base.css') }}"/>
+{% endblock %}
+
+{% block content %}
+<br></br>
+<br></br>
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-lg-3 col-md-4 col-sm-7">
+            <a class="nav-link" href="/newworld/table/alchemy/" target="_blank"><button type="button" class="btn btn-primary btn-lg btn-block mb-2 mt-2 home-button">Alchemy Table</button></a>
+        </div>
+        <div class="col-lg-3 col-md-4 col-sm-7">
+            <a class="nav-link" href="/newworld/table/refining" target="_blank"><button type="button" class="btn btn-success btn-lg btn-block mb-2 mt-2 home-button">Refining Table</button></a>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col-lg-3 col-md-4 col-sm-7">
+            <a class="nav-link" href="/newworld/table/trophy/" target="_blank"><button type="button" class="btn btn-danger btn-lg btn-block mb-2 mt-2 home-button">Trophy Table</button></a>
+        </div>
+    </div>
+    <br>
+</div>
+{% endblock %}

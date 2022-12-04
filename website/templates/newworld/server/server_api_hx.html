@@ -1,3 +1,4 @@
+
 <ul class="nav nav-tabs" id="myTab" role="tablist">
     <li class="nav-item mr-1" role="presentation">
         <button class="nav-link btn-outline-success active" id="materials-tab" data-toggle="tab" data-target="#materials" type="button" role="tab" aria-controls="materials" aria-selected="true"  _="on click call #materials-tab.blur()">Refining</button>
@@ -28,9 +29,9 @@
                             {% if '_lodestone' in material or 'pure_solvent' in material %}
                             <label for={{material}}>{{material.title() | replace("_"," ")}}</label>
                             {% else %}
-                            <label for={{material}}><a href="/newworld/material/{{material}}" target="#"><u>{{material.title() | replace("_"," ")}}</u></a></label>
+                            <label for={{material}}><a href="/newworld/material/{{material}}" target="_blank"><u>{{material.title() | replace("_"," ")}}</u></a></label>
                             {% endif %}
-                            <input required type="number" step="0.01" id="{{material}}" name="{{material}}" class="form-control price" min="0" value="{{ '%.2f'|format(price_list[template_order[i][0]][material]) }}">
+                            <input disabled style="background-color:rgb(200, 200, 200)" type="text" id="{{material}}" name="{{material}}" class="form-control price" min="0" value="{{ '%.2f'|format(price_list[template_order[i][0]][material]) }}">
                         </div>
                         {% endfor %}
                     </div>
@@ -77,16 +78,11 @@
                                 <div class="col-auto">
                                     {% if material in ['minor', 'basic', 'major'] %}
                                     {% set trophy = material ~ '_' ~ trophy_order[i][0] ~ '_trophy' %}
-                                    <label for={{material}}><a href="/newworld/material/{{trophy}}" target="#"><u>{{material.title() | replace("_"," ")}}</u></a></label>
-                                    <input required type="number" step="0.01" id="{{trophy}}" name="{{trophy}}" class="form-control price" min="0" value="{{ '%.2f'|format(price_list[trophy_order[i][0]][trophy]) }}">
+                                    <label for={{material}}><a href="/newworld/material/{{trophy}}" target="_blank"><u>{{material.title() | replace("_"," ")}}</u></a></label>
+                                    <input disabled style="background-color:rgb(200, 200, 200)" type="text" id="{{trophy}}" name="{{trophy}}" class="form-control price" min="0" value="{{ '%.2f'|format(price_list[trophy_order[i][0]][trophy]) }}">
                                     {% else %}
-                                        {% if 'stain' in material %}
-                                        <label for={{material}}>{{material.title() | replace("_"," ")}}</label>
-                                        {% else %}
-                                        <label for={{material}}><a href="/newworld/material/{{material}}" target="#"><u>{{material.title() | replace("_"," ")}}</u></a></label>
-                                        {% endif %}
-                                    
-                                    <input required type="number" step="0.01" id="{{material}}" name="{{material}}" class="form-control price" min="0" value="{{ '%.2f'|format(price_list[trophy_order[i][0]][material]) }}">
+                                    <label for={{material}}><a href="/newworld/material/{{material}}" target="_blank"><u>{{material.title() | replace("_"," ")}}</u></a></label>
+                                    <input disabled style="background-color:rgb(200, 200, 200)" type="text" id="{{material}}" name="{{material}}" class="form-control price" min="0" value="{{ '%.2f'|format(price_list[trophy_order[i][0]][material]) }}">
                                     {% endif %}
                                 </div>
                                 {% endfor %}
@@ -115,11 +111,11 @@
                                 <div class="col-auto">
                                     {% if material in ['minor', 'basic', 'major'] %}
                                     {% set trophy = material ~ '_' ~ trophy_order[i][0] ~ '_trophy' %}
-                                    <label for={{material}}><a href="/newworld/material/{{trophy}}" target="#"><u>{{material.title() | replace("_"," ")}}</u></a></label>
-                                    <input required type="number" step="0.01" id="{{trophy}}" name="{{trophy}}" class="form-control price" min="0" value="{{ '%.2f'|format(price_list[trophy_order[i][0]][trophy]) }}">
+                                    <label for={{material}}><a href="/newworld/material/{{trophy}}" target="_blank"><u>{{material.title() | replace("_"," ")}}</u></a></label>
+                                    <input disabled style="background-color:rgb(200, 200, 200)" type="text" id="{{trophy}}" name="{{trophy}}" class="form-control price" min="0" value="{{ '%.2f'|format(price_list[trophy_order[i][0]][trophy]) }}">
                                     {% else %}
-                                    <label for={{material}}><a href="/newworld/material/{{material}}" target="#"><u>{{material.title() | replace("_"," ")}}</u></a></label>
-                                    <input required type="number" step="0.01" id="{{material}}" name="{{material}}" class="form-control price" min="0" value="{{ '%.2f'|format(price_list[trophy_order[i][0]][material]) }}">
+                                    <label for={{material}}><a href="/newworld/material/{{material}}" target="_blank"><u>{{material.title() | replace("_"," ")}}</u></a></label>
+                                    <input disabled style="background-color:rgb(200, 200, 200)" type="text" id="{{material}}" name="{{material}}" class="form-control price" min="0" value="{{ '%.2f'|format(price_list[trophy_order[i][0]][material]) }}">
                                     {% endif %}
                                 </div>
                                 {% endfor %}
@@ -147,11 +143,11 @@
                                 <div class="col-auto">
                                     {% if material in ['minor', 'basic', 'major'] %}
                                     {% set trophy = material ~ '_' ~ trophy_order[i][0] ~ '_trophy' %}
-                                    <label for={{material}}><a href="/newworld/material/{{trophy}}" target="#"><u>{{material.title() | replace("_"," ")}}</u></a></label>
-                                    <input required type="number" step="0.01" id="{{trophy}}" name="{{trophy}}" class="form-control price" min="0" value="{{ '%.2f'|format(price_list[trophy_order[i][0]][trophy]) }}">
+                                    <label for={{material}}><a href="/newworld/material/{{trophy}}" target="_blank"><u>{{material.title() | replace("_"," ")}}</u></a></label>
+                                    <input disabled style="background-color:rgb(200, 200, 200)" type="text" id="{{trophy}}" name="{{trophy}}" class="form-control price" min="0" value="{{ '%.2f'|format(price_list[trophy_order[i][0]][trophy]) }}">
                                     {% else %}
-                                    <label for={{material}}><a href="/newworld/material/{{material}}" target="#"><u>{{material.title() | replace("_"," ")}}</u></a></label>
-                                    <input required type="number" step="0.01" id="{{material}}" name="{{material}}" class="form-control price" min="0" value="{{ '%.2f'|format(price_list[trophy_order[i][0]][material]) }}">
+                                    <label for={{material}}><a href="/newworld/material/{{material}}" target="_blank"><u>{{material.title() | replace("_"," ")}}</u></a></label>
+                                    <input disabled style="background-color:rgb(200, 200, 200)" type="text" id="{{material}}" name="{{material}}" class="form-control price" min="0" value="{{ '%.2f'|format(price_list[trophy_order[i][0]][material]) }}">
                                     {% endif %}
                                 </div>
                                 {% endfor %}
@@ -170,7 +166,7 @@
                     </div>
                     <div class='container'>
                         {% for i in range(0, trophy_order|length) %}
-                        {% if 'gathering' in trophy_order[i][0] or 'luck' in trophy_order[i][0] %}
+                        {% if 'gathering' in trophy_order[i][0] %}
                         <div id="collapse_gathering_trophy" href="#homeSubmenu_gathering_trophy_{{i}}" data-toggle="collapse" aria-expanded="false" class="btn btn-outline-secondary dropdown-toggle collapse-main collapsed collapse-combat-trophy">{{trophy_order[i][0].title() | replace("_"," ")}}</div>
                         <ul class="collapse list-unstyled collapseallgatheringTrophy" id="homeSubmenu_gathering_trophy_{{i}}">
                             <li id="listspace">
@@ -179,11 +175,11 @@
                                     <div class="col-auto">
                                         {% if material in ['minor', 'basic', 'major'] %}
                                         {% set trophy = material ~ '_' ~ trophy_order[i][0] ~ '_trophy' %}
-                                        <label for={{material}}><a href="/newworld/material/{{trophy}}" target="#"><u>{{material.title() | replace("_"," ")}}</u></a></label>
-                                        <input required type="number" step="0.01" id="{{trophy}}" name="{{trophy}}" class="form-control price" min="0" value="{{ '%.2f'|format(price_list[trophy_order[i][0]][trophy]) }}">
+                                        <label for={{material}}><a href="/newworld/material/{{trophy}}" target="_blank"><u>{{material.title() | replace("_"," ")}}</u></a></label>
+                                        <input disabled style="background-color:rgb(200, 200, 200)" type="text" id="{{trophy}}" name="{{trophy}}" class="form-control price" min="0" value="{{ '%.2f'|format(price_list[trophy_order[i][0]][trophy]) }}">
                                         {% else %}
-                                        <label for={{material}}><a href="/newworld/material/{{material}}" target="#"><u>{{material.title() | replace("_"," ")}}</u></a></label>
-                                        <input required type="number" step="0.01" id="{{material}}" name="{{material}}" class="form-control price" min="0" value="{{ '%.2f'|format(price_list[trophy_order[i][0]][material]) }}">
+                                        <label for={{material}}><a href="/newworld/material/{{material}}" target="_blank"><u>{{material.title() | replace("_"," ")}}</u></a></label>
+                                        <input disabled style="background-color:rgb(200, 200, 200)" type="text" id="{{material}}" name="{{material}}" class="form-control price" min="0" value="{{ '%.2f'|format(price_list[trophy_order[i][0]][material]) }}">
                                         {% endif %}
                                     </div>
                                     {% endfor %}
@@ -212,11 +208,11 @@
                     <div class="form-row justify-content-center">
                         {% for material in alchemy_order[i][1:] %}
                         <div class="col-auto">
-                            <label for={{material}}><a href="/newworld/material/{{material}}" target="#"><u>{{material.title() | replace("_"," ")}}</u></a></label>
+                            <label for={{material}}><a href="/newworld/material/{{material}}" target="_blank"><u>{{material.title() | replace("_"," ")}}</u></a></label>
                             {% if alchemy_order[i][0] == "mote" %}
-                            <input required type="number" step="0.01" id="alchemy_{{material}}" name="alchemy_{{material}}" class="form-control price" min="0" value="{{ '%.2f'|format(price_list[alchemy_order[i][0]][material]) }}">
+                            <input disabled id="alchemy_{{material}}" name="alchemy_{{material}}" class="form-control price" min="0" value="{{ '%.2f'|format(price_list[alchemy_order[i][0]][material]) }}">
                             {% else %}
-                            <input required type="number" step="0.01" id="{{material}}" name="{{material}}" class="form-control price" min="0" value="{{ '%.2f'|format(price_list[alchemy_order[i][0]][material]) }}">
+                            <input disabled id="{{material}}" name="{{material}}" class="form-control price" min="0" value="{{ '%.2f'|format(price_list[alchemy_order[i][0]][material]) }}">
                             {% endif %}
                         </div>
                         {% endfor %}
@@ -226,5 +222,4 @@
             {% endfor %}
         </div>
     </div>
-
 </div>

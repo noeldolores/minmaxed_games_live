@@ -28,7 +28,7 @@
 </div>
 
 <div class="container profit-input">
-    <form hx-post="/newworld/market_calculator_hx" hx-target="#profit_container">
+    <form hx-post="/newworld/calculator/market_hx" hx-target="#profit_container">
         <div class="d-flex justify-content-center">
             <div class="row">
                 <div class="col-auto">
@@ -47,7 +47,7 @@
         </div>
     </form>
 
-    <div id="profit_container" _="init fetch /newworld/market_calculator_hx put the result into #profit_container"></div>
+    <div id="profit_container" _="init fetch /newworld/calculator/market_hx put the result into #profit_container"></div>
 </div>
 
 <br>

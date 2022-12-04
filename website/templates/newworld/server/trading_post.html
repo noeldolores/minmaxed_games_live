@@ -144,8 +144,7 @@
                 {% include "newworld/trading_post/house.html" %}
             </div>
         </div>
-        
-        <div class="col tradingPostTable" _="init fetch /newworld/trading_post_hx/{{server}}  put the result into #tradingPostTable">
+        <div class="col tradingPostTable" _="init fetch /newworld/server/trading_post_hx/{{server}} put the result into #tradingPostTable">
             <div id="tradingPostTable">
                 <img class="loadingImage" alt="Result loading..." class="htmx-indicator" width="256px" src="/static/newworld/images/ball-triangle.svg"/>
             </div>
@@ -156,7 +155,7 @@
     <div class="container-fluid">
         <div class="row justify-content-center">
             <div class="col-lg-6 col-md-6 col-sm-6">
-                <a href="/newworld/server_api"><button type="button" class="btn btn-warning btn-lg btn-block mb-2 mt-2 home-button">Choose Server<br><span style="font-size:1.35rem">(then reload page)</span></button></a>
+                <a href="/newworld/server/server_api"><button type="button" class="btn btn-warning btn-lg btn-block mb-2 mt-2 home-button">Choose Server<br><span style="font-size:1.35rem">(then reload page)</span></button></a>
             </div>
         </div>
     </div>

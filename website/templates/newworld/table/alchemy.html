@@ -1,0 +1,35 @@
+{% extends "newworld/base.html" %} 
+
+{% block head %}
+<title>Alchemy Table - NW Calculators</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='newworld/css/alchemy.css') }}"/>
+{% endblock %}
+
+{% block content%}
+<div class="container col-xl-5 col-lg-6 col-md-6">
+    <br><br>
+    <br><br>
+    <div class="card bg-secondary border-success">
+        <div class="card-header button btn-outline-success" id="headingOne" type="button" data-toggle="collapse" data-target="#collapseOne">
+            <h1>Alchemy Table</h1>
+        </div>
+
+        <div id="collapseOne" class="collapse">
+            <div class="card-body bg-dark">
+                <p1>This table shows the <span style="color:orange;">cheapest</span> upgrade route to acquire each <span style="color:aqua;">material</span>.</p1><br>
+                <p1>The <span style="color:red;">Avg. Cost</span> takes into account all bonuses and applies them with no variance. Thus, this is only accurate on larger quantities (100+). Select the specific material to view a more granular calculator.</p1><br>
+                <p1><span style="color:green;">TP Flip</span> and <span style="color:green;">Margin</span> show the potential profit for selling the refined material back on the Trade Post.</p1><br>
+            </div>
+        </div>
+    </div>
+    <br>
+    <br>
+</div>
+
+<div class="container">
+    <div id="alchemy_table_container" _="init fetch /newworld/table/alchemy_hx put the result into #alchemy_table_container"></div>
+</div>
+
+<br>
+<br>
+{% endblock %}

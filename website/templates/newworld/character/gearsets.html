@@ -17,7 +17,7 @@
 
         <div id="collapseOne" class="collapse">
             <div class="card-body bg-dark">
-                <p1>Select each armor piece you own to generate data for the <a href="/newworld/refining" target="#"><u>Refining Cost</u></a> and <a href="/newworld/material/orichalcum_ingot" target="#"><u>Refining Ingredients</u></a> tables.</p1><br>
+                <p1>Select each armor piece you own to generate data for the <a href="/newworld/table/refining" target="_blank"><u>Refining Cost</u></a> and <a href="/newworld/material/orichalcum_ingot" target="_blank"><u>Refining Ingredients</u></a> tables.</p1><br>
                 <p1>The data you enter will be saved to your browser for future visits.</p1>
             </div>
         </div>
@@ -25,9 +25,9 @@
 </div>
 
 <div class="container gearsets">
-    <form hx-post="/newworld/gearsets_hx" hx-target="#gearsets_hx">
+    <form hx-post="/newworld/character/gearsets_hx" hx-target="#gearsets_hx">
         <div class="container" id="gearsets_hx">
-            {% include "newworld/gearsets_hx.html" %}
+            {% include "newworld/character/gearsets_hx.html" %}
         </div>
 
         <div>

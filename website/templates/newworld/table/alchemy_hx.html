@@ -1,0 +1,39 @@
+<div>
+    <button id="refining_toggle" class="btn btn-outline-light custom_toggle" _="on click call me.blur() if my.innerText == 'Show All' remove .collapsed from #collapse add .show to .collapseall set .collapse-main's @aria-expanded to 'true' set my.innerText to 'Hide All' else add .collapsed to #collapse remove .show from .collapseall set .collapse-main's @aria-expanded to 'false' set my.innerText to 'Show All'">Hide All</button>
+</div>
+
+
+
+<div class="container active list-unstyled components">
+            
+    {% for key, value in cheapest_route.items() %}
+    <div id="collapse" href="#homeSubmenu_{{key}}" data-toggle="collapse" aria-expanded="true" class="btn btn-outline-secondary dropdown-toggle collapse-main">{{key.title()|replace("_"," ")}}</div>
+    <ul class="collapse list-unstyled collapseall show" id="homeSubmenu_{{key}}">
+        <li>
+            <table class="table table-striped table-dark">
+                <thead>
+                <tr>
+                    <th scope="col" class="table-dark" style="width: 25%; color:aqua;">Target</th>
+                    <th scope="col" class="table-dark" style="width: 25%; color:orange;">Buy</th>
+                    <th scope="col" class="table-dark" style="width: 17%; color:red;">Avg. Cost</th>
+                    <th scope="col" class="table-dark" style="width: 17%; color:green;">TP Flip</th>
+                    <th scope="col" class="table-dark" style="width: 16%; color:green;">Margin</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for material, data in value.items() %}
+                    <tr>
+                        <td scope="row"><a href="/newworld/material/{{material | replace(" ","_")}}"><u>{{material.title() | replace("_"," ")}}</u></a></td>
+                        <td><a href="/newworld/material/{{ data['source'].lower() | replace(" ","_") }}"><u>{{ data['source'].title()|replace("_"," ") }}</u></td>
+                        <td>{{ '%.2f'|format(data['price'] | float) }}</td>
+                        <td>{{ '%.2f'|format(data['tp_flip'] | float) }}</td>
+                        <td>{{ data['tp_margin'] }}%</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </li>
+    </ul> 
+    {% endfor %}
+
+</div>

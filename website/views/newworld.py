@@ -391,11 +391,15 @@ def home():
     if search:
         return redirect(url_for("newworld.material", material=search))
     
-    return render_template('newworld/base.html')
+    server_name = None
+    if 'server_api' in session:
+        server_name = session['server_api']['server_name']
+        
+    return render_template('newworld/base.html', server=server_name)
 
 
-@newworld.route('/trade_skills_refining/', methods=['GET', 'POST'])
-def trade_skills_refining():
+@newworld.route('/character/', methods=['GET', 'POST'])
+def character():
     init_session()
     dictionary_key_replacements()
     
@@ -403,11 +407,47 @@ def trade_skills_refining():
     if search:
         return redirect(url_for("newworld.material", material=search))
 
-    return render_template('newworld/trade_skills_refining.html')
+    return render_template('newworld/character.html')
 
 
-@newworld.route('/skills/', methods=['GET', 'POST'])
-def skills():
+@newworld.route('/server/', methods=['GET', 'POST'])
+def server():
+    init_session()
+    dictionary_key_replacements()
+    
+    search = search_function()
+    if search:
+        return redirect(url_for("newworld.material", material=search))
+
+    return render_template('newworld/server.html')
+
+
+@newworld.route('/calculators/', methods=['GET', 'POST'])
+def calculators():
+    init_session()
+    dictionary_key_replacements()
+    
+    search = search_function()
+    if search:
+        return redirect(url_for("newworld.material", material=search))
+
+    return render_template('newworld/calculators.html')
+
+
+@newworld.route('/tables/', methods=['GET', 'POST'])
+def tables():
+    init_session()
+    dictionary_key_replacements()
+    
+    search = search_function()
+    if search:
+        return redirect(url_for("newworld.material", material=search))
+
+    return render_template('newworld/tables.html')
+
+
+@newworld.route('/character/skills/', methods=['GET', 'POST'])
+def character_skills():
     init_session()
     dictionary_key_replacements()
     
@@ -415,11 +455,11 @@ def skills():
     if search:
         return redirect(url_for('newworld.material', material=search))
 
-    return render_template('newworld/skills.html', skill_levels=session['skill_levels'])
+    return render_template('newworld/character/skills.html', skill_levels=session['skill_levels'])
 
 
-@newworld.route('/skills_hx', methods=['GET', 'POST'])
-def skills_hx():
+@newworld.route('/character/skills_hx', methods=['GET', 'POST'])
+def character_skills_hx():
     if request.method == 'POST':
         if "save" in request.form:
             session['skill_levels'] = {
@@ -448,11 +488,11 @@ def skills_hx():
                 }
             }
             
-    return render_template('newworld/skills_hx.html', skill_levels=session['skill_levels'])
+    return render_template('newworld/character/skills_hx.html', skill_levels=session['skill_levels'])
 
 
-@newworld.route('/gearsets/', methods=['GET', 'POST'])
-def gearsets():
+@newworld.route('/character/gearsets/', methods=['GET', 'POST'])
+def character_gearsets():
     init_session()
     dictionary_key_replacements()
     
@@ -460,11 +500,11 @@ def gearsets():
     if search:
         return redirect(url_for('newworld.material', material=search))
 
-    return render_template('newworld/gearsets.html', gear_sets=session['gear_sets'])
+    return render_template('newworld/character/gearsets.html', gear_sets=session['gear_sets'])
 
 
-@newworld.route('/gearsets_hx', methods=['GET', 'POST'])
-def gearsets_hx():
+@newworld.route('/character/gearsets_hx', methods=['GET', 'POST'])
+def character_gearsets_hx():
     if request.method == 'POST':
         if "save" in request.form:
             for i in session['gear_sets'].keys():
@@ -474,11 +514,11 @@ def gearsets_hx():
                     else:
                         session['gear_sets'][i][j] = False
 
-    return render_template('newworld/gearsets_hx.html', gear_sets=session['gear_sets'])
+    return render_template('newworld/character/gearsets_hx.html', gear_sets=session['gear_sets'])
 
 
-@newworld.route('/user_prices/', methods=['GET', 'POST'])
-def user_prices():
+@newworld.route('/server/user_prices/', methods=['GET', 'POST'])
+def server_user_prices():
     init_session()
     dictionary_key_replacements()
     
@@ -490,11 +530,11 @@ def user_prices():
     trophy_order = player_data.trade_post_trophy_order()
     alchemy_order = player_data.alchemy_order()
     
-    return render_template('newworld/user_prices.html', price_list=session['price_list'], template_order=template_order, trophy_order=trophy_order, alchemy_order=alchemy_order)
+    return render_template('newworld/server/user_prices.html', price_list=session['price_list'], template_order=template_order, trophy_order=trophy_order, alchemy_order=alchemy_order)
 
 
-@newworld.route('/user_prices_hx', methods=['GET', 'POST'])
-def user_prices_hx():
+@newworld.route('/server/user_prices_hx', methods=['GET', 'POST'])
+def server_user_prices_hx():
     template_order = player_data.trade_post_order()
     trophy_order = player_data.trade_post_trophy_order()
     alchemy_order = player_data.alchemy_order()
@@ -511,10 +551,10 @@ def user_prices_hx():
                         if item == "orichalcum_ingot_platinum":
                             session['price_list'][category][item] = strip_leading_zeros(True, request.form["orichalcum_ingot"]) 
             
-    return render_template('newworld/user_prices_hx.html', price_list=session['price_list'], template_order=template_order, trophy_order=trophy_order, alchemy_order=alchemy_order)
+    return render_template('newworld/server/user_prices_hx.html', price_list=session['price_list'], template_order=template_order, trophy_order=trophy_order, alchemy_order=alchemy_order)
 
 
-@newworld.route('/refining/', methods=['GET', 'POST'])
+@newworld.route('/table/refining/', methods=['GET', 'POST'])
 def refining():
     init_session()
     dictionary_key_replacements()
@@ -523,10 +563,10 @@ def refining():
     if search:
         return redirect(url_for('newworld.material', material=search))
 
-    return render_template('newworld/refining.html')
+    return render_template('newworld/table/refining.html')
 
 
-@newworld.route('/refining_hx', methods=['GET', 'POST'])
+@newworld.route('/table/refining_hx', methods=['GET', 'POST'])
 def refining_hx():
     init_session()
     dictionary_key_replacements()
@@ -544,7 +584,7 @@ def refining_hx():
     all_tiers_all_routes, financial_data = calcs.tp_cost_to_refine_all_routes_all_tiers(price_dict, session['skill_levels']['refining'], session['gear_sets'], taxes_fees)
     cheapest_route = calcs.cheapest_tp_cost_route_to_refine_each_tier(price_dict, all_tiers_all_routes, taxes_fees, financial_data)
     
-    return render_template('newworld/refining_hx.html', cheapest_route=cheapest_route, template_order=template_order)
+    return render_template('newworld/table/refining_hx.html', cheapest_route=cheapest_route, template_order=template_order)
 
 
 @newworld.route('/material/<material>', methods=['GET', 'POST'])
@@ -703,8 +743,8 @@ def material_price_hx(material):
     return render_template('newworld/material_price_hx.html', material_price=material_price, final_price=final_price, buy_tax=buy_tax)
     
 
-@newworld.route('/server_api/', methods=['GET', 'POST'])
-def server_api():
+@newworld.route('/server/server_api/', methods=['GET', 'POST'])
+def server_server_api():
     init_session()
     dictionary_key_replacements()
     
@@ -761,14 +801,14 @@ def server_api():
                 if force_load is not None:
                     price_dict = force_load
 
-    if "load_all" in request.form:
-        stopwatch = db_scripts.timer()
-        full_server = db_scripts.request_nwmarketprices(stopwatch)
+    # if "load_all" in request.form:
+    #     stopwatch = db_scripts.timer()
+    #     full_server = db_scripts.request_nwmarketprices(stopwatch)
         
     template_order = player_data.trade_post_order()
     trophy_order = player_data.trade_post_trophy_order()
     
-    return render_template('newworld/server_api.html', server_dict=server_dict, price_list=price_dict, template_order=template_order, trophy_order=trophy_order,copy_available=copy_available)
+    return render_template('newworld/server/server_api.html', server_dict=server_dict, price_list=price_dict, template_order=template_order, trophy_order=trophy_order,copy_available=copy_available)
 
 
 @newworld.route('/copy_server_data',methods=['GET', 'POST'])
@@ -786,8 +826,8 @@ def copy_server_data():
     """
     
     
-@newworld.route('/server_api_hx', methods=['GET', 'POST'])
-def server_api_hx():
+@newworld.route('/server/server_api_hx', methods=['GET', 'POST'])
+def server_server_api_hx():
     template_order = player_data.trade_post_order()
     trophy_order = player_data.trade_post_trophy_order()
     alchemy_order = player_data.alchemy_order()
@@ -802,7 +842,7 @@ def server_api_hx():
                 if 'items' in server_data:
                     price_dict = server_data['items']
 
-    return render_template('newworld/server_api_hx.html', price_list=price_dict, template_order=template_order, trophy_order=trophy_order, alchemy_order=alchemy_order)
+    return render_template('newworld/server/server_api_hx.html', price_list=price_dict, template_order=template_order, trophy_order=trophy_order, alchemy_order=alchemy_order)
 
 
 @newworld.route('/navbar_api_hx', defaults={'material':None}, methods=['GET', 'POST'])
@@ -827,8 +867,8 @@ def navbar_api_hx(material):
     return render_template('newworld/navbar_api_hx.html', status=status, css_class=css_class, material=material_hx)
 
 
-@newworld.route('/taxes_and_bonuses/', methods=['GET', 'POST'])
-def taxes_and_bonuses():
+@newworld.route('/character/taxes_and_bonuses/', methods=['GET', 'POST'])
+def character_taxes_and_bonuses():
     init_session()
     dictionary_key_replacements()
 
@@ -838,11 +878,11 @@ def taxes_and_bonuses():
     
     taxes_fees = session['taxes_fees']              
                         
-    return render_template('newworld/taxes_and_bonuses.html', taxes_fees=taxes_fees)
+    return render_template('newworld/character/taxes_and_bonuses.html', taxes_fees=taxes_fees)
     
 
-@newworld.route('/taxes_and_bonuses_hx', methods=['GET', 'POST'])
-def taxes_and_bonuses_hx():
+@newworld.route('/character/taxes_and_bonuses_hx', methods=['GET', 'POST'])
+def character_taxes_and_bonuses_hx():
     if request.method == 'POST':
         if "save" in request.form:
             for i in session['taxes_fees'].keys():
@@ -863,7 +903,7 @@ def taxes_and_bonuses_hx():
     
     taxes_fees = session['taxes_fees']              
                 
-    return render_template('newworld/taxes_and_bonuses_hx.html', taxes_fees=taxes_fees)
+    return render_template('newworld/character/taxes_and_bonuses_hx.html', taxes_fees=taxes_fees)
 
 
 @newworld.route('/datalist', methods=['GET', 'POST'])
@@ -914,8 +954,8 @@ def datalist():
     return render_template('newworld/datalist.html', datalist=parsed_list)
 
 
-@newworld.route('/market_calculator/', methods=['GET', 'POST'])
-def market_calculator():
+@newworld.route('/calculator/market/', methods=['GET', 'POST'])
+def calculator_market():
     init_session()
     dictionary_key_replacements()
 
@@ -923,11 +963,11 @@ def market_calculator():
     if search:
         return redirect(url_for('newworld.material', material=search))
 
-    return render_template('newworld/market_calculator.html')
+    return render_template('newworld/calculators/market.html')
     
     
-@newworld.route('/market_calculator_hx', methods=['GET', 'POST'])
-def market_calculator_hx():
+@newworld.route('/calculator/market_hx', methods=['GET', 'POST'])
+def calculator_market_hx():
     if 'taxes_fees' in session:
         taxes_fees = session['taxes_fees']
     
@@ -1027,11 +1067,11 @@ def market_calculator_hx():
         }
     }
     
-    return render_template('newworld/market_calculator_hx.html', data=data, only_purchase=only_purchase, purchase_quant=purchase_quant)
+    return render_template('newworld/calculators/market_hx.html', data=data, only_purchase=only_purchase, purchase_quant=purchase_quant)
 
 
-@newworld.route('/crafting/trophy/', methods=['GET', 'POST'])
-def trophy_calculator():
+@newworld.route('/table/trophy/', methods=['GET', 'POST'])
+def table_trophy():
     init_session()
     dictionary_key_replacements()
 
@@ -1039,11 +1079,11 @@ def trophy_calculator():
     if search:
         return redirect(url_for('newworld.material', material=search))
 
-    return render_template('newworld/trophy_calculator.html')
+    return render_template('newworld/table/trophy.html')
 
 
-@newworld.route('/crafting/trophy_hx', methods=['GET', 'POST'])
-def trophy_calculator_hx():
+@newworld.route('/table/trophy_hx', methods=['GET', 'POST'])
+def table_trophy_hx():
     template_order = player_data.trade_post_trophy_order()
 
     if 'price_list' in session:
@@ -1062,12 +1102,12 @@ def trophy_calculator_hx():
     
     data = calcs.calculate_trophy_profitability(cheapest_route, price_dict, taxes_fees, skill_level, gear_set)
     
-    return render_template('newworld/trophy_calculator_hx.html', data=data, template_order=template_order)
+    return render_template('newworld/table/trophy_hx.html', data=data, template_order=template_order)
 
 
-@newworld.route('/trading_post/', defaults={'server_id':None}, methods=['GET', 'POST'])
-@newworld.route('/trading_post/<server_id>', methods=['GET', 'POST'])
-def trading_post(server_id):
+@newworld.route('/server/trading_post/', defaults={'server_id':None}, methods=['GET', 'POST'])
+@newworld.route('/server/trading_post/<server_id>', methods=['GET', 'POST'])
+def server_trading_post(server_id):
     init_session()
     dictionary_key_replacements()
     
@@ -1101,12 +1141,12 @@ def trading_post(server_id):
                 server_name = session['server_api']['server_name'].title()
                 
 
-    return render_template('newworld/trading_post.html', server=server_id, name=server_name)
+    return render_template('newworld/server/trading_post.html', server=server_id, name=server_name)
 
 
-@newworld.route('/trading_post_hx', defaults={'server_id':None}, methods=['GET', 'POST'])
-@newworld.route('/trading_post_hx/<server_id>', methods=['GET', 'POST'])
-def trading_post_hx(server_id):
+@newworld.route('/server/trading_post_hx', defaults={'server_id':None}, methods=['GET', 'POST'])
+@newworld.route('/server/trading_post_hx/<server_id>', methods=['GET', 'POST'])
+def server_trading_post_hx(server_id):
     if server_id is None:
         if 'server_api' in session:
             server_id = session['server_api']['server_id']
@@ -1121,7 +1161,7 @@ def trading_post_hx(server_id):
     else:
         item_data_price = None
         
-    return render_template('newworld/trading_post_hx.html', item_data=item_data_price)
+    return render_template('newworld/server/trading_post_hx.html', item_data=item_data_price)
 
 
 @newworld.route('/material_alchemy_primary/<material>', methods=['GET', 'POST'])
@@ -1210,6 +1250,40 @@ def material_alchemy_raw_hx(material):
     element = list(material_display.split(" "))[0].lower()
     
     return render_template('newworld/material_alchemy_raw_hx.html', data=data, quantity=quantity, material=material_display, element=element)
+
+
+@newworld.route('/table/alchemy/', methods=['GET', 'POST'])
+def table_alchemy():
+    init_session()
+    dictionary_key_replacements()
+    
+    search = search_function()
+    if search:
+        return redirect(url_for('newworld.material', material=search))
+
+    return render_template('newworld/table/alchemy.html')
+
+
+@newworld.route('/table/alchemy_hx/', methods=['GET', 'POST'])
+def table_alchemy_hx():
+    init_session()
+    dictionary_key_replacements()
+    
+    template_order = player_data.alchemy_order()
+
+    if 'price_list' in session:
+        price_dict = session['price_list']
+    force_load = force_load_server_api_check()
+    if force_load is not None:
+        price_dict = force_load
+
+    taxes_fees = session['taxes_fees']
+    skill_level = session['skill_levels']['crafting']['arcana']
+    
+    all_tiers_all_routes, financial_data = calcs.tp_cost_to_upgrade_all_alchemy(price_dict, skill_level, taxes_fees)
+    cheapest_route = calcs.generate_cheapest_route_alchemy_table(all_tiers_all_routes, financial_data)
+
+    return render_template('newworld/table/alchemy_hx.html', cheapest_route=cheapest_route, template_order=template_order)
 
 
 @newworld.route('/test_scripts', methods=['GET', 'POST'])
