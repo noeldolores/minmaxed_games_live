@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 import pytz
 from website import app, db, models
 import time
@@ -17,32 +17,38 @@ def print_stderr(output=str):
     return False
 
 
-def timer(time_history=None, function=None):
-  if not time_history:
-    base = time.time()
-    time_history = [('Beginning task...', base, 0)]
-    print_stderr(time_history[0])
-    return time_history
+def timer(time_history=None, to_print=None):
+    if not time_history:
+        base = time.time()
+        time_history = [('Beginning task...', base, 0)]
+        print_stderr(time_history[0])
+        return time_history
 
-  if function:
     stamp = time.time()
     lap_num = len(time_history) - 1
     total_time = round(stamp - time_history[0][1], 4)
     lap_time = round(total_time - time_history[lap_num][2], 4)
-    lap_data = ((str(function), lap_time, total_time))
+    lap_data = (str(to_print), lap_time, total_time)
     time_history.append(lap_data)
-    print_stderr(lap_data)
+    if to_print:
+        print_stderr(f'{lap_data} : {round(total_time/60,2)} min')
     return time_history
 
 
 def str_to_datetime(date_string):
-    _date = datetime.strptime(date_string, '%Y-%m-%d %H:%M:%S.%f')
-    return _date.astimezone(pytz.utc)
+    try:
+        if '.' in date_string:
+            _date = datetime.strptime(date_string, '%Y-%m-%dT%H:%M:%S.%f')
+        else:
+            _date = datetime.strptime(date_string, '%Y-%m-%dT%H:%M:%S')
+        return _date.astimezone(pytz.utc)
+    except Exception as e:
+        print_stderr(f'{e} str_to_datetime: {date_string}')
+        return None
 
 
 def datetime_to_str(date_time):
-    _local = pytz.utc.localize(date_time, is_dst=None).astimezone()
-    _date = datetime.strftime(_local, '%m/%d %I:%M %p')
+    _date = datetime.strftime(date_time, '%m/%d %I:%M %p')
     return _date
 
 
@@ -55,24 +61,6 @@ def request_server_data(stopwatch, server_name_num):
         'items' : {}
         }
     
-    # Filter by used items
-    material_source = player_data.trade_post_order()
-    trophy_source = player_data.trade_post_trophy_order()
-    full_item_check_list = []
-    for material_list in material_source:
-        full_item_check_list.extend(material_list[1:])
-    for trophy_list in trophy_source:
-        category = trophy_list[0]
-        if category != "components":
-            for item in trophy_list[1:]:
-                if item in ['minor', 'basic', 'major']:
-                    full_item_check_list.append(f'{item}_{category}_trophy')
-                else:
-                    full_item_check_list.append(item)
-        else:
-            full_item_check_list.extend(trophy_list[1:])
-    
-    total_item_count = len(full_item_check_list)
     for server_name, server_data in server_dict.items():
         api_id = server_data['api_id']
         url = f"https://nwmarketprices.com/api/latest-prices/{api_id}/"
@@ -88,33 +76,25 @@ def request_server_data(stopwatch, server_name_num):
         
         if response:
             if response.status_code == 200:
-                stopwatch = timer(stopwatch, f'{server_name} : Response Success {response.status_code}')
+                stopwatch = timer(stopwatch, None)
                 
                 soup = BeautifulSoup(response.content, "html.parser")
                 item_list = json.loads(str(soup))
-                item_check_ref = {}
-                #for i in range(len(item_list)):
+                
+                total_item_count = max(len(item_list),1)
+                
+                dates_list=[]
                 for item in item_list:
                     name = item['ItemName'].replace("'","").replace(" ","_").lower()
-                    if name in full_item_check_list:
-                        item_check_ref[name] = {
-                            'ID': item['ItemId'],
-                            'Price' : item['Price'],
-                            'Availability' : item['Availability'],
-                            'LastUpdated' : str_to_datetime(item['LastUpdated']),
-                        }
-                        
-                dates_list=[]
-                for item, data in item_check_ref.items():
-                    server_dict[server_name]['items'][item] = {
-                        'Name': item,
-                        'ID': data['ID'],
-                        'Price' : data['Price'],
-                        'Availability' : data['Availability'],
-                        'LastUpdated' : data['LastUpdated'],
+                    _date = str_to_datetime(item['LastUpdated'])
+                    dates_list.append(_date)
+                    server_dict[server_name]['items'][name] = {
+                        'Name': name,
+                        'ID': item['ItemId'],
+                        'Price' : item['Price'],
+                        'Availability' : item['Availability'],
+                        'LastUpdated' : _date,
                     }
-                        
-                    dates_list.append(data['LastUpdated'])
 
                 if len(dates_list) > 0:
                     latest_date = max(dates_list)
@@ -122,10 +102,10 @@ def request_server_data(stopwatch, server_name_num):
                 else:
                     server_dict[server_name]['latest_date'] = None
             else:
-                stopwatch = timer(stopwatch, f'{server_name} : Unable to connect. Response from server: {response.status_code}')
+                stopwatch = timer(stopwatch, None)
                 continue
         else:
-            stopwatch = timer(stopwatch, f'{server_name} : Unable to connect. No response from server.')
+            stopwatch = timer(stopwatch, None)
             continue
         
     # Push data to db
@@ -137,47 +117,46 @@ def request_server_data(stopwatch, server_name_num):
             db.session.add(server)
             db.session.commit()
             server = models.Market.query.filter_by(name=server_name).first()
-            
+        
         item_data = server_data['items']
+        item_update_count = 0
         if len(item_data) > 0:
             for item, item_info in item_data.items():
                 item_check = models.Item.query.filter_by(market_id=server.id).filter_by(item_id=item_info['ID']).first()
                 if item_check:
-                    item_check.price = item_info['Price']
-                    item_check.availability = item_info['Availability']
-                    item_check.last_update = item_info['LastUpdated']
+                    if float(item_info['Price']) > 0:
+                        item_check.price = item_info['Price']
+                        item_check.availability = item_info['Availability']
+                        item_check.last_update = item_info['LastUpdated']
+                        item_update_count += 1 
                 else:
                     new_item = models.Item(last_update=item_info['LastUpdated'], item_id=item_info['ID'], name=item_info['Name'], price=item_info['Price'], availability=item_info['Availability'], market_id=server.id)
                     db.session.add(new_item)
+                    item_update_count += 1 
             
             latest_date = server_dict[server_name]['latest_date']
             if latest_date:
                 server.last_update = latest_date
-                stopwatch = timer(stopwatch, f'{server_name} updated with {len(item_data)} items to {latest_date}')
+                update_percentage = round((item_update_count / total_item_count)*100,1)
+                stopwatch = timer(stopwatch, f'{server_name} : {update_percentage}% ({item_update_count}) to {datetime_to_str(latest_date)}')
         else:
-            stopwatch = timer(stopwatch, f'{server_name} : Empty item_data dictionary')
+            stopwatch = timer(stopwatch, f'{server_name} : Unable to connect.')
             
         db.session.commit()
     return True
 
 
 def main():
-    time.sleep(10800)
     with app.app_context():
         stopwatch = timer()
         try:
-            server_list_file = '/home/noeldolores/minmaxed_games/website/static/newworld/txt/api_server_list.txt'
-            with open(server_list_file) as file:
-                lines = file.readlines()
-                for line in lines:
-                    server_name_num = line.rstrip().lower()
-                    full_pull = request_server_data(stopwatch, server_name_num)
-                    print(full_pull, flush=True)
+            server_name_num = 'Castle of Steel,11'
+            full_pull = request_server_data(stopwatch, server_name_num)
         except Exception as e:
             full_pull = False
             db.session.rollback()
-            print(e)
+            print(full_pull, e)
         stopwatch = timer(stopwatch, f'Task completed...{full_pull}')
     
 if __name__ == "__main__":
-  main()
+    main()
