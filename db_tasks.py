@@ -1,7 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
 import json
-from datetime import datetime
+from datetime import datetime, timezone
 import pytz
 from website import app, db, models
 import time
@@ -142,12 +142,11 @@ def request_server_data(stopwatch, server_name_num):
         else:
             stopwatch = timer(stopwatch, f'{server_name} : Unable to connect.')
             
-        db.session.commit()
+    db.session.commit()
     return True
 
 
 def main():
-    time.sleep(5400)
     with app.app_context():
         stopwatch = timer()
         try:
@@ -165,3 +164,4 @@ def main():
     
 if __name__ == "__main__":
     main()
+    time.sleep(5400)

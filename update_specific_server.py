@@ -142,7 +142,7 @@ def request_server_data(stopwatch, server_name_num):
         else:
             stopwatch = timer(stopwatch, f'{server_name} : Unable to connect.')
             
-        db.session.commit()
+    db.session.commit()
     return True
 
 
