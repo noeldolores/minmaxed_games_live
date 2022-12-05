@@ -15,8 +15,11 @@ def init_session():
     if 'first_visit' not in session:
         session.permanent = True
         session['ID'] = str(uuid.uuid4())
-        user = create_user(session['ID'])
-        print('New user added', user)
+        try:
+            user = create_user(session['ID'])
+            print('New user added', user)
+        except Exception as e:
+            print('create_user', e)
         session['first_visit'] = True
         session['skill_levels'] = player_data.init_skill_levels()
         session['gear_sets'] = player_data.init_gear_sets()
@@ -33,6 +36,18 @@ def init_session():
         
         session.pop('_flashes', None)
         flash("We use only the necessary cookies to store the data you provide so it is available for your next visit. No data is shared with any third party. By continuing, you agree to this use of cookies.", category='success')
+
+
+def log_visit_datetime():
+    if 'ID' in session:
+        try:
+            user = User.query.filter_by(user_id=session['ID']).first()
+            if user is not None:
+                user.last_visit = datetime.now(timezone.utc)
+                db.session.commit()
+        except Exception as e:
+            print('log_visit_datetime', e)
+            
 
 
 def strip_leading_zeros(is_float, number):
@@ -386,6 +401,7 @@ def force_load_server_api_check():
 def home():
     init_session()
     dictionary_key_replacements()
+    log_visit_datetime()
     
     search = search_function()
     if search:
@@ -402,6 +418,7 @@ def home():
 def character():
     init_session()
     dictionary_key_replacements()
+    log_visit_datetime()
     
     search = search_function()
     if search:
@@ -414,6 +431,7 @@ def character():
 def server():
     init_session()
     dictionary_key_replacements()
+    log_visit_datetime()
     
     search = search_function()
     if search:
@@ -426,6 +444,7 @@ def server():
 def calculators():
     init_session()
     dictionary_key_replacements()
+    log_visit_datetime()
     
     search = search_function()
     if search:
@@ -438,6 +457,7 @@ def calculators():
 def tables():
     init_session()
     dictionary_key_replacements()
+    log_visit_datetime()
     
     search = search_function()
     if search:
@@ -450,6 +470,7 @@ def tables():
 def character_skills():
     init_session()
     dictionary_key_replacements()
+    log_visit_datetime()
     
     search = search_function()
     if search:
@@ -495,6 +516,7 @@ def character_skills_hx():
 def character_gearsets():
     init_session()
     dictionary_key_replacements()
+    log_visit_datetime()
     
     search = search_function()
     if search:
@@ -521,6 +543,7 @@ def character_gearsets_hx():
 def server_user_prices():
     init_session()
     dictionary_key_replacements()
+    log_visit_datetime()
     
     search = search_function()
     if search:
@@ -558,6 +581,7 @@ def server_user_prices_hx():
 def refining():
     init_session()
     dictionary_key_replacements()
+    log_visit_datetime()
     
     search = search_function()
     if search:
@@ -591,6 +615,7 @@ def refining_hx():
 def material(material):
     init_session()
     dictionary_key_replacements()
+    log_visit_datetime()
     
     search = search_function()
     if search:
@@ -747,6 +772,7 @@ def material_price_hx(material):
 def server_server_api():
     init_session()
     dictionary_key_replacements()
+    log_visit_datetime()
     
     search = search_function()
     if search:
@@ -871,6 +897,7 @@ def navbar_api_hx(material):
 def character_taxes_and_bonuses():
     init_session()
     dictionary_key_replacements()
+    log_visit_datetime()
 
     search = search_function()
     if search:
@@ -958,6 +985,7 @@ def datalist():
 def calculator_market():
     init_session()
     dictionary_key_replacements()
+    log_visit_datetime()
 
     search = search_function()
     if search:
@@ -1110,6 +1138,7 @@ def table_trophy_hx():
 def server_trading_post(server_id):
     init_session()
     dictionary_key_replacements()
+    log_visit_datetime()
     
     search = search_function()
     if search:
@@ -1256,6 +1285,7 @@ def material_alchemy_raw_hx(material):
 def table_alchemy():
     init_session()
     dictionary_key_replacements()
+    log_visit_datetime()
     
     search = search_function()
     if search:

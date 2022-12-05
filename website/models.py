@@ -1,5 +1,5 @@
 from sqlalchemy.dialects.mysql import DECIMAL
-from datetime import datetime
+from datetime import datetime, timezone
 from . import db
 
 
@@ -71,6 +71,6 @@ class User(db.Model):
   id = db.Column(db.Integer, primary_key=True)
   user_id = db.Column(db.String(36))
   server_id = db.Column(db.Integer)
-  last_visit = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+  last_visit = db.Column(db.DateTime, nullable=False, default=datetime.now(timezone.utc))
   user_prices = db.Column(db.JSON)
   server_prices = db.Column(db.JSON)
