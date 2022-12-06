@@ -290,7 +290,7 @@ def create_user(ID):
                             save_price_dict_to_db(server_data['items'], session['server_api']['server_id'])
                             return True
                         except Exception as e:
-                            print('force_load_server_api_check - user_server_check: True', e)
+                            print('create_user', e)
                             return None
         return True
     return None

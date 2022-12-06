@@ -68,11 +68,7 @@ def request_server_data(stopwatch, server_name_num):
             my_timeout = 300
             response = requests.request(method='GET', url=url, timeout=my_timeout)
         except Exception as e:
-            if response:
-                print(response.status_code, e)
-            else:
-                print(e)
-            continue
+            print(e)
         
         if response:
             if response.status_code == 200:
@@ -161,7 +157,7 @@ def main():
             db.session.rollback()
             print(full_pull, e)
         stopwatch = timer(stopwatch, f'Task completed...{full_pull}')
+    time.sleep(5400)
     
 if __name__ == "__main__":
     main()
-    time.sleep(5400)
