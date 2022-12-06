@@ -266,6 +266,27 @@ def dictionary_key_replacements():
         
     if 'user_last_update' not in session:
         session['user_last_update'] = None
+    
+    if 'server_api' in session:
+        if 'server_verified' not in session:
+            server_dict = {}
+            basedir = os.path.abspath(os.path.dirname(__file__))
+            server_list_file = os.path.join(basedir, '../static/newworld/txt/api_server_list.txt')
+            with open(server_list_file) as file:
+                lines = file.readlines()
+                lines.sort()
+                for line in lines:
+                    name, num = line.rstrip().lower().split(",")
+                    server_dict[name] = num
+            
+            if session['server_api']['server_name'] not in server_dict:
+                session['server_api'] = {
+                    'server_name': None,
+                    'server_id': None,
+                    'last_update': None,
+                    'force_load': False
+                }
+            session['server_verified'] = True
 
 
 def create_user(ID):
