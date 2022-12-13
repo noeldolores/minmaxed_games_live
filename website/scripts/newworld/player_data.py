@@ -11,7 +11,7 @@ taxes_fees = {
         "tier_5_L" : 0.19,
     },
     "trade_post" : {
-        "tax" : 2.5,
+        "tax" : 5,
         "discount" : 0,
         "duration" : "1_Day"
     },
@@ -50,7 +50,7 @@ skill_levels = {
         "logging" : 0,
         "mining" : 0,
         "skinning" : 0
-    }    
+    }
 }
 
 # Bonus Gear - store in cookies
@@ -176,7 +176,7 @@ price_list = {
         "ironwood_planks" : 0,
         "wildwood" : 0,
         "barbvine" : 0,
-        "glittering_ebony" : 0  
+        "glittering_ebony" : 0
     }
 }
 
@@ -261,7 +261,7 @@ trade_post_template = [
         "ironwood_planks",
         "wildwood",
         "barbvine",
-        "glittering_ebony"  
+        "glittering_ebony"
     ]
 ]
 
@@ -435,7 +435,7 @@ refining_template = [
         "lumber",
         "wyrdwood_planks",
         "ironwood_planks",
-        "glittering_ebony"  
+        "glittering_ebony"
     ]
 ]
 
@@ -486,7 +486,7 @@ navbar_template = [
         "lumber",
         "wyrdwood_planks",
         "ironwood_planks",
-        "glittering_ebony"  
+        "glittering_ebony"
     ]
 ]
 
