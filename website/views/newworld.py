@@ -1337,6 +1337,23 @@ def table_alchemy_hx():
     return render_template('newworld/table/alchemy_hx.html', cheapest_route=cheapest_route, template_order=template_order)
 
 
+@newworld.route('/server/status/', methods=['GET', 'POST'])
+def server_status():
+    init_session()
+    dictionary_key_replacements()
+    log_visit_datetime()
+    
+    search = search_function()
+    if search:
+        return redirect(url_for('newworld.material', material=search))
+    
+    server_dict = db_scripts.update_server_status()
+    server_list = sorted(list(server_dict.keys()))
+    current_utc = db_scripts.datetime_to_str(datetime.utcnow())
+    
+    return render_template('newworld/server/server_status.html', server_dict=server_dict, server_list=server_list, current_utc=current_utc)
+
+
 @newworld.route('/test_scripts', methods=['GET', 'POST'])
 def test_scripts():
     

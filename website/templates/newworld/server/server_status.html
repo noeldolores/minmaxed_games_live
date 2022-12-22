@@ -1,0 +1,59 @@
+{% extends "newworld/base.html" %} 
+
+{% block head %}
+<title>Server Status - NW Calculators</title>
+<link id="style" rel="stylesheet" href="{{ url_for('static', filename='newworld/css/server_status.css') }}"/>
+{% endblock %}
+
+{% block content%}
+<div class="container col-xl-5 col-lg-6 col-md-6">
+
+    <br><br>
+    <br><br>
+    
+    <div class="card bg-secondary border-warning">
+        <div class="card-header button btn-outline-warning" id="headingOne" type="button" data-toggle="collapse" data-target="#collapseOne">
+            <h1>Server Status</h1>
+        </div>
+
+        <div id="collapseOne" class="collapse">
+            <div class="card-body bg-dark">
+                <p1>Pricing data is sourced by <a href="https://nwmarketprices.com/" target="_blank"><u>NWMarketPrices</u></a> community members.</p1><br>
+                <p1>Select your server from the dropdown and select the Choose Server button.</p1><br>
+                <p1>You can toggle between the API data and your User Prices by selecting the Server button on the top bar.</p1><br>
+                <p1>You can override your User Prices with the server data by selecting the Copy All button.</p1><br>
+                <p1>You can view your server's Prices below. You can also view a full Trading Post view by selecting the Trading Post button.</p1><br>
+            </div>
+        </div>
+    </div>
+</div>
+
+<br><br>
+
+<div class="container">
+    <div class="row justify-content-around">
+        {% include 'newworld/server/server_status_utc_hx.html' %}
+    </div>
+    <div class="row justify-content-around">
+
+        <table class="table table-hover table-dark">
+            <thead>
+                <tr>
+                    <th style="width:15%">Server</th>
+                    <th style="width:15%">Update</th>
+                    <th style="width:25%">DB Update</th>
+                    <th style="width:10%">DB Freshness</th>
+                    <th style="width:25%">NWMarketPrices Update</th>
+                    <th style="width:10%">NWMarketPrices Freshness</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% include 'newworld/server/server_status_hx.html' %}
+            </tbody>
+        </table>
+  
+    </div>
+</div>
+
+<br><br>
+{% endblock %}

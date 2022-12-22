@@ -1,7 +1,7 @@
 from datetime import datetime
 import pytz
 from ... import db
-from ...models import Market, Item, ItemData
+from ...models import Market, Item, ItemData, ServerStatus
 import json
 from . import player_data
 
@@ -418,3 +418,39 @@ def rename_default_groups():
     except Exception as e:
         print(e)
         return False
+    
+
+def update_server_status():
+    server_dict = {}
+    server_list_file = '/home/noeldolores/minmaxed_games/website/static/newworld/txt/api_server_list.txt'
+    with open(server_list_file) as file:
+        lines = file.readlines()
+        for line in lines:
+            server_name, api_id = line.rstrip().lower().split(",")
+            server_dict[server_name] = {
+                'api_id': api_id
+            }
+    
+    for server_name, server_data in server_dict.items():
+        server = ServerStatus.query.filter_by(name=server_name).first()
+        
+        if server:
+            server_dict[server_name] = {
+                'api_id' : server_data['api_id'],
+                'update_status' : None,
+                'db_update' : datetime_to_str(server.last_update),
+                'db_freshness' : datetime_to_str(server.db_freshness),
+                'nwmarketprices_update': datetime_to_str(server.nwmarketprices_update),
+                'nwmarketprices_freshness': datetime_to_str(server.nwmarketprices_freshness)
+            }
+        else:
+            server_dict[server_name] = {
+                'api_id' : server_data['api_id'],
+                'update_status' : None,
+                'db_update' : None,
+                'db_freshness' : None,
+                'nwmarketprices_update': None,
+                'nwmarketprices_freshness': None
+            }
+            
+    return server_dict

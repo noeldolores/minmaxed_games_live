@@ -1,0 +1,10 @@
+{% for server in server_list %}
+<tr>
+    <td scope="row" style="width:15%">{{server.title()}}</td>
+    <td style="width:15%">{{server_dict[server]['status']}}</td>
+    <td style="width:25%">{{server_dict[server]['db_update']}}</td>
+    <td style="width:10%">{{server_dict[server]['db_freshness']}}</td>
+    <td style="width:25%">{{server_dict[server]['nwmarketprices_update']}}</td>
+    <td style="width:10%">{{server_dict[server]['nwmarketprices_freshness']}}</td>
+</tr>
+{% endfor %}
