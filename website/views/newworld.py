@@ -7,6 +7,7 @@ import os
 import copy
 from datetime import datetime, timezone
 import uuid
+import math
 
 newworld = Blueprint('newworld', __name__)
 
@@ -1348,6 +1349,18 @@ def server_status():
         return redirect(url_for('newworld.material', material=search))
     
     server_dict = db_scripts.update_server_status()
+    for server in server_dict.keys():
+        db_age =  server_dict[server]['db_age']
+        db_hours = db_age / (60 * 60) #5
+        db_minutes = math.modf(db_hours) * 60
+        server_dict[server]['db_age'] = f'{int(db_hours)}:{int(db_minutes)}'
+        
+        nwmkp_age = server_dict[server]['nwmarketprices_age']
+        nwmkp_hours = db_age / (60 * 60) #5
+        nwmkp_minutes = math.modf(nwmkp_hours) * 60
+        server_dict[server]['nwmarketprices_age'] = f'{int(nwmkp_hours)}:{int(nwmkp_minutes)}'
+        
+    
     server_list = sorted(list(server_dict.keys()))
     current_utc = db_scripts.datetime_to_str(datetime.utcnow())
     
