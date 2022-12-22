@@ -5,7 +5,8 @@ from datetime import datetime, timezone
 import pytz
 from website import app, db, models
 import time
-from website.scripts.newworld import player_data
+from website.scripts.newworld import player_data, db_scripts
+from dateutil.parser import parse
 
 
 def print_stderr(output=str):
@@ -52,6 +53,13 @@ def datetime_to_str(date_time):
     return _date
 
 
+def fetch_servers_status():
+    server_status = db_scripts.update_server_status()
+    if server_status:
+        return server_status
+    return None
+
+
 def request_server_data(stopwatch, server_name_num):
     # Retrieve server name/id dictionary
     server_dict = {}
@@ -61,103 +69,141 @@ def request_server_data(stopwatch, server_name_num):
         'items' : {}
         }
     
+    server_status = fetch_servers_status()
+    age_minimum = 60 * 10 # 10 minutes
+    server_update = {}
     for server_name, server_data in server_dict.items():
-        api_id = server_data['api_id']
-        url = f"https://nwmarketprices.com/api/latest-prices/{api_id}/"
-        try:
-            my_timeout = 300
-            response = requests.request(method='GET', url=url, timeout=my_timeout)
-        except Exception as e:
-            print(e)
-        
-        if response:
-            if response.status_code == 200:
-                stopwatch = timer(stopwatch, None)
-                
-                soup = BeautifulSoup(response.content, "html.parser")
-                item_list = json.loads(str(soup))
-                
-                total_item_count = max(len(item_list),1)
-                
-                dates_list=[]
-                for item in item_list:
-                    name = item['ItemName'].replace("'","").replace(" ","_").lower()
-                    _date = str_to_datetime(item['LastUpdated'])
-                    dates_list.append(_date)
-                    server_dict[server_name]['items'][name] = {
-                        'Name': name,
-                        'ID': item['ItemId'],
-                        'Price' : item['Price'],
-                        'Availability' : item['Availability'],
-                        'LastUpdated' : _date,
-                    }
+        status = server_status.get(server_name)
+        if status:
+            age = (status[server_name]['nwmarketprices_update'] - status[server_name]['db_update']).seconds
+            server_update[server_name] = {
+                'update': age > age_minimum,
+                'age': age
+            }
+        else:
+             server_update[server_name] = {
+                'update': True,
+                'age': 0
+            }
+    
+    servers_already_fresh = 0
+    for server_name, server_data in server_dict.items():
+        if server_update[server_name]['update'] == True:
+            api_id = server_data['api_id']
+            url = f"https://nwmarketprices.com/api/latest-prices/{api_id}/"
+            try:
+                my_timeout = 300
+                response = requests.request(method='GET', url=url, timeout=my_timeout)
+            except Exception as e:
+                print(e)
+            
+            if response:
+                if response.status_code == 200:
+                    stopwatch = timer(stopwatch, None)
+                    
+                    soup = BeautifulSoup(response.content, "html.parser")
+                    item_list = json.loads(str(soup))
+                    
+                    total_item_count = max(len(item_list),1)
+                    
+                    dates_list=[]
+                    for item in item_list:
+                        name = item['ItemName'].replace("'","").replace(" ","_").lower()
+                        _date = str_to_datetime(item['LastUpdated'])
+                        dates_list.append(_date)
+                        server_dict[server_name]['items'][name] = {
+                            'Name': name,
+                            'ID': item['ItemId'],
+                            'Price' : item['Price'],
+                            'Availability' : item['Availability'],
+                            'LastUpdated' : _date,
+                        }
 
-                if len(dates_list) > 0:
-                    latest_date = max(dates_list)
-                    server_dict[server_name]['latest_date'] = latest_date
+                    if len(dates_list) > 0:
+                        latest_date = max(dates_list)
+                        server_dict[server_name]['latest_date'] = latest_date
+                    else:
+                        server_dict[server_name]['latest_date'] = None
                 else:
-                    server_dict[server_name]['latest_date'] = None
+                    stopwatch = timer(stopwatch, None)
+                    continue
             else:
                 stopwatch = timer(stopwatch, None)
                 continue
         else:
-            stopwatch = timer(stopwatch, None)
-            continue
+            servers_already_fresh += 1
         
     # Push data to db
+    servers_updated = 0
+    server_update_errors = 0 
     for server_name, server_data in server_dict.items():
-        server = models.Market.query.filter_by(name=server_name).first()
-        
-        if server is None:
-            server = models.Market(name=server_name, server_id=server_data['api_id'])
-            db.session.add(server)
-            db.session.commit()
+        if server_update[server_name]['update'] == True:
             server = models.Market.query.filter_by(name=server_name).first()
-        
-        item_data = server_data['items']
-        item_update_count = 0
-        if len(item_data) > 0:
-            for item, item_info in item_data.items():
-                item_check = models.Item.query.filter_by(market_id=server.id).filter_by(item_id=item_info['ID']).first()
-                if item_check:
-                    if float(item_info['Price']) > 0:
-                        item_check.price = item_info['Price']
-                        item_check.availability = item_info['Availability']
-                        item_check.last_update = item_info['LastUpdated']
+            
+            if server is None:
+                server = models.Market(name=server_name, server_id=server_data['api_id'])
+                db.session.add(server)
+                db.session.commit()
+                server = models.Market.query.filter_by(name=server_name).first()
+            
+            item_data = server_data['items']
+            item_update_count = 0
+            if len(item_data) > 0:
+                for item, item_info in item_data.items():
+                    item_check = models.Item.query.filter_by(market_id=server.id).filter_by(item_id=item_info['ID']).first()
+                    if item_check:
+                        if float(item_info['Price']) > 0:
+                            item_check.price = item_info['Price']
+                            item_check.availability = item_info['Availability']
+                            item_check.last_update = item_info['LastUpdated']
+                            item_update_count += 1 
+                    else:
+                        new_item = models.Item(last_update=item_info['LastUpdated'], item_id=item_info['ID'], name=item_info['Name'], price=item_info['Price'], availability=item_info['Availability'], market_id=server.id)
+                        db.session.add(new_item)
                         item_update_count += 1 
-                else:
-                    new_item = models.Item(last_update=item_info['LastUpdated'], item_id=item_info['ID'], name=item_info['Name'], price=item_info['Price'], availability=item_info['Availability'], market_id=server.id)
-                    db.session.add(new_item)
-                    item_update_count += 1 
-            
-            latest_date = server_dict[server_name]['latest_date']
-            if latest_date:
-                server.last_update = latest_date
-                update_percentage = round((item_update_count / total_item_count)*100,1)
-                stopwatch = timer(stopwatch, f'{server_name} : {update_percentage}% ({item_update_count}) to {datetime_to_str(latest_date)}')
-        else:
-            stopwatch = timer(stopwatch, f'{server_name} : Unable to connect.')
-            
-    db.session.commit()
-    return True
+                
+                latest_date = status[server_name]['nwmarketprices_update']
+                if latest_date:
+                    server.last_update = latest_date
+                    update_percentage = round((item_update_count / total_item_count)*100,1)
+                    stopwatch = timer(stopwatch, f'{server_name} : {update_percentage}% ({item_update_count}) to {datetime_to_str(latest_date)}')
+                servers_updated += 1
+            else:
+                stopwatch = timer(stopwatch, f'{server_name} : Unable to connect.')
+                server_update_errors += 1
+                
+            db.session.commit()
+    
+    update_results = {
+        'completion_time': datetime.utcnow(),
+        'total_servers': len(list(server_dict.keys())),
+        'update_not_required': servers_already_fresh,
+        'servers_updated': servers_updated,
+        'server_update_errors': server_update_errors
+    }
+    return update_results
 
 
 def main():
     with app.app_context():
         stopwatch = timer()
+        update_results = None
         try:
             server_list_file = '/home/noeldolores/minmaxed_games/website/static/newworld/txt/api_server_list.txt'
             with open(server_list_file) as file:
                 lines = file.readlines()
                 for line in lines:
                     server_name_num = line.rstrip().lower()
-                    full_pull = request_server_data(stopwatch, server_name_num)
+                    update_results = request_server_data(stopwatch, server_name_num)
+            full_pull = True
         except Exception as e:
             full_pull = False
             db.session.rollback()
-            print(full_pull, e)
+            print_stderr(e)
+            
         stopwatch = timer(stopwatch, f'Task completed...{full_pull}')
-    time.sleep(5400)
+        print_stderr(update_results)
+    time.sleep(60 * 60 * 1) # 1 hour rest
     
 if __name__ == "__main__":
     main()
