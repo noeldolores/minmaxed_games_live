@@ -434,13 +434,18 @@ def update_server_status():
     for server_name, server_data in server_dict.items():
         server = ServerStatus.query.filter_by(name=server_name).first()
         
+        db_age = (server.nwmarketprices_update - server.db_update).seconds
+        nwmarketprices_age = (datetime.utcnow() - server.nwmarketprices_update).seconds
+        
         if server:
             server_dict[server_name] = {
                 'api_id' : server_data['api_id'],
                 'update_status' : None,
-                'db_update' : datetime_to_str(server.db_update),
+                'db_update' : server.db_update,
+                'db_age' : db_age,
                 'db_freshness' : server.db_freshness,
-                'nwmarketprices_update': datetime_to_str(server.nwmarketprices_update),
+                'nwmarketprices_update': server.nwmarketprices_update,
+                'nwmarketprices_age' : nwmarketprices_age,
                 'nwmarketprices_freshness': server.nwmarketprices_freshness
             }
         else:
@@ -448,8 +453,10 @@ def update_server_status():
                 'api_id' : server_data['api_id'],
                 'update_status' : None,
                 'db_update' : None,
+                'db_age' : None,
                 'db_freshness' : None,
                 'nwmarketprices_update': None,
+                'nwmarketprices_age' : None,
                 'nwmarketprices_freshness': None
             }
             
