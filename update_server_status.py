@@ -121,6 +121,9 @@ def update_server_status():
         elif nwmarketprices_age > 60 * 60 * 1: # 1 hour
             nwmarketprices_freshness = 1
         
+        if server_name == "abaton" or server_name == "apophis":
+            print_stderr(server_name, db_datetime, db_age, db_freshness, nwmarketprices_datetime, nwmarketprices_age, nwmarketprices_freshness)
+            
         if server is None:
             server = models.ServerStatus(  name=server_name, 
                                     server_id=server_data['api_id'],
