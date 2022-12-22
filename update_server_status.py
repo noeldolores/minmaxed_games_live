@@ -110,7 +110,7 @@ def update_server_status():
         
         nwmarketprices_age = (datetime.now(pytz.utc) - nwmarketprices_datetime).seconds
         nwmarketprices_freshness = 0
-        if nwmarketprices_datetime > datetime.now(pytz.utc):
+        if datetime.now(pytz.utc) > nwmarketprices_datetime:
             if nwmarketprices_age > 60 * 60 * 24: # 24 hours
                 nwmarketprices_freshness = 5
             elif nwmarketprices_age > 60 * 60 * 12: # 12 hours
