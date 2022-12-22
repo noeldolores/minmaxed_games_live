@@ -1356,7 +1356,7 @@ def server_status():
         server_dict[server]['db_age'] = f'{int(db_hours)}:{int(db_minutes)}'
         
         nwmkp_age = server_dict[server]['nwmarketprices_age']
-        nwmkp_hours = db_age / (60 * 60) #5
+        nwmkp_hours = nwmkp_age / (60 * 60) #5
         nwmkp_minutes = math.modf(nwmkp_hours) * 60
         server_dict[server]['nwmarketprices_age'] = f'{int(nwmkp_hours)}:{int(nwmkp_minutes)}'
         
