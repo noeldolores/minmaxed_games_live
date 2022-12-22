@@ -60,7 +60,7 @@ def fetch_servers_status():
     return None
 
 
-def request_server_data(stopwatch, server_name_num):
+def request_server_data(stopwatch, server_name_num, update_results):
     # Retrieve server name/id dictionary
     server_dict = {}
     server_name, api_id = server_name_num.lower().split(",")
@@ -86,7 +86,6 @@ def request_server_data(stopwatch, server_name_num):
                 'age': 0
             }
     
-    servers_already_fresh = 0
     for server_name, server_data in server_dict.items():
         if server_update[server_name]['update'] == True:
             api_id = server_data['api_id']
@@ -131,11 +130,9 @@ def request_server_data(stopwatch, server_name_num):
                 stopwatch = timer(stopwatch, None)
                 continue
         else:
-            servers_already_fresh += 1
+            update_results['update_not_required'] += 1
         
     # Push data to db
-    servers_updated = 0
-    server_update_errors = 0 
     for server_name, server_data in server_dict.items():
         if server_update[server_name]['update'] == True:
             server = models.Market.query.filter_by(name=server_name).first()
@@ -167,34 +164,32 @@ def request_server_data(stopwatch, server_name_num):
                     server.last_update = latest_date
                     update_percentage = round((item_update_count / total_item_count)*100,1)
                     stopwatch = timer(stopwatch, f'{server_name} : {update_percentage}% ({item_update_count}) to {datetime_to_str(latest_date)}')
-                servers_updated += 1
+                update_results['servers_updated'] += 1
             else:
                 stopwatch = timer(stopwatch, f'{server_name} : Unable to connect.')
-                server_update_errors += 1
+                update_results['server_update_errors'] += 1
                 
             db.session.commit()
-    
-    update_results = {
-        'completion_time': datetime.utcnow(),
-        'total_servers': len(list(server_dict.keys())),
-        'update_not_required': servers_already_fresh,
-        'servers_updated': servers_updated,
-        'server_update_errors': server_update_errors
-    }
+
     return update_results
 
 
 def main():
     with app.app_context():
         stopwatch = timer()
-        update_results = None
+        update_results = {
+            'update_not_required': 0,
+            'servers_updated': 0,
+            'server_update_errors': 0
+        }
+        
         try:
             server_list_file = '/home/noeldolores/minmaxed_games/website/static/newworld/txt/api_server_list.txt'
             with open(server_list_file) as file:
                 lines = file.readlines()
                 for line in lines:
                     server_name_num = line.rstrip().lower()
-                    update_results = request_server_data(stopwatch, server_name_num)
+                    update_results = request_server_data(stopwatch, server_name_num, update_results)
             full_pull = True
         except Exception as e:
             full_pull = False
