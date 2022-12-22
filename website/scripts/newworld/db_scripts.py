@@ -438,7 +438,7 @@ def update_server_status():
             server_dict[server_name] = {
                 'api_id' : server_data['api_id'],
                 'update_status' : None,
-                'db_update' : datetime_to_str(server.last_update),
+                'db_update' : datetime_to_str(server.db_update),
                 'db_freshness' : datetime_to_str(server.db_freshness),
                 'nwmarketprices_update': datetime_to_str(server.nwmarketprices_update),
                 'nwmarketprices_freshness': datetime_to_str(server.nwmarketprices_freshness)
