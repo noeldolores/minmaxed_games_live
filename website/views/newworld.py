@@ -1363,8 +1363,6 @@ def server_status():
         if len(str(nwmkp_minutes)) == 1:
             nwmkp_minutes = f'0{nwmkp_minutes}'
         server_dict[server]['nwmarketprices_age'] = f'{int(nwmkp_hours)}:{nwmkp_minutes}'
-        if server == "mayari":
-            print(server_dict[server]['nwmarketprices_update'], nwmkp_age)
     
     server_list = sorted(list(server_dict.keys()))
     current_utc = db_scripts.datetime_to_str(datetime.utcnow())

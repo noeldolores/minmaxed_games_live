@@ -434,8 +434,8 @@ def update_server_status():
     for server_name, server_data in server_dict.items():
         server = ServerStatus.query.filter_by(name=server_name).first()
         
-        db_age = (server.nwmarketprices_update - server.db_update).seconds
-        nwmarketprices_age = (datetime.utcnow() - server.nwmarketprices_update).seconds
+        db_age = (server.nwmarketprices_update - server.db_update).total_seconds()
+        nwmarketprices_age = (datetime.utcnow() - server.nwmarketprices_update).total_seconds()
         
         if server:
             server_dict[server_name] = {
