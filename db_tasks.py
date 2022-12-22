@@ -73,15 +73,15 @@ def request_server_data(stopwatch, server_name_num):
     age_minimum = 60 * 10 # 10 minutes
     server_update = {}
     for server_name, server_data in server_dict.items():
-        status = server_status.get(server_name)
-        if status:
+        try:
             age = (server_status[server_name]['nwmarketprices_update'] - server_status[server_name]['db_update']).seconds
             server_update[server_name] = {
                 'update': age > age_minimum,
                 'age': age
             }
-        else:
-             server_update[server_name] = {
+        except Exception as e:
+            print(server_name, e)
+            server_update[server_name] = {
                 'update': True,
                 'age': 0
             }
@@ -162,7 +162,7 @@ def request_server_data(stopwatch, server_name_num):
                         db.session.add(new_item)
                         item_update_count += 1 
                 
-                latest_date = status[server_name]['nwmarketprices_update']
+                latest_date = server_update[server_name]['nwmarketprices_update']
                 if latest_date:
                     server.last_update = latest_date
                     update_percentage = round((item_update_count / total_item_count)*100,1)
