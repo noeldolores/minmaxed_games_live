@@ -162,7 +162,7 @@ def request_server_data(stopwatch, server_name_num):
                         db.session.add(new_item)
                         item_update_count += 1 
                 
-                latest_date = server_update[server_name]['nwmarketprices_update']
+                latest_date = server_status[server_name]['nwmarketprices_update']
                 if latest_date:
                     server.last_update = latest_date
                     update_percentage = round((item_update_count / total_item_count)*100,1)
