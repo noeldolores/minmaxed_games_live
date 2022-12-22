@@ -74,3 +74,13 @@ class User(db.Model):
   last_visit = db.Column(db.DateTime, nullable=False, default=datetime.now(timezone.utc))
   user_prices = db.Column(db.JSON)
   server_prices = db.Column(db.JSON)
+
+class ServerStatus(db.Model):
+  id = db.Column(db.Integer, primary_key=True)
+  name = db.Column(db.String(150))
+  server_id = db.Column(db.Integer)
+  update_status = db.Column(db.String(150))
+  db_update = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+  db_freshness = db.Column(db.Integer) # 1-5, lower number is newer sync
+  nwmarketprices_update = db.Column(db.DateTime, nullable=False, default=datetime.utcnow)
+  nwmarketprices_freshness = db.Column(db.Integer) # 1-5, lower number is newer sync
