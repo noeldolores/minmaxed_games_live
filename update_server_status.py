@@ -94,35 +94,33 @@ def update_server_status():
         db_datetime = parse(database[server_name]['updated']).replace(tzinfo=pytz.utc)
         nwmarketprices_datetime = parse(nwmarketprices[server_name]['updated']).replace(tzinfo=pytz.utc)
         
-        db_age = (nwmarketprices_datetime- db_datetime).seconds
+        db_age = (nwmarketprices_datetime - db_datetime).seconds
         db_freshness = 0
-        if db_age > 60 * 60 * 24: # 24 hours
-            db_freshness = 5
-        elif db_age > 60 * 60 * 12: # 12 hours
-            db_freshness = 4
-        elif db_age > 60 * 60 * 6: # 6 hours
-            db_freshness = 3
-        elif db_age > 60 * 60 * 3: # 3 hours
-            db_freshness = 2
-        elif db_age > 60 * 60 * 1: # 1 hour
-            db_freshness = 1
-        
+        if nwmarketprices_datetime > db_datetime:
+            if db_age > 60 * 60 * 24: # 24 hours
+                db_freshness = 5
+            elif db_age > 60 * 60 * 12: # 12 hours
+                db_freshness = 4
+            elif db_age > 60 * 60 * 6: # 6 hours
+                db_freshness = 3
+            elif db_age > 60 * 60 * 3: # 3 hours
+                db_freshness = 2
+            elif db_age > 60 * 60 * 1: # 1 hour
+                db_freshness = 1
         
         nwmarketprices_age = (datetime.now(pytz.utc) - nwmarketprices_datetime).seconds
         nwmarketprices_freshness = 0
-        if nwmarketprices_age > 60 * 60 * 24: # 24 hours
-            nwmarketprices_freshness = 5
-        elif nwmarketprices_age > 60 * 60 * 12: # 12 hours
-            nwmarketprices_freshness = 4
-        elif nwmarketprices_age > 60 * 60 * 6: # 6 hours
-            nwmarketprices_freshness = 3
-        elif nwmarketprices_age > 60 * 60 * 3: # 3 hours
-            nwmarketprices_freshness = 2
-        elif nwmarketprices_age > 60 * 60 * 1: # 1 hour
-            nwmarketprices_freshness = 1
-        
-        if server_name == "abaton" or server_name == "apophis":
-            print(server_name, db_datetime, db_age, db_freshness, nwmarketprices_datetime, nwmarketprices_age, nwmarketprices_freshness)
+        if nwmarketprices_datetime > datetime.now(pytz.utc):
+            if nwmarketprices_age > 60 * 60 * 24: # 24 hours
+                nwmarketprices_freshness = 5
+            elif nwmarketprices_age > 60 * 60 * 12: # 12 hours
+                nwmarketprices_freshness = 4
+            elif nwmarketprices_age > 60 * 60 * 6: # 6 hours
+                nwmarketprices_freshness = 3
+            elif nwmarketprices_age > 60 * 60 * 3: # 3 hours
+                nwmarketprices_freshness = 2
+            elif nwmarketprices_age > 60 * 60 * 1: # 1 hour
+                nwmarketprices_freshness = 1
             
         if server is None:
             server = models.ServerStatus(  name=server_name, 
