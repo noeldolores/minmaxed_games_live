@@ -122,7 +122,7 @@ def update_server_status():
             nwmarketprices_freshness = 1
         
         if server_name == "abaton" or server_name == "apophis":
-            print_stderr(server_name, db_datetime, db_age, db_freshness, nwmarketprices_datetime, nwmarketprices_age, nwmarketprices_freshness)
+            print(server_name, db_datetime, db_age, db_freshness, nwmarketprices_datetime, nwmarketprices_age, nwmarketprices_freshness)
             
         if server is None:
             server = models.ServerStatus(  name=server_name, 
