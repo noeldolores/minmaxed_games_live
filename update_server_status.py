@@ -167,7 +167,7 @@ def main():
             time.sleep(60 * 10)
         except Exception as e:
             db.session.rollback()
-            print('update_server_status: ', e)
+            print_stderr('update_server_status: ', e)
 
 if __name__ == "__main__":
     main()
