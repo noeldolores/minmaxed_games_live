@@ -75,7 +75,7 @@ def request_server_data(stopwatch, server_name_num):
     for server_name, server_data in server_dict.items():
         status = server_status.get(server_name)
         if status:
-            age = (server_status[server_name]['nwmarketprices_update'] - server_status[server_name]['db_update']).seconds
+            age = (str_to_datetime(server_status[server_name]['nwmarketprices_update']) - str_to_datetime(server_status[server_name]['db_update'])).seconds
             server_update[server_name] = {
                 'update': age > age_minimum,
                 'age': age
