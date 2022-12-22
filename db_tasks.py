@@ -198,7 +198,7 @@ def main():
             
         stopwatch = timer(stopwatch, f'Task completed...{full_pull}')
         print_stderr(update_results)
-    time.sleep(60 * 30 * 1) # 30 minute rest
+    time.sleep(60 * 10) # 10 minute rest
     
 if __name__ == "__main__":
     main()
