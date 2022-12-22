@@ -3,7 +3,7 @@ from bs4 import BeautifulSoup
 import json
 from datetime import datetime
 import pytz
-from website import db, models
+from website import app, db, models
 from dateutil.parser import parse
 import time
 
@@ -160,9 +160,14 @@ def update_server_status():
 
 
 def main():
-    result = update_server_status()
-    print_stderr(f'{result[2]}% of servers updated [{result[0]}/{result[1]}]. {result[3]} errors occured')
-    time.sleep(60 * 10)
+    with app.app_context():
+        try:
+            result = update_server_status()
+            print_stderr(f'{result[2]}% of servers updated [{result[0]}/{result[1]}]. {result[3]} errors occured')
+            time.sleep(60 * 10)
+        except Exception as e:
+            db.session.rollback()
+            print('update_server_status: ', e)
 
 if __name__ == "__main__":
     main()
