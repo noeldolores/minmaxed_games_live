@@ -440,7 +440,7 @@ def update_server_status():
         if server:
             server_dict[server_name] = {
                 'api_id' : server_data['api_id'],
-                'update_status' : None,
+                'update_status' : server.update_status,
                 'db_update' : server.db_update,
                 'db_age' : db_age,
                 'db_freshness' : server.db_freshness,
