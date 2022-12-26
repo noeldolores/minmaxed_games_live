@@ -84,22 +84,25 @@ def request_server_data(stopwatch, server_name_num, update_results):
             
             if server_update[server_name]['update'] == True:
                 status_server.update_status = "Pending Scan"
-                
+            else:
+                status_server.update_status = "Up-to-Date"
         except Exception as e:
             print(server_name, e)
             server_update[server_name] = {
                 'update': True,
                 'age': 0
             }
+    db.session.commit()
     
     for server_name, server_data in server_dict.items():
-        status_server = models.ServerStatus.query.filter_by(name=server_name).first()
-        
         if server_update[server_name]['update'] == True:
             api_id = server_data['api_id']
             url = f"https://nwmarketprices.com/api/latest-prices/{api_id}/"
             try:
+                status_server = models.ServerStatus.query.filter_by(name=server_name).first()
                 status_server.update_status = "Scanning"
+                db.session.commit()
+                
                 my_timeout = 300
                 response = requests.request(method='GET', url=url, timeout=my_timeout)
             except Exception as e:
@@ -133,7 +136,9 @@ def request_server_data(stopwatch, server_name_num, update_results):
                     else:
                         server_dict[server_name]['latest_date'] = None
                     
+                    status_server = models.ServerStatus.query.filter_by(name=server_name).first()
                     status_server.update_status = "Pending Update"
+                    db.session.commit()
                 else:
                     stopwatch = timer(stopwatch, None)
                     continue
@@ -141,14 +146,18 @@ def request_server_data(stopwatch, server_name_num, update_results):
                 stopwatch = timer(stopwatch, None)
                 continue
         else:
-            status_server.update_status = "Up-to-Date"
             update_results['update_not_required'] += 1
+            
+            status_server = models.ServerStatus.query.filter_by(name=server_name).first()
+            status_server.update_status = "Up-to-Date"
+            db.session.commit()
         
     # Push data to db
     for server_name, server_data in server_dict.items():
         if server_update[server_name]['update'] == True:
             status_server = models.ServerStatus.query.filter_by(name=server_name).first()
             status_server.update_status = "Updating"
+            db.session.commit()
             
             server = models.Market.query.filter_by(name=server_name).first()
             
@@ -181,10 +190,12 @@ def request_server_data(stopwatch, server_name_num, update_results):
                     stopwatch = timer(stopwatch, f'{server_name} : {update_percentage}% ({item_update_count}) to {datetime_to_str(latest_date)}')
                 
                 update_results['servers_updated'] += 1
+                status_server = models.ServerStatus.query.filter_by(name=server_name).first()
                 status_server.update_status = "Up-to-Date"
             else:
                 stopwatch = timer(stopwatch, f'{server_name} : Unable to connect.')
                 update_results['server_update_errors'] += 1
+                status_server = models.ServerStatus.query.filter_by(name=server_name).first()
                 status_server.update_status = "Error"
                 
             db.session.commit()
