@@ -1356,7 +1356,7 @@ def server_status():
         if len(str(db_minutes)) == 1:
             db_minutes = f'0{db_minutes}'
         server_dict[server]['db_age'] = f'{int(db_hours)}:{db_minutes}'
-        server_dict[server]['db_age'] = db_scripts.datetime_to_str(server_dict[server]['db_update'])
+        server_dict[server]['db_update'] = db_scripts.datetime_to_str(server_dict[server]['db_update'])
         
         nwmkp_age = int(server_dict[server]['nwmarketprices_age'])
         nwmkp_hours = nwmkp_age / (60 * 60)
@@ -1364,7 +1364,7 @@ def server_status():
         if len(str(nwmkp_minutes)) == 1:
             nwmkp_minutes = f'0{nwmkp_minutes}'
         server_dict[server]['nwmarketprices_age'] = f'{int(nwmkp_hours)}:{nwmkp_minutes}'
-        server_dict[server]['nwmarketprices_age'] = db_scripts.datetime_to_str(server_dict[server]['nwmarketprices_update'])
+        server_dict[server]['nwmarketprices_update'] = db_scripts.datetime_to_str(server_dict[server]['nwmarketprices_update'])
         
     server_list = sorted(list(server_dict.keys()))
     current_utc = db_scripts.datetime_to_str(datetime.utcnow())
