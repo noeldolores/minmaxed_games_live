@@ -1,7 +1,7 @@
 {% for server in server_list %}
 <tr>
     <td scope="row" style="width:20%">{{server.title()}}</td>
-    <td style="width:20%">{{server_dict[server]['status']}}</td>
+    <td style="width:20%">{{server_dict[server]['update_status']}}</td>
     <td style="width:15%">{{server_dict[server]['db_update']}}</td>
     <td style="width:15%">{{server_dict[server]['db_age']}}</td>
     <td style="width:15%">{{server_dict[server]['nwmarketprices_update']}}</td>
