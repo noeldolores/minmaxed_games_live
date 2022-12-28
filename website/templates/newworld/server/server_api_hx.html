@@ -81,8 +81,12 @@
                                     <label for={{material}}><a href="/newworld/material/{{trophy}}" target="_blank"><u>{{material.title() | replace("_"," ")}}</u></a></label>
                                     <input disabled style="background-color:rgb(200, 200, 200)" type="text" id="{{trophy}}" name="{{trophy}}" class="form-control price" min="0" value="{{ '%.2f'|format(price_list[trophy_order[i][0]][trophy]) }}">
                                     {% else %}
-                                    <label for={{material}}><a href="/newworld/material/{{material}}" target="_blank"><u>{{material.title() | replace("_"," ")}}</u></a></label>
-                                    <input disabled style="background-color:rgb(200, 200, 200)" type="text" id="{{material}}" name="{{material}}" class="form-control price" min="0" value="{{ '%.2f'|format(price_list[trophy_order[i][0]][material]) }}">
+                                        {% if 'stain' in material %}
+                                        <label for={{material}}>{{material.title() | replace("_"," ")}}</label>
+                                        {% else %}
+                                        <label for={{material}}><a href="/newworld/material/{{material}}" target="_blank"><u>{{material.title() | replace("_"," ")}}</u></a></label>
+                                        {% endif %}
+                                        <input disabled style="background-color:rgb(200, 200, 200)" type="text" id="{{material}}" name="{{material}}" class="form-control price" min="0" value="{{ '%.2f'|format(price_list[trophy_order[i][0]][material]) }}">
                                     {% endif %}
                                 </div>
                                 {% endfor %}
