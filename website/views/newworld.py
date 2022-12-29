@@ -218,7 +218,10 @@ def dictionary_key_replacements():
                         
     if 'taxes_fees' not in session:
         session['taxes_fees'] = player_data.init_taxes_and_fees()
-    elif 'weavers_fen' not in session['taxes_fees']['territory']:
+    else:
+        if session['taxes_fees']['trading_post']['tax'] != 5:
+            session['taxes_fees']['trading_post']['tax'] = 5
+        if 'weavers_fen' not in session['taxes_fees']['territory']:
             session['taxes_fees']['territory']['weavers_fen'] = False
     if 'crafting' not in session['taxes_fees']:
         session['taxes_fees']['crafting'] = {
