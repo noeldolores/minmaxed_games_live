@@ -1122,7 +1122,7 @@ def calculator_market_hx():
         }
     }
     
-    return render_template('newworld/calculators/market_hx.html', data=data, only_purchase=only_purchase, purchase_quant=purchase_quant, tax=taxes_fees['trade_post']['tax'])
+    return render_template('newworld/calculators/market_hx.html', data=data, only_purchase=only_purchase, purchase_quant=purchase_quant, tax=(taxes_fees['trade_post']['tax'],base_value))
 
 
 @newworld.route('/table/trophy/', methods=['GET', 'POST'])
