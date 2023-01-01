@@ -949,7 +949,7 @@ def character_taxes_and_bonuses_hx():
                         if j == 'duration':
                             session['taxes_fees'][i][j] = request.form[j]
                         elif j == 'tax':
-                            session['taxes_fees'][i][j] = 2.5
+                            session['taxes_fees'][i][j] = 5
                         else:
                             session['taxes_fees'][i][j] = float(request.form[j])   
     
@@ -1021,6 +1021,8 @@ def calculator_market():
     
 @newworld.route('/calculator/market_hx', methods=['GET', 'POST'])
 def calculator_market_hx():
+    init_session()
+    dictionary_key_replacements()
     if 'taxes_fees' in session:
         taxes_fees = session['taxes_fees']
     
