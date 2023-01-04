@@ -6,6 +6,7 @@ import pytz
 from website import app, db, models
 from dateutil.parser import parse
 import time
+from dateutil.relativedelta import relativedelta
 
 
 def print_stderr(output=str):
@@ -92,6 +93,8 @@ def update_server_status():
         server = models.ServerStatus.query.filter_by(name=server_name).first()
         
         db_datetime = parse(database[server_name]['updated']).replace(tzinfo=pytz.utc)
+        if db_datetime.month == 12 and db_datetime.year == 2023:
+            db_datetime = db_datetime - relativedelta(years=1)
         nwmarketprices_datetime = parse(nwmarketprices[server_name]['updated']).replace(tzinfo=pytz.utc)
         
         db_age = (nwmarketprices_datetime - db_datetime).seconds
