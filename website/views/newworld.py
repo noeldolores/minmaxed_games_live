@@ -1139,6 +1139,7 @@ def table_trophy():
 
 @newworld.route('/table/trophy_hx', methods=['GET', 'POST'])
 def table_trophy_hx():
+    init_session()
     template_order = player_data.trade_post_trophy_order()
 
     if 'price_list' in session:
@@ -1150,7 +1151,6 @@ def table_trophy_hx():
     taxes_fees = session['taxes_fees']
     skill_level = session['skill_levels']['refining']
     gear_set = session['gear_sets']
-    taxes_fees = session['taxes_fees']
     
     all_tiers_all_routes, financial_data = calcs.tp_cost_to_refine_all_routes_all_tiers(price_dict, session['skill_levels']['refining'], session['gear_sets'], taxes_fees)
     cheapest_route = calcs.cheapest_tp_cost_route_to_refine_each_tier(price_dict, all_tiers_all_routes, taxes_fees, financial_data)
