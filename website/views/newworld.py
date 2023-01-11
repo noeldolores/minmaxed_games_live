@@ -320,15 +320,16 @@ def create_user(ID):
         return True
     return None
     
-## Issue with this function, update_threshold set to 0 to bypass the old value (1800) causing the live price to not load. Investigate.
+## Issue with this function. Potential Fix pushed
 def update_user_server_check():
-    update_threshold = 0
+    update_threshold = 1800
     current_time = datetime.now(timezone.utc)
     last_update = datetime.now(timezone.utc)
     if 'user_last_update' in session:
         if session['user_last_update'] is not None:
             last_update = session['user_last_update']
-    
+        else:
+            return True
     if (current_time - last_update).total_seconds() >= update_threshold:
         return True
     return False
